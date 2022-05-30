@@ -1,0 +1,7 @@
+common-header:
+  menu:
+    action-login: Login
+    action-sign-up: Sign Up
+    theme-mode-dark: Dark
+    theme-mode-light: Light
+    theme-mode-text: Mode

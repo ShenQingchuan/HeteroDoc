@@ -1,0 +1,7 @@
+common-header:
+  menu:
+    action-login: 登录
+    action-sign-up: 注册
+    theme-mode-dark: 深色
+    theme-mode-light: 浅色
+    theme-mode-text: 模式
