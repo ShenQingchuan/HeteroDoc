@@ -6,12 +6,11 @@ const envStore = useEnvStore()
 <template>
   <div
     class="hd-common-header__container"
-    py2 px4 flex-items-center z-2 border-b="gray-200/80 1 solid"
-    bg="dark:neutral-800"
+    py2 px4 flex-items-center z-2 border-b="gray-200/80 1 solid" bg-base
   >
     <div class="hd-common-header__hero" flex-items-center>
       <div i-twemoji-sheaf-of-rice text-10 />
-      <span ml1 my0 text-6 font-medium dark:text-light-100 select-none>
+      <span ml1 my0 text-6 font-medium txt-color-base select-none>
         HeteroDocs
       </span>
     </div>

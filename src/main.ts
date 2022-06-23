@@ -7,6 +7,7 @@ import { localeCacheKey } from './constants/keys'
 
 import App from './App.vue'
 
+import 'prosemirror-view/style/prosemirror.css'
 import 'uno.css'
 
 const app = createApp(App)
