@@ -1,114 +1,271 @@
-import { InputRule } from 'prosemirror-inputrules'
-import type { Mark, MarkType } from 'prosemirror-model'
+import type { MarkType } from 'prosemirror-model'
 import { Plugin } from 'prosemirror-state'
-import type { EditorState, Transaction } from 'prosemirror-state'
-import type { EditorView } from 'prosemirror-view'
-
+import type { EditorState, TextSelection } from 'prosemirror-state'
 import { callOrReturn } from '../utils/callOrReturn'
+import { isNumber } from '../utils/isSomewhat'
+import type { Range } from './types'
+import { createChainableState } from './helpers/createChainableState'
+import { getTextContentFromNodes } from './helpers/getTextContentFromNodes'
+import { getMarksBetween } from './helpers/getMarksBetween'
+import type { EditorCore } from './index'
 
-function getMarksBetween(start: number, end: number, state: EditorState) {
-  let marks: { start: number; end: number; mark: Mark }[] = []
-  state.doc.nodesBetween(start, end, (node, pos) => {
-    marks = [
-      ...marks,
-      ...node.marks.map(mark => ({
-        start: pos,
-        end: pos + node.nodeSize,
-        mark,
-      })),
-    ]
-  })
-  return marks
+interface PatternRuleHandlerProps {
+  state: EditorState
+  range: Range
+  match: RegExpMatchArray
+}
+interface MarkRuleConfig {
+  find: RegExp
+  type: MarkType
+  getAttributes?:
+  | Record<string, any>
+  | ((match: RegExpMatchArray) => Record<string, any>)
+  | false
+  | null
+}
+const createMarkRuleHandler = (config: MarkRuleConfig) => ({ state, range, match }: PatternRuleHandlerProps) => {
+  const attributes = callOrReturn(config.getAttributes, undefined, match)
+  if (attributes === false || attributes === null)
+    return null
+
+  const { tr } = state
+  const captureGroup = match[match.length - 1]
+  const fullMatch = match[0]
+  let markEnd = range.to
+
+  if (captureGroup) {
+    const startSpaces = fullMatch.search(/\S/)
+    const textStart = range.from + fullMatch.indexOf(captureGroup)
+    const textEnd = textStart + captureGroup.length
+
+    const excludedMarks = getMarksBetween(range.from, range.to, state.doc)
+      .filter((item) => {
+        return (
+          item.mark.type.excludes(config.type)
+          && !item.mark.type.excludes(item.mark.type)
+        )
+      })
+      .filter(item => item.to > textStart)
+
+    if (excludedMarks.length)
+      return null
+
+    if (textEnd < range.to)
+      tr.delete(textEnd, range.to)
+
+    if (textStart > range.from)
+      tr.delete(range.from + startSpaces, textStart)
+
+    markEnd = range.from + startSpaces + captureGroup.length
+
+    tr.addMark(range.from + startSpaces, markEnd, config.type.create(attributes || {}))
+    tr.removeStoredMark(config.type)
+  }
 }
 
-function createMarkHandler(
-  markType: MarkType,
-  getAttrs: any,
-) {
-  return (state: EditorState, match: string[], start: number, end: number) => {
-    const attrs = callOrReturn(getAttrs, undefined, match)
-    const { tr } = state
-    const captureGroup = match[match.length - 1]
-    const fullMatch = match[0]
-    let markEnd = end
+export class PatternRule {
+  find: RegExp
+  handler: (props: PatternRuleHandlerProps) => void | null
 
-    if (captureGroup) {
-      const startSpaces = fullMatch.search(/\S/)
-      const textStart = start + fullMatch.indexOf(captureGroup)
-      const textEnd = textStart + captureGroup.length
+  constructor(config: {
+    find: RegExp
+    handler: (props: PatternRuleHandlerProps) => void | null
+  }) {
+    this.find = config.find
+    this.handler = config.handler
+  }
+}
+const inputRuleMatcherHandler = (text: string, find: RegExp): RegExpMatchArray | null => {
+  return find.exec(text)
+}
+function runInputRule(config: {
+  core: EditorCore
+  from: number
+  to: number
+  text: string
+  rules: PatternRule[]
+  plugin: Plugin
+}): boolean {
+  const {
+    core, from, to, text,
+    rules, plugin,
+  } = config
+  const { view } = core
 
-      const excludedMarks = getMarksBetween(start, end, state)
-        .filter(item => item.mark.type.excludes(markType) && !item.mark.type.excludes(item.mark.type))
-        .filter(item => item.end > textStart)
+  if (view.composing)
+    return false
 
-      if (excludedMarks.length)
-        return null
+  const $from = view.state.doc.resolve(from)
+  if (
+    // check for code node
+    $from.parent.type.spec.code
+    // check for code mark
+    || !!($from.nodeBefore || $from.nodeAfter)?.marks.find(mark => mark.type.spec.code)
+  )
+    return false
 
-      if (textEnd < end)
-        tr.delete(textEnd, end)
+  let matched = false
+  const textBefore = getTextContentFromNodes($from) + text
+  rules.forEach((rule) => {
+    if (matched)
+      return
 
-      if (textStart > start)
-        tr.delete(start + startSpaces, textStart)
+    const match = inputRuleMatcherHandler(textBefore, rule.find)
+    if (!match)
+      return
 
-      markEnd = end + startSpaces + captureGroup.length
-
-      tr.addMark(start + startSpaces, markEnd, markType.create(attrs || {}))
-        .removeStoredMark(markType)
+    const tr = view.state.tr
+    const state = createChainableState({
+      state: view.state,
+      transaction: tr,
+    })
+    const range = {
+      from: from - (match[0].length - text.length),
+      to,
     }
+    const handler = rule.handler({
+      state,
+      range,
+      match,
+    })
 
-    return tr
-  }
+    // stop if there are no changes
+    if (handler === null || !tr.steps.length)
+      return
+
+    // store transform as meta data
+    // so we can undo input rules within the `undoInputRules` command
+    tr.setMeta(plugin, {
+      transform: tr,
+      from,
+      to,
+      text,
+    })
+
+    view.dispatch(tr)
+    matched = true
+  })
+
+  return matched
+}
+/**
+ * Build an input rule that adds a mark when the
+ * matched text is typed into it.
+ */
+export function markInputRule(config: MarkRuleConfig) {
+  return new PatternRule({
+    find: config.find,
+    handler: createMarkRuleHandler(config),
+  })
+}
+/**
+ * Create an input rules plugin. When enabled, it will cause text
+ * input that matches any of the given rules to trigger the rule’s
+ * action.
+ */
+export function inputRules(props: { core: EditorCore; rules: PatternRule[] }): Plugin {
+  const { core, rules } = props
+  const plugin = new Plugin({
+    state: {
+      init() {
+        return null
+      },
+      apply(tr, prev) {
+        const stored = tr.getMeta(plugin)
+        if (stored)
+          return stored
+
+        return tr.selectionSet || tr.docChanged
+          ? null
+          : prev
+      },
+    },
+    props: {
+      handleTextInput(_, from, to, text) {
+        return runInputRule({
+          core,
+          from,
+          to,
+          text,
+          rules,
+          plugin,
+        })
+      },
+
+      handleDOMEvents: {
+        compositionend: (view) => {
+          setTimeout(() => {
+            const { $cursor } = view.state.selection as TextSelection
+
+            if ($cursor) {
+              runInputRule({
+                core,
+                from: $cursor.pos,
+                to: $cursor.pos,
+                text: '',
+                rules,
+                plugin,
+              })
+            }
+          })
+
+          return false
+        },
+      },
+
+      // add support for input rules to trigger on enter
+      // this is useful for example for code blocks
+      handleKeyDown(view, event) {
+        if (event.key !== 'Enter')
+          return false
+
+        const { $cursor } = view.state.selection as TextSelection
+
+        if ($cursor) {
+          return runInputRule({
+            core,
+            from: $cursor.pos,
+            to: $cursor.pos,
+            text: '\n',
+            rules,
+            plugin,
+          })
+        }
+
+        return false
+      },
+    },
+    isInputRules: true,
+  }) as Plugin
+
+  return plugin
 }
 
-export function markInputRule(
-  regexp: RegExp,
-  markType: MarkType,
-  getAttrs?: any,
-) {
-  return new InputRule(
-    regexp,
-    createMarkHandler(markType, getAttrs),
-  )
+const pasteRuleMatcherHandler = (text: string, find: RegExp): RegExpMatchArray[] => {
+  return [...text.matchAll(find)]
 }
+function runPasteRule(config: {
+  core: EditorCore
+  state: EditorState
+  from: number
+  to: number
+  rule: PatternRule
+}): boolean {
+  const {
+    state,
+    from,
+    to,
+    rule,
+  } = config
 
-type RuleHandler = (state: EditorState, match: string[], start: number, end: number) => Transaction | null
+  const handlers: (void | null)[] = []
 
-export class PasteRule {
-  handler: RuleHandler
-
-  constructor(
-    readonly match: RegExp,
-    handler: RuleHandler,
-  ) {
-    this.handler = handler
-    this.match = match
-  }
-}
-
-export function markPasteRule(
-  regexp: RegExp,
-  markType: MarkType,
-  getAttrs?: any,
-) {
-  return new PasteRule(
-    regexp,
-    createMarkHandler(markType, getAttrs),
-  )
-}
-
-function runPasteHandler(
-  state: EditorState,
-  from: number,
-  to: number,
-  rule: PasteRule,
-): boolean {
-  const handledTransactions: (Transaction | null)[] = []
   state.doc.nodesBetween(from, to, (node, pos) => {
-    if (!node.isTextblock || node.type.spec.node)
+    if (!node.isTextblock || node.type.spec.code)
       return
 
     const resolvedFrom = Math.max(from, pos)
-    const resolvedTo = Math.min(to, pos + node.nodeSize)
+    const resolvedTo = Math.min(to, pos + node.content.size)
     const textToMatch = node.textBetween(
       resolvedFrom - pos,
       resolvedTo - pos,
@@ -116,37 +273,58 @@ function runPasteHandler(
       '\uFFFC',
     )
 
-    const matches = [...textToMatch.matchAll(rule.match)]
+    const matches = pasteRuleMatcherHandler(textToMatch, rule.find)
+
     matches.forEach((match) => {
       if (match.index === undefined)
         return
 
-      const resolvedStart = resolvedFrom + match.index + 1
-      const resolvedEnd = resolvedStart + match[0].length
-      const start = state.tr.mapping.map(resolvedStart)
-      const end = state.tr.mapping.map(resolvedEnd)
-      const handleResult = rule.handler(
+      const start = resolvedFrom + match.index + 1
+      const end = start + match[0].length
+      const range = {
+        from: state.tr.mapping.map(start),
+        to: state.tr.mapping.map(end),
+      }
+
+      const handler = rule.handler({
         state,
+        range,
         match,
-        start,
-        end,
-      )
-      handledTransactions.push(handleResult)
+      })
+
+      handlers.push(handler)
     })
   })
 
-  return handledTransactions.some(tr => tr !== null)
-}
+  const success = handlers.every(handler => handler !== null)
 
-export function pasteRules(rules: PasteRule[]): Plugin[] {
+  return success
+}
+/**
+ * Build an paste rule that adds a mark when the
+ * matched text is pasted into it.
+ */
+export function markPasteRule(config: MarkRuleConfig) {
+  return new PatternRule({
+    find: config.find,
+    handler: createMarkRuleHandler(config),
+  })
+}
+/**
+ * Create an paste rules plugin. When enabled, it will cause pasted
+ * text that matches any of the given rules to trigger the rule’s
+ * action.
+ */
+export function pasteRules(props: { core: EditorCore; rules: PatternRule[] }): Plugin[] {
+  const { core, rules } = props
   let dragSourceElement: Element | null = null
   let isPastedFromProseMirror = false
   let isDroppedFromProseMirror = false
 
-  return rules.map((rule) => {
+  const plugins = rules.map((rule) => {
     return new Plugin({
-      // Register a global drag handler to track the current drag source element
-      view(view: EditorView) {
+      // we register a global drag handler to track the current drag source element
+      view(view) {
         const handleDragstart = (event: DragEvent) => {
           dragSourceElement = view.dom.parentElement?.contains(event.target as Element)
             ? view.dom.parentElement
@@ -161,43 +339,61 @@ export function pasteRules(rules: PasteRule[]): Plugin[] {
           },
         }
       },
+
       props: {
         handleDOMEvents: {
           drop: (view) => {
             isDroppedFromProseMirror = dragSourceElement === view.dom.parentElement
             return false
           },
-          paste: (view, event) => {
+
+          paste: (_, event: Event) => {
             const html = (event as ClipboardEvent).clipboardData?.getData('text/html')
             isPastedFromProseMirror = !!html?.includes('data-pm-slice')
             return false
           },
         },
       },
+
       appendTransaction: (transactions, oldState, state) => {
         const transaction = transactions[0]
         const isPaste = transaction.getMeta('uiEvent') === 'paste' && !isPastedFromProseMirror
         const isDrop = transaction.getMeta('uiEvent') === 'drop' && !isDroppedFromProseMirror
+
         if (!isPaste && !isDrop)
           return
 
         // stop if there is no changed range
         const from = oldState.doc.content.findDiffStart(state.doc.content)
         const to = oldState.doc.content.findDiffEnd(state.doc.content)
-        if (typeof from !== 'number' || !to || from === to.b)
+
+        if (!isNumber(from) || !to || from === to.b)
           return
 
-        const hasTransaction = runPasteHandler(
+        // build a chainable state
+        // so we can use a single transaction for all paste rules
+        const tr = state.tr
+        const chainableState = createChainableState({
           state,
-          Math.max(from - 1, 0),
-          to.b,
+          transaction: tr,
+        })
+
+        const handler = runPasteRule({
+          core,
+          state: chainableState,
+          from: Math.max(from - 1, 0),
+          to: to.b,
           rule,
-        )
-        if (!hasTransaction || state.tr.steps.length === 0)
+        })
+
+        // stop if there are no changes
+        if (!handler || !tr.steps.length)
           return
 
-        return state.tr
+        return tr
       },
     })
   })
+
+  return plugins
 }

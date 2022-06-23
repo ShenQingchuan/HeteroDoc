@@ -1,44 +1,52 @@
-import type { InputRule } from 'prosemirror-inputrules'
-import type { Schema, SchemaSpec } from 'prosemirror-model'
+import type { SchemaSpec } from 'prosemirror-model'
 import { markInputRule, markPasteRule } from '../core/rule'
-import type { PasteRule } from '../core/rule'
+import type { PatternRule } from '../core/rule'
+import type { EditorCore } from '../core'
 import type { IEditorExtension } from './editorExtension'
 
-const boldStyleRegExp = /bold(er)?|[5-9]0{2}/
+const boldStyleRegExp = /^(bold(er)?|[5-9]\d{2,})$/
 const starInputRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))$/
 const starPasteRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))/g
+const underscoreInputRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))$/
+const underscorePasteRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))/g
 
 export class BoldExtension implements IEditorExtension {
   name = 'bold'
-  schema: Schema
+  core: EditorCore
   options = {}
 
-  constructor(schema: Schema) {
-    this.schema = schema
+  constructor(core: EditorCore) {
+    this.core = core
   }
 
   schemaSpec: () => Partial<SchemaSpec<any, 'bold'>> = () => {
     return {
       marks: {
         bold: {
-          content: 'text*',
-          group: 'inline',
           parseDOM: [
             { tag: 'strong' },
-            { tag: 'b', getAttrs: node => (node as HTMLElement).style.fontWeight !== 'normal' && {} },
-            { style: 'font-weight', getAttrs: value => boldStyleRegExp.test(value as string) && {} },
+            { tag: 'b', getAttrs: node => (node as HTMLElement).style.fontWeight !== 'normal' && null },
+            { style: 'font-weight', getAttrs: value => boldStyleRegExp.test(value as string) && null },
           ],
-          toDOM: () => ['span', { style: 'font-weight: bold' }],
+          toDOM: () => ['strong', 0],
         },
       },
     }
   }
 
-  inputRules: () => InputRule[] = () => [
-    markInputRule(starInputRegex, this.schema.marks.bold),
-  ]
+  inputRules: () => PatternRule[] = () => {
+    const type = this.core.schema.marks.bold
+    return [
+      markInputRule({ find: starInputRegex, type }),
+      markInputRule({ find: underscoreInputRegex, type }),
+    ]
+  }
 
-  pasteRules: () => PasteRule[] = () => [
-    markPasteRule(starPasteRegex, this.schema.marks.bold),
-  ]
+  pasteRules: () => PatternRule[] = () => {
+    const type = this.core.schema.marks.bold
+    return [
+      markPasteRule({ find: starPasteRegex, type }),
+      markPasteRule({ find: underscorePasteRegex, type }),
+    ]
+  }
 }

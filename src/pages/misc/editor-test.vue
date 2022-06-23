@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useHeteroEditor } from '../../editor'
+import { BoldPlugin } from '../../editor/extensions'
 
 const editorRef = templateRef<HTMLElement | null>('editor')
 
@@ -10,6 +11,8 @@ onMounted(() => {
       container: editorMountPoint,
       isReadOnly: false,
       autofocus: true,
+    }, {
+      fromKeys: ['bold'],
     })
   }
 })
@@ -17,7 +20,7 @@ onMounted(() => {
 
 <template>
   <div class="page-misc__editor-test" flex-col items-center justify-center w100vw>
-    <div class="page-misc__editor-test-container" w1000px m-x-auto m-t-20>
+    <div class="page-misc__editor-test-container" w80vw m-x-auto m-t-20>
       <div ref="editor" class="page-misc__editor-test-mount-point" p-12 min-h-1000px />
     </div>
   </div>
@@ -32,6 +35,10 @@ onMounted(() => {
 
   &-mount-point {
     .ProseMirror {
+      min-height: 900px;
+      @media screen and (max-width: 768px) {
+        min-height: 500px;
+      }
       height: 100%;
       outline: none;
     }

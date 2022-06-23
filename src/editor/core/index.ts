@@ -11,8 +11,11 @@ import type {
 import { TypeEvent } from '../utils/typeEvent'
 import { getLogger } from '../utils/logger'
 import type { EditorLogger } from '../utils/logger'
-import type { IEditorExtension } from '../extensions/editorExtension'
+import type { ExtensionsKeys, IEditorExtension } from '../extensions'
+import { extensionsMap } from '../extensions'
 import { mergeSchemaSpecs } from './schema'
+import type { PatternRule } from './rule'
+import { inputRules, pasteRules } from './rule'
 
 export interface EditorOptions {
   container: string | HTMLElement // editor mount point
@@ -31,13 +34,28 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   view: EditorView
   logger: EditorLogger
 
-  constructor(options: EditorOptions, extensions: IEditorExtension[] = []) {
+  constructor(options: EditorOptions, extensionsConfig: {
+    fromKeys?: ExtensionsKeys[]
+    fromCustom?: IEditorExtension[]
+  }) {
     super()
-    this.extensions = extensions
+    const { fromKeys = [], fromCustom = [] } = extensionsConfig
     this.options = options
-    this.schema = this.getSchema()
+    this.extensions = [
+      ...this.getExtensionsByKeys(fromKeys),
+      ...fromCustom,
+    ]
+    this.schema = this.initSchema()
     this.logger = getLogger('HeteroEditor core')
     this.view = this.initEditorView()
+  }
+
+  private getExtensionsByKeys(extensions: ExtensionsKeys[]): IEditorExtension[] {
+    return extensions.map((key) => {
+      const ExtensionClass = extensionsMap[key]
+      const extensionInstance = new ExtensionClass(this)
+      return extensionInstance
+    })
   }
 
   private dispatchTransaction = (tr: Transaction) => {
@@ -56,10 +74,9 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   private initEditorView = () => {
     const { schema, dispatchTransaction } = this
     const { isReadOnly, doc, container } = this.options
-    const proseMirrorPlugins = this.extensions.reduce(
-      (prev, curr) => [...prev, ...(curr.getProseMirrorPlugin?.() ?? [])],
-      [] as ProseMirrorPlugin[],
-    )
+    const proseMirrorPlugins = this.extensions.reduce((prev, curr) => [...prev, ...(curr.getProseMirrorPlugin?.() ?? [])], [] as ProseMirrorPlugin[])
+    const allInputRules = this.extensions.reduce((prev, curr) => [...prev, ...(curr.inputRules?.() ?? [])], [] as PatternRule[])
+    const allPasteRules = this.extensions.reduce((prev, curr) => [...prev, ...(curr.pasteRules?.() ?? [])], [] as PatternRule[])
     let editorMountContainer: HTMLElement
 
     if (typeof container === 'string') {
@@ -75,7 +92,14 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       editorMountContainer = container
     }
 
-    const editorStateConfig: EditorStateConfig = { schema, plugins: proseMirrorPlugins }
+    const editorStateConfig: EditorStateConfig = {
+      schema,
+      plugins: [
+        inputRules({ core: this, rules: allInputRules }),
+        ...pasteRules({ core: this, rules: allPasteRules }),
+        ...proseMirrorPlugins,
+      ],
+    }
     if (isReadOnly) {
       // readonly mode must be given document data
       if (doc) {
@@ -96,7 +120,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     return view
   }
 
-  public getSchema = () => {
+  private initSchema = () => {
     const allSchemaSpecs = this.extensions.map(ext => ext.schemaSpec())
     return new Schema(mergeSchemaSpecs(allSchemaSpecs))
   }

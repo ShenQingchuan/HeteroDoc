@@ -3,14 +3,14 @@ import type { SchemaSpec } from 'prosemirror-model'
 export function mergeSchemaSpecs(specs: Partial<SchemaSpec>[]): SchemaSpec {
   const merged: SchemaSpec = {
     nodes: {
-      doc: { content: 'block+' },
-      text: { group: 'inline' },
+      doc: { content: 'block+', topNode: true },
       paragraph: {
-        content: 'inline*',
         group: 'block',
+        content: 'inline*',
         parseDOM: [{ tag: 'p' }],
         toDOM() { return ['p', 0] },
       },
+      text: { group: 'inline' },
     },
     marks: {},
   }
