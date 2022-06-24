@@ -1,14 +1,14 @@
-import type { SchemaSpec } from 'prosemirror-model'
-import { markInputRule, markPasteRule } from '../core/rule'
-import type { PatternRule } from '../core/rule'
-import type { EditorCore } from '../core'
-import type { IEditorExtension } from './editorExtension'
+import { markInputRule, markPasteRule } from '../../core/rule'
+import type { PatternRule } from '../../core/rule'
+import type { EditorCore } from '../../core'
+import type { IEditorExtension } from '../editorExtension'
+import type { AddMarksSchema } from '../../types'
 
 const boldStyleRegExp = /^(bold(er)?|[5-9]\d{2,})$/
-const starInputRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))$/
-const starPasteRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))/g
-const underscoreInputRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))$/
-const underscorePasteRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))/g
+const doubleStarInputRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))$/
+const doubleStarPasteRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))/g
+const doubleUnderscoreInputRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))$/
+const doubleUnderscorePasteRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))/g
 
 export class BoldExtension implements IEditorExtension {
   name = 'bold'
@@ -19,7 +19,7 @@ export class BoldExtension implements IEditorExtension {
     this.core = core
   }
 
-  schemaSpec: () => Partial<SchemaSpec<any, 'bold'>> = () => {
+  schemaSpec: () => AddMarksSchema<'bold'> = () => {
     return {
       marks: {
         bold: {
@@ -37,16 +37,16 @@ export class BoldExtension implements IEditorExtension {
   inputRules: () => PatternRule[] = () => {
     const type = this.core.schema.marks.bold
     return [
-      markInputRule({ find: starInputRegex, type }),
-      markInputRule({ find: underscoreInputRegex, type }),
+      markInputRule({ find: doubleStarInputRegex, type }),
+      markInputRule({ find: doubleUnderscoreInputRegex, type }),
     ]
   }
 
   pasteRules: () => PatternRule[] = () => {
     const type = this.core.schema.marks.bold
     return [
-      markPasteRule({ find: starPasteRegex, type }),
-      markPasteRule({ find: underscorePasteRegex, type }),
+      markPasteRule({ find: doubleStarPasteRegex, type }),
+      markPasteRule({ find: doubleUnderscorePasteRegex, type }),
     ]
   }
 }

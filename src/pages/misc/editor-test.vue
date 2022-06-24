@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { useHeteroEditor } from '../../editor'
-import { BoldPlugin } from '../../editor/extensions'
 
+const envStore = useEnvStore()
+const themeModeText = useThemeModeText()
 const editorRef = templateRef<HTMLElement | null>('editor')
 
 onMounted(() => {
@@ -12,36 +13,60 @@ onMounted(() => {
       isReadOnly: false,
       autofocus: true,
     }, {
-      fromKeys: ['bold'],
+      fromKeys: ['bold', 'italic'],
     })
   }
 })
 </script>
 
 <template>
-  <div class="page-misc__editor-test" flex-col items-center justify-center w100vw>
-    <div class="page-misc__editor-test-container" w80vw m-x-auto m-t-20>
-      <div ref="editor" class="page-misc__editor-test-mount-point" p-12 min-h-1000px />
+  <div
+    class="page-misc__editor-test"
+    bg-base flex-col items-center justify-center
+    w100vw min-h-100vh p-y-10
+  >
+    <div
+      class="page-misc__editor-test__settings"
+      flex-items-center justify-center m-y-4
+    >
+      <n-button @click="envStore.toggleDark()">
+        <div v-if="envStore.isDark" i-carbon-moon text-6 mr2 font-light />
+        <div v-else i-carbon-light text-6 mr2 font-light />
+        <span>{{ themeModeText }}</span>
+      </n-button>
+    </div>
+    <div
+      class="page-misc__editor-test-container"
+      w80vw m-x-auto
+      border-base border-rounded
+    >
+      <div
+        ref="editor"
+        class="page-misc__editor-test-mount-point"
+        p-12 bg="neutral-200/50 dark:neutral-600/70"
+      />
     </div>
   </div>
 </template>
 
 <style lang="less">
-.page-misc__editor-test {
-  &-container {
-    background-color: #fafafa;
-    border: 1px solid #e5e5e5;
+:root {
+  --heterodoc-editor-color: rgba(0,0,0,0.85);
+  --heterodoc-caret-color: rgba(0,0,0,0.85);
+}
+:root.dark {
+  --heterodoc-editor-color: rgba(255,255,255,0.85);
+  --heterodoc-caret-color: rgba(255,255,255,0.85);
+}
+
+.ProseMirror {
+  min-height: 600px;
+  outline: none;
+  @media screen and (max-width: 768px) {
+    min-height: 300px;
   }
 
-  &-mount-point {
-    .ProseMirror {
-      min-height: 900px;
-      @media screen and (max-width: 768px) {
-        min-height: 500px;
-      }
-      height: 100%;
-      outline: none;
-    }
-  }
+  color: var(--heterodoc-editor-color);
+  caret-color: var(--heterodoc-caret-color);
 }
 </style>

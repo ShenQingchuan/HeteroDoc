@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const envStore = useEnvStore()
+const themeModeText = useThemeModeText()
 </script>
 
 <template>
@@ -25,9 +26,9 @@ const envStore = useEnvStore()
         </span>
       </n-button>
       <n-button type="primary" quaternary mx-2 @click="envStore.toggleDark()">
-        <div i-carbon-light text-6 mr2 font-light />
-        <span font-bold>{{ envStore.isDark ? t('common-header.menu.theme-mode-dark') : t('common-header.menu.theme-mode-light') }}</span>
-        <span font-bold>{{ t('common-header.menu.theme-mode-text') }}</span>
+        <div v-if="envStore.isDark" i-carbon-moon text-6 mr2 font-light />
+        <div v-else i-carbon-light text-6 mr2 font-light />
+        <span font-bold>{{ themeModeText }}</span>
       </n-button>
     </div>
   </div>

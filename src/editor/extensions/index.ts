@@ -6,8 +6,8 @@ export type {
 } from './extensionsMap'
 
 export {
-  BoldExtension as BoldPlugin,
-} from './bold'
+  BoldExtension,
+} from './startkit/bold'
 export {
   extensionsMap,
 } from './extensionsMap'
