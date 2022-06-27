@@ -34,8 +34,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   schema: Schema
   view: EditorView
   logger: EditorLogger
-
-  private commandManager: CommandManager
+  command: CommandManager
 
   constructor(options: EditorOptions, extensionsConfig: {
     fromKeys?: ExtensionsKeys[]
@@ -51,7 +50,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
 
     // Initialize schema and commands set needs extensions to be ready
     this.schema = this.initSchema()
-    this.commandManager = new CommandManager(this)
+    this.command = new CommandManager(this)
     this.logger = getLogger('HeteroEditor core')
     this.view = this.initEditorView()
   }
@@ -139,9 +138,5 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     return this.getMarkExtensions().filter((markExt) => {
       return markExt.keepOnSplit
     })
-  }
-
-  get command() {
-    return this.commandManager
   }
 }

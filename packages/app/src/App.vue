@@ -4,8 +4,7 @@ import { naiveUILocale } from './constants/locales'
 
 const { locale } = useI18n()
 const envStore = useEnvStore()
-const isDark = useDark()
-const naiveUITheme = ref(isDark ? darkTheme : lightTheme)
+const naiveUITheme = ref(envStore.isDark ? darkTheme : lightTheme)
 
 envStore.$subscribe((_, state) => {
   naiveUITheme.value = state.isDark

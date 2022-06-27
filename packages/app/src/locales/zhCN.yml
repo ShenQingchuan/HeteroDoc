@@ -5,3 +5,7 @@ common-header:
     theme-mode-dark: 深色
     theme-mode-light: 浅色
     theme-mode-text: 模式
+editor:
+  menu:
+    command-bold: 粗体
+    command-italic: 斜体

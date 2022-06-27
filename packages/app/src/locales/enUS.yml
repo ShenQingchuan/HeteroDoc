@@ -5,3 +5,7 @@ common-header:
     theme-mode-dark: Dark
     theme-mode-light: Light
     theme-mode-text: Mode
+editor:
+  menu:
+    command-bold: Bold
+    command-italic: Italic

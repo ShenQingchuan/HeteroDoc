@@ -1,7 +1,7 @@
 import { markInputRule, markPasteRule } from '../core/rule'
 import type { PatternRule } from '../core/rule'
 import type { EditorCore } from '../core'
-import type { AddMarksSchema } from '../types'
+import type { AddMarksSchema, NoArgsCommand } from '../types'
 import type { IEditorExtension } from './editorExtension'
 import { ExtensionType } from './editorExtension'
 
@@ -10,9 +10,17 @@ const singleStarPasteRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))/g
 const singleUnderscoreInputRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))$/
 const singleUnderscorePasteRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))/g
 
+declare global {
+  interface Commands {
+    setItalic: NoArgsCommand
+    unsetItalic: NoArgsCommand
+    toggleItalic: NoArgsCommand
+  }
+}
+
 export class ItalicExtension implements IEditorExtension {
   type = ExtensionType.mark
-  name = 'bold'
+  name = 'italic'
   core: EditorCore
   options = {}
 
@@ -49,5 +57,19 @@ export class ItalicExtension implements IEditorExtension {
       markPasteRule({ find: singleStarPasteRegex, type }),
       markPasteRule({ find: singleUnderscorePasteRegex, type }),
     ]
+  }
+
+  commands: () => Record<string, NoArgsCommand> = () => {
+    return {
+      setItalic: () => ({ commands }) => {
+        return commands.setMark({ typeOrName: this.name })
+      },
+      unsetItalic: () => ({ commands }) => {
+        return commands.unsetMark({ typeOrName: this.name })
+      },
+      toggleItalic: () => ({ commands }) => {
+        return commands.toggleMark({ typeOrName: this.name })
+      },
+    }
   }
 }

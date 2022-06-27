@@ -1,6 +1,7 @@
 # Logs
 logs
 *.log
+*.local
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -8,9 +9,8 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
-dist-ssr
-*.local
+packages/**/dist
+packages/app/dist-ssr
 
 # Editor directories and files
 .vscode/*

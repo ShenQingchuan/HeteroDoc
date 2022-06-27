@@ -1,14 +1,17 @@
 <script lang="ts" setup>
-import { useHeteroEditor } from '../../editor'
+import type { EditorCore } from '@hetero/editor'
+import { useHeteroEditor } from '@hetero/editor'
 
+const { t } = useI18n()
 const envStore = useEnvStore()
 const themeModeText = useThemeModeText()
 const editorRef = templateRef<HTMLElement | null>('editor')
+const editor = ref<EditorCore>()
 
 onMounted(() => {
   const editorMountPoint = editorRef.value
   if (editorMountPoint) {
-    useHeteroEditor({
+    editor.value = useHeteroEditor({
       container: editorMountPoint,
       isReadOnly: false,
       autofocus: true,
@@ -29,10 +32,22 @@ onMounted(() => {
       class="page-misc__editor-test__settings"
       flex-items-center justify-center m-y-4
     >
-      <n-button @click="envStore.toggleDark()">
+      <n-button m-x-4 @click="envStore.toggleDark()">
         <div v-if="envStore.isDark" i-carbon-moon text-6 mr2 font-light />
         <div v-else i-carbon-light text-6 mr2 font-light />
         <span>{{ themeModeText }}</span>
+      </n-button>
+      <n-button m-x-4 @click="editor?.command.chain.toggleBold().run()">
+        <div flex-items-center>
+          <div i-ic:round-format-bold text-5 mr1 />
+          <span>{{ t('editor.menu.command-bold') }}</span>
+        </div>
+      </n-button>
+      <n-button m-x-4 @click="editor?.command.chain.toggleItalic().run()">
+        <div flex-items-center>
+          <div i-ic:round-format-italic text-5 mr1 />
+          <span>{{ t('editor.menu.command-italic') }}</span>
+        </div>
       </n-button>
     </div>
     <div

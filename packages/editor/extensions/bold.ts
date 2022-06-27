@@ -1,7 +1,7 @@
 import { markInputRule, markPasteRule } from '../core/rule'
 import type { PatternRule } from '../core/rule'
 import type { EditorCore } from '../core'
-import type { AddMarksSchema, Command } from '../types'
+import type { AddMarksSchema, NoArgsCommand } from '../types'
 import type { IEditorMark } from './editorExtension'
 import { ExtensionType } from './editorExtension'
 
@@ -13,9 +13,9 @@ const doubleUnderscorePasteRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))/g
 
 declare global {
   interface Commands {
-    setBold: Command
-    unsetBold: Command
-    toggleBold: Command
+    setBold: NoArgsCommand
+    unsetBold: NoArgsCommand
+    toggleBold: NoArgsCommand
   }
 }
 
@@ -60,7 +60,7 @@ export class BoldExtension implements IEditorMark {
     ]
   }
 
-  commands: () => Record<string, Command> = () => {
+  commands: () => Record<string, NoArgsCommand> = () => {
     return {
       setBold: () => ({ commands }) => {
         return commands.setMark({ typeOrName: this.name })

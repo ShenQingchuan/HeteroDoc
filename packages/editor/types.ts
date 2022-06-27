@@ -14,19 +14,29 @@ export type MaybeReturnType<T> = T extends (...args: any) => any
 export type AddNodesSchema<NodeNames extends string> = Partial<SchemaSpec<NodeNames, any>>
 export type AddMarksSchema<MarkNames extends string> = Partial<SchemaSpec<any, MarkNames>>
 
+export type Command<T = {}> = (args: T) => CommandPrimitive
+export type NoArgsCommand = () => CommandPrimitive
+export type CommandPrimitive = (props: CommandProps) => boolean
+
 type _inferCommandsArgsForExec<K extends keyof Commands> = {
-  [N in K]: Commands[N] extends Command<infer A> ? (args: A) => boolean : never
+  [N in K]: Commands[N] extends NoArgsCommand
+    ? () => boolean
+    : Commands[N] extends Command<infer A>
+      ? (args: A) => boolean
+      : never
 }
 export type PrimitiveCommandsMap = _inferCommandsArgsForExec<keyof Commands>
 type _inferCommandsArgsForChain<K extends keyof Commands> = {
-  [N in K]: Commands[N] extends Command<infer A> ? (args: A) => RunCommandsChain : never
+  [N in K]: Commands[N] extends NoArgsCommand
+    ? () => RunCommandsChain
+    : Commands[N] extends Command<infer A>
+      ? (args: A) => RunCommandsChain
+      : never
 }
 export type RunCommandsChain = _inferCommandsArgsForChain<keyof Commands> & {
   run: () => boolean
 }
 
-export type Command<T = {}> = (args: T) => CommandPrimitive
-export type CommandPrimitive = (props: CommandProps) => boolean
 export interface CommandProps {
   core: EditorCore
   tr: Transaction
