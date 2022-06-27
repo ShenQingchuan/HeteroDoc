@@ -1,8 +1,9 @@
-import { markInputRule, markPasteRule } from '../../core/rule'
-import type { PatternRule } from '../../core/rule'
-import type { EditorCore } from '../../core'
-import type { IEditorExtension } from '../editorExtension'
-import type { AddMarksSchema } from '../../types'
+import { markInputRule, markPasteRule } from '../core/rule'
+import type { PatternRule } from '../core/rule'
+import type { EditorCore } from '../core'
+import type { AddMarksSchema } from '../types'
+import type { IEditorExtension } from './editorExtension'
+import { ExtensionType } from './editorExtension'
 
 const singleStarInputRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))$/
 const singleStarPasteRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))/g
@@ -10,6 +11,7 @@ const singleUnderscoreInputRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))$/
 const singleUnderscorePasteRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))/g
 
 export class ItalicExtension implements IEditorExtension {
+  type = ExtensionType.mark
   name = 'bold'
   core: EditorCore
   options = {}

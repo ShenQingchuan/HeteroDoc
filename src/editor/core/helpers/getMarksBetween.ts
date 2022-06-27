@@ -1,6 +1,6 @@
 import type { Node as ProseMirrorNode } from 'prosemirror-model'
 
-import type { MarkRange } from '../types'
+import type { MarkRange } from '../../types'
 import { getMarkRange } from './getMarkRange'
 
 export function getMarksBetween(from: number, to: number, doc: ProseMirrorNode): MarkRange[] {

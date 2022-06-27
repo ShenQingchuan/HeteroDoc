@@ -1,8 +1,9 @@
-import { markInputRule, markPasteRule } from '../../core/rule'
-import type { PatternRule } from '../../core/rule'
-import type { EditorCore } from '../../core'
-import type { IEditorExtension } from '../editorExtension'
-import type { AddMarksSchema } from '../../types'
+import { markInputRule, markPasteRule } from '../core/rule'
+import type { PatternRule } from '../core/rule'
+import type { EditorCore } from '../core'
+import type { AddMarksSchema, Command } from '../types'
+import type { IEditorMark } from './editorExtension'
+import { ExtensionType } from './editorExtension'
 
 const boldStyleRegExp = /^(bold(er)?|[5-9]\d{2,})$/
 const doubleStarInputRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))$/
@@ -10,7 +11,16 @@ const doubleStarPasteRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))/g
 const doubleUnderscoreInputRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))$/
 const doubleUnderscorePasteRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))/g
 
-export class BoldExtension implements IEditorExtension {
+declare global {
+  interface Commands {
+    setBold: Command<{}>
+    unsetBold: Command<{}>
+    toggleBold: Command<{}>
+  }
+}
+
+export class BoldExtension implements IEditorMark {
+  type = ExtensionType.mark
   name = 'bold'
   core: EditorCore
   options = {}
@@ -48,5 +58,19 @@ export class BoldExtension implements IEditorExtension {
       markPasteRule({ find: doubleStarPasteRegex, type }),
       markPasteRule({ find: doubleUnderscorePasteRegex, type }),
     ]
+  }
+
+  commands: () => Record<string, Command> = () => {
+    return {
+      setBold: () => ({ core }) => {
+        return core.commands.setMark({ typeOrName: this.name })
+      },
+      unsetBold: () => ({ core }) => {
+        return core.commands.unsetMark({ typeOrName: this.name })
+      },
+      toggleBold: () => ({ core }) => {
+        return core.commands.toggleMark({ typeOrName: this.name })
+      },
+    }
   }
 }

@@ -1,21 +1,22 @@
 import { EditorState } from 'prosemirror-state'
 import { Node, Schema } from 'prosemirror-model'
 import { EditorView } from 'prosemirror-view'
-
 import type {
   EditorStateConfig,
   Plugin as ProseMirrorPlugin,
   Transaction,
 } from 'prosemirror-state'
-
 import { TypeEvent } from '../utils/typeEvent'
 import { getLogger } from '../utils/logger'
 import type { EditorLogger } from '../utils/logger'
 import type { ExtensionsKeys, IEditorExtension } from '../extensions'
 import { extensionsMap } from '../extensions'
+import type { IEditorMark } from '../extensions/editorExtension'
+import { ExtensionType } from '../extensions/editorExtension'
 import { mergeSchemaSpecs } from './schema'
 import type { PatternRule } from './rule'
 import { inputRules, pasteRules } from './rule'
+import { CommandManager } from './commandManager'
 
 export interface EditorOptions {
   container: string | HTMLElement // editor mount point
@@ -34,6 +35,8 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   view: EditorView
   logger: EditorLogger
 
+  private commandManager: CommandManager
+
   constructor(options: EditorOptions, extensionsConfig: {
     fromKeys?: ExtensionsKeys[]
     fromCustom?: IEditorExtension[]
@@ -45,7 +48,10 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       ...this.getExtensionsByKeys(fromKeys),
       ...fromCustom,
     ]
+
+    // Initialize schema and commands set needs extensions to be ready
     this.schema = this.initSchema()
+    this.commandManager = new CommandManager(this)
     this.logger = getLogger('HeteroEditor core')
     this.view = this.initEditorView()
   }
@@ -123,5 +129,19 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   private initSchema = () => {
     const allSchemaSpecs = this.extensions.map(ext => ext.schemaSpec())
     return new Schema(mergeSchemaSpecs(allSchemaSpecs))
+  }
+
+  getMarkExtensions = (): IEditorMark[] => {
+    return this.extensions.filter(ext => ext.type === ExtensionType.mark)
+  }
+
+  getSplittedableMarks = (): IEditorMark[] => {
+    return this.getMarkExtensions().filter((markExt) => {
+      return markExt.keepOnSplit
+    })
+  }
+
+  get commands() {
+    return this.commandManager.commands
   }
 }
