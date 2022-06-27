@@ -141,7 +141,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     })
   }
 
-  get commands() {
-    return this.commandManager.commands
+  get command() {
+    return this.commandManager
   }
 }

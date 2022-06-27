@@ -13,9 +13,9 @@ const doubleUnderscorePasteRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))/g
 
 declare global {
   interface Commands {
-    setBold: Command<{}>
-    unsetBold: Command<{}>
-    toggleBold: Command<{}>
+    setBold: Command
+    unsetBold: Command
+    toggleBold: Command
   }
 }
 
@@ -62,14 +62,14 @@ export class BoldExtension implements IEditorMark {
 
   commands: () => Record<string, Command> = () => {
     return {
-      setBold: () => ({ core }) => {
-        return core.commands.setMark({ typeOrName: this.name })
+      setBold: () => ({ commands }) => {
+        return commands.setMark({ typeOrName: this.name })
       },
-      unsetBold: () => ({ core }) => {
-        return core.commands.unsetMark({ typeOrName: this.name })
+      unsetBold: () => ({ commands }) => {
+        return commands.unsetMark({ typeOrName: this.name })
       },
-      toggleBold: () => ({ core }) => {
-        return core.commands.toggleMark({ typeOrName: this.name })
+      toggleBold: () => ({ commands }) => {
+        return commands.toggleMark({ typeOrName: this.name })
       },
     }
   }

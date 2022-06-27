@@ -16,13 +16,15 @@ declare global {
   }
 }
 
-export const toggleMark: Commands['toggleMark'] = ({ typeOrName, attrs = {}, options = {} }) => ({ core, state }) => {
+export const toggleMark: Commands['toggleMark'] = (
+  { typeOrName, attrs = {}, options = {} },
+) => ({ commands, state }) => {
   const { extendEmptyMarkRange = false } = options
   const type = getMarkType(typeOrName, state.schema)
   const isActive = isMarkActive(state, type, attrs)
 
   if (isActive)
-    return core.commands.unsetMark({ typeOrName: type, options: { extendEmptyMarkRange } })
+    return commands.unsetMark({ typeOrName: type, options: { extendEmptyMarkRange } })
 
-  return core.commands.setMark({ typeOrName: type, attrs })
+  return commands.setMark({ typeOrName: type, attrs })
 }
