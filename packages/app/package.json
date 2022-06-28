@@ -2,7 +2,7 @@
   "name": "@hetero/doc-web-app",
   "version": "0.0.1",
   "scripts": {
-    "start": "vite",
+    "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },

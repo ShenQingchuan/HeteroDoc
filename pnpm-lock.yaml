@@ -23,7 +23,7 @@ importers:
 
   packages/app:
     specifiers:
-      '@hetero/editor': workspace:^0.0.1
+      '@hetero/editor': workspace:*
       '@iconify/json': ^2.1.50
       '@intlify/vite-plugin-vue-i18n': ^3.4.0
       '@vitejs/plugin-vue': ^2.3.3

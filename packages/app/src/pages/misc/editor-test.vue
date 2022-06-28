@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { EditorCore } from '@hetero/editor'
-import { useHeteroEditor } from '@hetero/editor'
+import { useHeteroEditor } from '../../composables/useHeteroEditor'
 
 const { t } = useI18n()
 const envStore = useEnvStore()

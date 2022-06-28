@@ -2,7 +2,13 @@
   "private": true,
   "version": "0.0.1",
   "description": "Collaborative cloud documentation for heterocube teams",
-  "scripts": {},
+  "scripts": {
+    "dev:app": "pnpm --filter @hetero/doc-web-app dev",
+    "build:app": "pnpm --filter @hetero/doc-web-app build",
+    "preview:app": "pnpm --filter @hetero/doc-web-app preview",
+    "dev:editor": "pnpm --filter @hetero/editor dev",
+    "build:editor": "pnpm --filter @hetero/editor build"
+  },
   "dependencies": {
     "lodash": "^4.17.21"
   },
