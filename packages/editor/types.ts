@@ -15,6 +15,7 @@ export type AddNodesSchema<NodeNames extends string> = Partial<SchemaSpec<NodeNa
 export type AddMarksSchema<MarkNames extends string> = Partial<SchemaSpec<any, MarkNames>>
 
 export type Command<T = {}> = (args: T) => CommandPrimitive
+export type OptionalArgsCommand<T = {}> = (args?: T) => CommandPrimitive
 export type NoArgsCommand = () => CommandPrimitive
 export type CommandPrimitive = (props: CommandProps) => boolean
 
@@ -23,15 +24,20 @@ type _inferCommandsArgsForExec<K extends keyof Commands> = {
     ? () => boolean
     : Commands[N] extends Command<infer A>
       ? (args: A) => boolean
-      : never
+      : Commands[N] extends OptionalArgsCommand<infer A1>
+        ? (arg?: A1) => boolean
+        : never
 }
 export type PrimitiveCommandsMap = _inferCommandsArgsForExec<keyof Commands>
+
 type _inferCommandsArgsForChain<K extends keyof Commands> = {
   [N in K]: Commands[N] extends NoArgsCommand
     ? () => RunCommandsChain
     : Commands[N] extends Command<infer A>
       ? (args: A) => RunCommandsChain
-      : never
+      : Commands[N] extends OptionalArgsCommand<infer A1>
+        ? (args?: A1) => RunCommandsChain
+        : never
 }
 export type RunCommandsChain = _inferCommandsArgsForChain<keyof Commands> & {
   run: () => boolean
@@ -73,3 +79,5 @@ export interface MarkRange {
   from: number
   to: number
 }
+
+export type FocusPosition = 'start' | 'end' | 'all' | number | boolean | null

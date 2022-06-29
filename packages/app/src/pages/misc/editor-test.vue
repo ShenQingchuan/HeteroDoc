@@ -37,13 +37,13 @@ onMounted(() => {
         <div v-else i-carbon-light text-6 mr2 font-light />
         <span>{{ themeModeText }}</span>
       </n-button>
-      <n-button m-x-4 @click="editor?.command.chain.toggleBold().run()">
+      <n-button m-x-4 @click="editor?.cmdManager.chain.focus().toggleBold().run()">
         <div flex-items-center>
           <div i-ic:round-format-bold text-5 mr1 />
           <span>{{ t('editor.menu.command-bold') }}</span>
         </div>
       </n-button>
-      <n-button m-x-4 @click="editor?.command.chain.toggleItalic().run()">
+      <n-button m-x-4 @click="editor?.cmdManager.chain.focus().toggleItalic().run()">
         <div flex-items-center>
           <div i-ic:round-format-italic text-5 mr1 />
           <span>{{ t('editor.menu.command-italic') }}</span>

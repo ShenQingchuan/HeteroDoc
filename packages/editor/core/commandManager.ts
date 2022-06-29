@@ -105,4 +105,26 @@ export class CommandManager {
   public get can() {
     return this.createCan()
   }
+
+  public getSingleCommands() {
+    const { rawCommands, core } = this
+    const { view } = core
+    const { tr } = view.state
+    const props = this.buildCommandProps(tr)
+
+    return Object.fromEntries(
+      Object.entries(rawCommands)
+        .map(([name, command]) => {
+          const method = (...args: any[]) => {
+            const callback = command(...args)(props)
+            if (!tr.getMeta('preventDispatch'))
+              view.dispatch(tr)
+
+            return callback
+          }
+
+          return [name, method]
+        }),
+    ) as PrimitiveCommandsMap
+  }
 }

@@ -1,3 +1,5 @@
+import { TextSelection } from 'prosemirror-state'
+
 export function isClass(value: any): boolean {
   if (value.constructor?.toString().substring(0, 5) !== 'class')
     return false
@@ -33,5 +35,20 @@ export function isRegExp(value: any): value is RegExp {
 }
 export function isNumber(value: any): value is number {
   return typeof value === 'number'
+}
+export function isiOS(): boolean {
+  return [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod',
+  ].includes(navigator.platform)
+  // iPad on iOS 13 detection
+  || (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+}
+export function isTextSelection(value: unknown): value is TextSelection {
+  return isObject(value) && value instanceof TextSelection
 }
 
