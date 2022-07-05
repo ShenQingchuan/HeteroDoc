@@ -20,23 +20,23 @@ export type NoArgsCommand = () => CommandPrimitive
 export type CommandPrimitive = (props: CommandProps) => boolean
 
 type _inferCommandsArgsForExec<K extends keyof Commands> = {
-  [N in K]: Commands[N] extends NoArgsCommand
-    ? () => boolean
-    : Commands[N] extends Command<infer A>
-      ? (args: A) => boolean
-      : Commands[N] extends OptionalArgsCommand<infer A1>
-        ? (arg?: A1) => boolean
+  [N in K]: Commands[N] extends OptionalArgsCommand<infer A1>
+    ? (arg?: A1) => boolean
+    : Commands[N] extends NoArgsCommand
+      ? () => boolean
+      : Commands[N] extends Command<infer A>
+        ? (args: A) => boolean
         : never
 }
 export type PrimitiveCommandsMap = _inferCommandsArgsForExec<keyof Commands>
 
 type _inferCommandsArgsForChain<K extends keyof Commands> = {
-  [N in K]: Commands[N] extends NoArgsCommand
-    ? () => RunCommandsChain
-    : Commands[N] extends Command<infer A>
-      ? (args: A) => RunCommandsChain
-      : Commands[N] extends OptionalArgsCommand<infer A1>
-        ? (args?: A1) => RunCommandsChain
+  [N in K]: Commands[N] extends OptionalArgsCommand<infer A1>
+    ? (arg?: A1) => RunCommandsChain
+    : Commands[N] extends NoArgsCommand
+      ? () => RunCommandsChain
+      : Commands[N] extends Command<infer A>
+        ? (args: A) => RunCommandsChain
         : never
 }
 export type RunCommandsChain = _inferCommandsArgsForChain<keyof Commands> & {

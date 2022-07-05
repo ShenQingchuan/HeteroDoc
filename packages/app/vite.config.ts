@@ -11,6 +11,7 @@ const fromAppPath = (p: string) => path.resolve(__dirname, p)
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  clearScreen: false,
   server: {
     proxy: {
       '/api': {

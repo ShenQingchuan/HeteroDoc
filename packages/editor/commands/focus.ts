@@ -2,7 +2,7 @@ import { resolveFocusPosition } from '../core/helpers/resolveFocusPosition'
 import type { FocusPosition, OptionalArgsCommand } from '../types'
 import { isTextSelection, isiOS } from '../utils/isSomewhat'
 
-interface FocusArgs {
+export interface FocusArgs {
   position?: FocusPosition
   options?: {
     scrollIntoView?: boolean
