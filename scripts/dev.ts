@@ -16,12 +16,13 @@ const logger = {
     return logger
   },
 }
-const bundleEditorSpinner = ora(`${chalk.cyan('Bundling editor package ...')}`)
+const bundleEditorSpinner = ora(`${chalk.cyan('Bundling editor package ...\n')}`)
 
 const compileEditor = async ({ onFirstFinish: onFinish }: {
   onFirstFinish?: () => Promise<void>
 }) => {
   logger.info('Start bundling editor package ...')
+  bundleEditorSpinner.start()
   try {
     const compileProcess = execaCommand(
       'pnpm cross-env NODE_ENV=development && pnpm vite build --watch',
@@ -32,11 +33,11 @@ const compileEditor = async ({ onFirstFinish: onFinish }: {
       },
     ).stdout?.on('data', (data) => {
       bundleEditorSpinner.start()
-      if (!didNotStart && String(data).includes('build started...'))
+      if (!didNotStart && String(data).includes('build started...')) {
         logger.clear().info('Restart bundling editor package ...')
-
-      if (String(data).includes('Declaration files built')) {
-        bundleEditorSpinner.stop()
+      }
+      else if (String(data).includes('Declaration files built')) {
+        bundleEditorSpinner.succeed()
         if (didNotStart) {
           didNotStart = false
           setTimeout(() => onFinish?.())

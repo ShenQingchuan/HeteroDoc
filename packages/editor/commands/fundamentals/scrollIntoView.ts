@@ -1,4 +1,4 @@
-import type { NoArgsCommand } from '../types'
+import type { NoArgsCommand } from '../../types'
 
 declare global {
   interface Commands {

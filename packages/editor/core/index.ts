@@ -6,6 +6,7 @@ import type {
   Plugin as ProseMirrorPlugin,
   Transaction,
 } from 'prosemirror-state'
+import { keymap } from 'prosemirror-keymap'
 import { TypeEvent } from '../utils/typeEvent'
 import { getLogger } from '../utils/logger'
 import type { EditorLogger } from '../utils/logger'
@@ -13,6 +14,7 @@ import type { ExtensionsKeys, IEditorExtension } from '../extensions'
 import { extensionsMap } from '../extensions'
 import type { IEditorMark } from '../extensions/editorExtension'
 import { ExtensionType } from '../extensions/editorExtension'
+import { BaseKeymap } from '../extensions/baseKeymap'
 import { mergeSchemaSpecs } from './schema'
 import type { PatternRule } from './rule'
 import { inputRules, pasteRules } from './rule'
@@ -44,6 +46,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     const { fromKeys = [], fromCustom = [] } = extensionsConfig
     this.options = options
     this.extensions = [
+      new BaseKeymap(this),
       ...this.getExtensionsByKeys(fromKeys),
       ...fromCustom,
     ]
@@ -79,11 +82,28 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   private initEditorView = () => {
     const { schema, dispatchTransaction } = this
     const { isReadOnly, doc, container } = this.options
+
+    // Resolve editor extensions' specs
     const proseMirrorPlugins = this.extensions.reduce((prev, curr) => [...prev, ...(curr.getProseMirrorPlugin?.() ?? [])], [] as ProseMirrorPlugin[])
     const allInputRules = this.extensions.reduce((prev, curr) => [...prev, ...(curr.inputRules?.() ?? [])], [] as PatternRule[])
     const allPasteRules = this.extensions.reduce((prev, curr) => [...prev, ...(curr.pasteRules?.() ?? [])], [] as PatternRule[])
-    let editorMountContainer: HTMLElement
+    const allKeymapPlugins = this.extensions.reduce((prev, curr) => {
+      const bindings = Object.fromEntries(
+        Object
+          .entries(curr.keymaps?.() || {})
+          .map(([shortcut, method]) => {
+            return [shortcut, () => method({ core: this })]
+          }),
+      )
 
+      const keyMapPlugin = keymap(bindings)
+      return [
+        ...prev,
+        keyMapPlugin,
+      ]
+    }, [] as ProseMirrorPlugin[])
+
+    let editorMountContainer: HTMLElement
     if (typeof container === 'string') {
       const queryBySelector = document.querySelector<HTMLElement>(container)
       if (queryBySelector) { editorMountContainer = queryBySelector }
@@ -102,6 +122,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       plugins: [
         inputRules({ core: this, rules: allInputRules }),
         ...pasteRules({ core: this, rules: allPasteRules }),
+        ...allKeymapPlugins,
         ...proseMirrorPlugins,
       ],
     }
@@ -126,7 +147,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   }
 
   private initSchema = () => {
-    const allSchemaSpecs = this.extensions.map(ext => ext.schemaSpec())
+    const allSchemaSpecs = this.extensions.map(ext => ext.schemaSpec?.() ?? {})
     return new Schema(mergeSchemaSpecs(allSchemaSpecs))
   }
 

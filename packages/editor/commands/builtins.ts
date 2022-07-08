@@ -1,15 +1,48 @@
-import { toggleMark } from './toggleMark'
-import { unsetMark } from './unsetMark'
-import { splitBlock } from './splitBlock'
-import { setMark } from './setMark'
-import { focus } from './focus'
-import { scrollIntoView } from './scrollIntoView'
+import { focus } from './fundamentals/focus'
+import { scrollIntoView } from './fundamentals/scrollIntoView'
+import { first } from './fundamentals/first'
+import { command } from './fundamentals/defineCommand'
+import { undoInputRule } from './fundamentals/undoInputRule'
+import { clearNodes } from './fundamentals/clearNodes'
+import { splitBlock } from './fundamentals/splitBlock'
+import { toggleMark } from './markOps/toggleMark'
+import { unsetMark } from './markOps/unsetMark'
+import { setMark } from './markOps/setMark'
+import { setTextSelection } from './fundamentals/setTextSelection'
+import { selectAll } from './fundamentals/selectAll'
+import {
+  createParagraphNear,
+  deleteSelection,
+  exitCode,
+  joinBackward,
+  joinForward,
+  liftEmptyBlock,
+  newlineInCode,
+  selectNodeBackward,
+  selectNodeForward,
+} from './fundamentals/adaptProseMirrorCmds'
 
 export const builtinsCommands = {
+  focus,
+  scrollIntoView,
+  first,
+  command,
+  undoInputRule,
+  clearNodes,
   splitBlock,
+  setTextSelection,
+  selectAll,
+  deleteSelection,
+  selectNodeBackward,
+  selectNodeForward,
+  joinBackward,
+  joinForward,
+  liftEmptyBlock,
+  createParagraphNear,
+  newlineInCode,
+  exitCode,
+
   toggleMark,
   setMark,
   unsetMark,
-  focus,
-  scrollIntoView,
 }

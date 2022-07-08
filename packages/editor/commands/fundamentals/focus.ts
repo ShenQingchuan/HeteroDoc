@@ -1,6 +1,6 @@
-import { resolveFocusPosition } from '../core/helpers/resolveFocusPosition'
-import type { FocusPosition, OptionalArgsCommand } from '../types'
-import { isTextSelection, isiOS } from '../utils/isSomewhat'
+import { resolveFocusPosition } from '../../core/helpers/resolveFocusPosition'
+import type { FocusPosition, OptionalArgsCommand } from '../../types'
+import { isTextSelection, isiOS } from '../../utils/isSomewhat'
 
 export interface FocusArgs {
   position?: FocusPosition

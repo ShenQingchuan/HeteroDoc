@@ -1,7 +1,7 @@
 import type { MarkType } from 'prosemirror-model'
-import { getMarkAttrs } from '../core/helpers/getMarkAttrs'
-import { getMarkType } from '../core/helpers/getMarkType'
-import type { Command } from '../types'
+import { getMarkAttrs } from '../../core/helpers/getMarkAttrs'
+import { getMarkType } from '../../core/helpers/getMarkType'
+import type { Command } from '../../types'
 
 declare global {
   interface Commands {

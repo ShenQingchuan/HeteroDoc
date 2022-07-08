@@ -2,9 +2,8 @@ import type { ContentMatch } from 'prosemirror-model'
 import type { EditorState } from 'prosemirror-state'
 import { NodeSelection, TextSelection } from 'prosemirror-state'
 import { canSplit } from 'prosemirror-transform'
-import { getSplittedAttributes } from '../core/helpers/getSplittedAttributes'
-
-import type { Command, ExtensionAttribute } from '../types'
+import { getSplittedAttributes } from '../../core/helpers/getSplittedAttributes'
+import type { ExtensionAttribute, OptionalArgsCommand } from '../../types'
 
 function defaultBlockAt(match: ContentMatch) {
   for (let i = 0; i < match.edgeCount; i += 1) {
@@ -28,12 +27,13 @@ function ensureMarks(state: EditorState, splittableMarks?: string[]) {
 
 declare global {
   interface Commands {
-    splitBlock: Command<{
+    splitBlock: OptionalArgsCommand<{
       keepMarks?: boolean
     }>
   }
 }
-export const splitBlock: Commands['splitBlock'] = ({ keepMarks = true }) => ({ tr, dispatch, state, core }) => {
+export const splitBlock: Commands['splitBlock'] = args => ({ tr, dispatch, state, core }) => {
+  const keepMarks = args?.keepMarks ?? true
   const { selection, doc } = tr
   const { $from, $to } = selection
   const extensionAttributes = core.extensions.reduce<ExtensionAttribute[]>(
