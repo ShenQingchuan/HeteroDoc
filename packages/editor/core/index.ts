@@ -79,12 +79,8 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     }
   }
 
-  private initEditorView = () => {
-    const { schema, dispatchTransaction } = this
-    const { isReadOnly, doc, container } = this.options
-
+  private resolveAllPlugins = () => {
     // Resolve editor extensions' specs
-    const proseMirrorPlugins = this.extensions.reduce((prev, curr) => [...prev, ...(curr.getProseMirrorPlugin?.() ?? [])], [] as ProseMirrorPlugin[])
     const allInputRules = this.extensions.reduce((prev, curr) => [...prev, ...(curr.inputRules?.() ?? [])], [] as PatternRule[])
     const allPasteRules = this.extensions.reduce((prev, curr) => [...prev, ...(curr.pasteRules?.() ?? [])], [] as PatternRule[])
     const allKeymapPlugins = this.extensions.reduce((prev, curr) => {
@@ -102,6 +98,19 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
         keyMapPlugin,
       ]
     }, [] as ProseMirrorPlugin[])
+    const proseMirrorPlugins = this.extensions.reduce((prev, curr) => [...prev, ...(curr.getProseMirrorPlugin?.() ?? [])], [] as ProseMirrorPlugin[])
+
+    return [
+      inputRules({ core: this, rules: allInputRules }),
+      ...pasteRules({ core: this, rules: allPasteRules }),
+      ...allKeymapPlugins,
+      ...proseMirrorPlugins,
+    ]
+  }
+
+  private initEditorView = () => {
+    const { schema, dispatchTransaction } = this
+    const { isReadOnly, doc, container } = this.options
 
     let editorMountContainer: HTMLElement
     if (typeof container === 'string') {
@@ -119,12 +128,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
 
     const editorStateConfig: EditorStateConfig = {
       schema,
-      plugins: [
-        inputRules({ core: this, rules: allInputRules }),
-        ...pasteRules({ core: this, rules: allPasteRules }),
-        ...allKeymapPlugins,
-        ...proseMirrorPlugins,
-      ],
+      plugins: this.resolveAllPlugins(),
     }
     if (isReadOnly) {
       // readonly mode must be given document data
