@@ -16,7 +16,7 @@ onMounted(() => {
       isReadOnly: false,
       autofocus: true,
     }, {
-      fromKeys: ['bold', 'italic'],
+      fromKeys: ['bold', 'italic', 'code', 'underline'],
     })
   }
 })
@@ -47,6 +47,16 @@ onMounted(() => {
           <n-icon><div i-ic:round-format-italic mr1 /></n-icon>
         </template>
       </n-button>
+      <n-button quaternary p-x-1 @click="editor?.cmdManager.chain.focus().toggleCode().run()">
+        <template #icon>
+          <n-icon><div i-ic:round-code mr1 /></n-icon>
+        </template>
+      </n-button>
+      <n-button quaternary p-x-1 @click="editor?.cmdManager.chain.focus().toggleUnderline().run()">
+        <template #icon>
+          <n-icon><div i-ic:round-format-underlined mr1 /></n-icon>
+        </template>
+      </n-button>
     </div>
     <div
       class="page-misc__editor-test-container"
@@ -66,10 +76,14 @@ onMounted(() => {
 :root {
   --heterodoc-editor-color: rgba(0,0,0,0.85);
   --heterodoc-caret-color: rgba(0,0,0,0.85);
+  --heterodoc-inline-code-color: #4a84d3;
+  --heterodoc-inline-code-bg-color: rgba(138, 152, 158, 0.2);
 }
 :root.dark {
   --heterodoc-editor-color: rgba(255,255,255,0.85);
   --heterodoc-caret-color: rgba(255,255,255,0.85);
+  --heterodoc-inline-code-color: #b4d4ff;
+  --heterodoc-inline-code-bg-color: rgba(245, 245, 245, 0.2);
 }
 
 .ProseMirror {
@@ -81,5 +95,14 @@ onMounted(() => {
 
   color: var(--heterodoc-editor-color);
   caret-color: var(--heterodoc-caret-color);
+
+  code {
+    margin: 0 2px;
+    padding: 2px 0.4em;
+    font-size: 95%;
+    border-radius: 6px;
+    color: var(--heterodoc-inline-code-color);
+    background-color: var(--heterodoc-inline-code-bg-color);
+  }
 }
 </style>

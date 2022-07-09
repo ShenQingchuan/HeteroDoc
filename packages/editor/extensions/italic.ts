@@ -72,4 +72,10 @@ export class ItalicExtension implements IEditorExtension {
       },
     }
   }
+
+  keymaps = () => {
+    return {
+      'Mod-i': () => this.core.commands.toggleItalic(),
+    }
+  }
 }

@@ -1,3 +1,4 @@
+import type { DOMOutputSpec } from 'prosemirror-model'
 import { markInputRule, markPasteRule } from '../core/rule'
 import type { PatternRule } from '../core/rule'
 import type { EditorCore } from '../core'
@@ -10,6 +11,7 @@ const doubleStarInputRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))$/
 const doubleStarPasteRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))/g
 const doubleUnderscoreInputRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))$/
 const doubleUnderscorePasteRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))/g
+const boldDOM: DOMOutputSpec = ['strong', 0]
 
 declare global {
   interface Commands {
@@ -38,7 +40,7 @@ export class BoldExtension implements IEditorMark {
             { tag: 'b', getAttrs: node => (node as HTMLElement).style.fontWeight !== 'normal' && null },
             { style: 'font-weight', getAttrs: value => boldStyleRegExp.test(value as string) && null },
           ],
-          toDOM: () => ['strong', 0],
+          toDOM: () => boldDOM,
         },
       },
     }
@@ -71,6 +73,12 @@ export class BoldExtension implements IEditorMark {
       toggleBold: () => ({ commands }) => {
         return commands.toggleMark({ typeOrName: this.name })
       },
+    }
+  }
+
+  keymaps = () => {
+    return {
+      'Mod-b': () => this.core.commands.toggleBold(),
     }
   }
 }
