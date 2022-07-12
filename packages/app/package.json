@@ -5,7 +5,8 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "cy": "cypress open"
+    "cypress": "cypress open",
+    "cypress:component": "cypress run --component --record false"
   },
   "dependencies": {
     "@hetero/editor": "workspace:*",

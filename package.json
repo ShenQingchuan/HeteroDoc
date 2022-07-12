@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "tsx ./scripts/dev.ts",
     "dev:app": "pnpm --filter @hetero/doc-web-app dev",
-    "cypress:app": "pnpm --filter @hetero/doc-web-app cy",
+    "cypress": "pnpm --filter @hetero/doc-web-app cypress",
+    "cypress:component": "pnpm --filter @hetero/editor build && pnpm --filter @hetero/doc-web-app cypress:component",
     "build:app": "pnpm --filter @hetero/doc-web-app build",
     "preview:app": "pnpm --filter @hetero/doc-web-app preview",
     "dev:editor": "pnpm --filter @hetero/editor dev",
