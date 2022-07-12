@@ -80,6 +80,7 @@ onMounted(() => {
   --heterodoc-caret-color: rgba(0,0,0,0.85);
   --heterodoc-inline-code-color: #4a84d3;
   --heterodoc-inline-code-bg-color: rgba(138, 152, 158, 0.2);
+  --heterodoc-inline-code-font: 'Fira Code', Menlo, Monaco, Consolas, 'DejaVu Sans Mono', 'Courier New', Courier, monospace;
 }
 :root.dark {
   --heterodoc-editor-color: rgba(255,255,255,0.85);
@@ -101,8 +102,9 @@ onMounted(() => {
   code {
     margin: 0 2px;
     padding: 2px 0.4em;
-    font-size: 95%;
     border-radius: 6px;
+    font-size: 95%;
+    font-family: var(--heterodoc-inline-code-font);
     color: var(--heterodoc-inline-code-color);
     background-color: var(--heterodoc-inline-code-bg-color);
   }

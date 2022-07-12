@@ -25,7 +25,7 @@ const testToggleToolbarResult = (
   callback: TestToggleToolbarMarkCallback,
 ) => {
   const actionResult = mountEditor()
-    .type('Editor test, mark bold')
+    .type(`Editor test, mark ${item}`)
     .type('{selectAll}')
     .get(`.editor-toolbar-item.${item}`)
     .click()
