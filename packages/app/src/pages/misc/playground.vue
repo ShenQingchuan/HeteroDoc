@@ -2,7 +2,6 @@
 import type { EditorCore } from '@hetero/editor'
 import { useHeteroEditor } from '../../composables/useHeteroEditor'
 
-const { t } = useI18n()
 const envStore = useEnvStore()
 const themeModeText = useThemeModeText()
 const editorRef = templateRef<HTMLElement | null>('editor')
@@ -37,22 +36,22 @@ onMounted(() => {
         <div v-else i-carbon-light text-6 mr2 font-light />
         <span>{{ themeModeText }}</span>
       </n-button>
-      <n-button quaternary p-x-1 @click="editor?.cmdManager.chain.focus().toggleBold().run()">
+      <n-button class="editor-toolbar-item bold" quaternary p-x-1 @click="editor?.cmdManager.chain.focus().toggleBold().run()">
         <template #icon>
           <n-icon><div i-ic:round-format-bold mr1 /></n-icon>
         </template>
       </n-button>
-      <n-button quaternary p-x-1 @click="editor?.cmdManager.chain.focus().toggleItalic().run()">
+      <n-button class="editor-toolbar-item italic" quaternary p-x-1 @click="editor?.cmdManager.chain.focus().toggleItalic().run()">
         <template #icon>
           <n-icon><div i-ic:round-format-italic mr1 /></n-icon>
         </template>
       </n-button>
-      <n-button quaternary p-x-1 @click="editor?.cmdManager.chain.focus().toggleCode().run()">
+      <n-button class="editor-toolbar-item code" quaternary p-x-1 @click="editor?.cmdManager.chain.focus().toggleCode().run()">
         <template #icon>
           <n-icon><div i-ic:round-code mr1 /></n-icon>
         </template>
       </n-button>
-      <n-button quaternary p-x-1 @click="editor?.cmdManager.chain.focus().toggleUnderline().run()">
+      <n-button class="editor-toolbar-item underline" quaternary p-x-1 @click="editor?.cmdManager.chain.focus().toggleUnderline().run()">
         <template #icon>
           <n-icon><div i-ic:round-format-underlined mr1 /></n-icon>
         </template>

@@ -13,6 +13,7 @@ const fromAppPath = (p: string) => path.resolve(__dirname, p)
 export default defineConfig({
   clearScreen: false,
   server: {
+    port: 5000,
     proxy: {
       '/api': {
         target: 'http://localhost:9000',

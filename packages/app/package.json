@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cy": "cypress open"
   },
   "dependencies": {
     "@hetero/editor": "workspace:*",
@@ -17,8 +18,12 @@
     "vue-router": "4"
   },
   "devDependencies": {
+    "@cypress/vite-dev-server": "^3.0.0",
+    "@cypress/vue": "^4.0.0",
     "@iconify/json": "^2.1.50",
+    "@pinia/testing": "^0.0.12",
     "@vitejs/plugin-vue": "^2.3.3",
+    "cypress": "^10.3.0",
     "less": "^4.1.2",
     "typescript": "^4.7.4",
     "unocss": "^0.34.1",
