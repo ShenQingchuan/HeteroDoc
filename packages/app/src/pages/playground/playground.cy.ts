@@ -45,7 +45,7 @@ describe('Editor playground test', () => {
   it('can make text underline by toolbar', () => {
     testToggleToolbarResult('underline', markSelectorExists('u'))
   })
-  it('can make text underline by toolbar', () => {
+  it('can make inline code by toolbar', () => {
     testToggleToolbarResult('code', markSelectorExists('code'))
   })
 })

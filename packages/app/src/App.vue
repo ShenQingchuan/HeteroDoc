@@ -1,16 +1,8 @@
 <script setup lang="ts">
-import { darkTheme, lightTheme } from 'naive-ui'
 import { naiveUILocale } from './constants/locales'
 
 const { locale } = useI18n()
-const envStore = useEnvStore()
-const naiveUITheme = ref(envStore.isDark ? darkTheme : lightTheme)
-
-envStore.$subscribe((_, state) => {
-  naiveUITheme.value = state.isDark
-    ? darkTheme
-    : lightTheme
-})
+const naiveUITheme = useNaiveThemeSetup()
 </script>
 
 <template>
