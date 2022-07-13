@@ -17,18 +17,18 @@ const themeModeText = useThemeModeText()
     </div>
 
     <div class="hd-common-header__menu" flex-items-center ml-auto>
-      <n-button type="primary" quaternary mx-2>
-        <div i-carbon-login text-6 mr2 font-light />
-        <span font-bold>
+      <n-button type="default" quaternary mx-2>
+        <i i-carbon-login text-6 mr2 font-light txt-color-base />
+        <span txt-color-base font-bold>
           {{ t('common-header.menu.action-login') }}
           <span mx1 font-light>│</span>
           {{ t('common-header.menu.action-sign-up') }}
         </span>
       </n-button>
-      <n-button type="primary" quaternary mx-2 @click="envStore.toggleDark()">
-        <div v-if="envStore.isDark" i-carbon-moon text-6 mr2 font-light />
-        <div v-else i-carbon-light text-6 mr2 font-light />
-        <span font-bold>{{ themeModeText }}</span>
+      <n-button type="default" quaternary mx-2 @click="envStore.toggleDark()">
+        <i v-if="envStore.isDark" i-carbon-moon text-6 mr2 font-light txt-color-base />
+        <i v-else i-carbon-light text-6 mr2 font-light txt-color-base />
+        <span txt-color-base font-bold>{{ themeModeText }}</span>
       </n-button>
     </div>
   </div>

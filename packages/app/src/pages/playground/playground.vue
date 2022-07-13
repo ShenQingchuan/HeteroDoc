@@ -6,7 +6,7 @@ const naiveUITheme = useNaiveThemeSetup()
 const envStore = useEnvStore()
 const themeModeText = useThemeModeText()
 const editorRef = templateRef<HTMLElement | null>('editor')
-const editorCore = ref<EditorCore>()
+const editorCore = shallowRef<EditorCore>()
 
 onMounted(() => {
   const editorMountPoint = editorRef.value
@@ -16,7 +16,7 @@ onMounted(() => {
       isReadOnly: false,
       autofocus: true,
     }, {
-      fromKeys: ['bold', 'italic', 'code', 'underline'],
+      fromKeys: ['bold', 'italic', 'code', 'underline', 'deleteLine'],
     })
   }
 })
@@ -56,6 +56,11 @@ onMounted(() => {
         <n-button class="editor-toolbar-item underline" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleUnderline().run()">
           <template #icon>
             <n-icon><div i-ic:round-format-underlined mr1 /></n-icon>
+          </template>
+        </n-button>
+        <n-button class="editor-toolbar-item deleteLine" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleDeleteLine().run()">
+          <template #icon>
+            <n-icon><div i-ic:round-format-strikethrough mr1 /></n-icon>
           </template>
         </n-button>
       </div>

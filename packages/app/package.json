@@ -6,7 +6,8 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "cypress": "cypress open",
-    "cypress:component": "cypress run --component --record false"
+    "cypress:component": "cypress run --component",
+    "cypress:component-video": "cross-env CYPRESS_VIDEO_RECORD=true cypress run --component"
   },
   "dependencies": {
     "@hetero/editor": "workspace:*",

@@ -6,7 +6,7 @@ import type { AddMarksSchema, NoArgsCommand } from '../types'
 import { ExtensionType } from './editorExtension'
 import type { IEditorExtension } from './editorExtension'
 
-const inlineCodeInputRegex = /(?:^|\s)((?:`·)((?:[^`]+))(?:`))$/
+const inlineCodeInputRegex = /(?:^|\s)((?:`)((?:[^`]+))(?:`))$/
 const inlineCodePasteRegex = /(?:^|\s)((?:`)((?:[^`]+))(?:`))/g
 const codeDOM: DOMOutputSpec = ['code', 0]
 

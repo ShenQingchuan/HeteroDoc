@@ -19,33 +19,73 @@ const mountEditor = () => {
     .type('{selectAll}')
     .type('{del}')
 }
-type TestToggleToolbarMarkCallback = (ar: Cypress.Chainable<JQuery<HTMLElement>>) => void
+type CypressChainablePipeline = (ar: Cypress.Chainable<JQuery<HTMLElement>>) => Cypress.Chainable
 const testToggleToolbarResult = (
-  item: string,
-  callback: TestToggleToolbarMarkCallback,
+  toolbarKeyClassName: string,
+  callback: CypressChainablePipeline,
 ) => {
   const actionResult = mountEditor()
-    .type(`Editor test, mark ${item}`)
+    .type(`Editor test, mark ${toolbarKeyClassName}`)
     .type('{selectAll}')
-    .get(`.editor-toolbar-item.${item}`)
+    .get(`.editor-toolbar-item.${toolbarKeyClassName}`)
     .click()
-  callback(actionResult)
+  return callback(actionResult)
 }
-const markSelectorExists = (selectorName: string): TestToggleToolbarMarkCallback => {
-  return ar => ar.get(`.ProseMirror > p > ${selectorName}`).should('exist')
+const getMarkSelector = (markTagName: string) => `.ProseMirror > p > ${markTagName}`
+const markSelectorExists = (markSelector: string): CypressChainablePipeline => {
+  return ar => ar.get(markSelector).should('exist')
 }
 
 describe('Editor playground test', () => {
-  it('can make text bold by toolbar', () => {
-    testToggleToolbarResult('bold', markSelectorExists('strong'))
+  it('can make text bold', () => {
+    const markSelector = getMarkSelector('strong')
+    testToggleToolbarResult('bold', markSelectorExists(markSelector))
+    // Test keyboard shortcut
+      .type('{selectAll}')
+      .type('{meta}b')
+      .get(markSelector).should('not.exist')
+    // Test input rule
+      .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
+      .type('**These text should be bold**')
+      .get(markSelector).should('exist')
   })
-  it('can make text italic by toolbar', () => {
-    testToggleToolbarResult('italic', markSelectorExists('em'))
+  it('can make text italic', () => {
+    const markSelector = getMarkSelector('em')
+    testToggleToolbarResult('italic', markSelectorExists(markSelector))
+    // Test keyboard shortcut
+      .type('{selectAll}')
+      .type('{meta}i')
+      .get(markSelector).should('not.exist')
+    // Test input rule
+      .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
+      .type('*These text should be italic*')
+      .get(markSelector).should('exist')
+      .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
+      .type('_These text should be italic_')
+      .get(markSelector).should('exist')
   })
-  it('can make text underline by toolbar', () => {
-    testToggleToolbarResult('underline', markSelectorExists('u'))
+  it('can make text underline', () => {
+    const markSelector = getMarkSelector('u')
+    testToggleToolbarResult('underline', markSelectorExists(markSelector))
+    // Test keyboard shortcut
+      .type('{selectAll}')
+      .type('{meta}u')
+      .get(markSelector).should('not.exist')
   })
-  it('can make inline code by toolbar', () => {
-    testToggleToolbarResult('code', markSelectorExists('code'))
+  it('can make inline code', () => {
+    const markSelector = getMarkSelector('code')
+    testToggleToolbarResult('code', markSelectorExists(markSelector))
+    // Test input rule
+      .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
+      .type('`These text should be inline code` outside')
+      .get(markSelector).should('exist')
+  })
+  it('can make text decoration strike-through', () => {
+    const markSelector = getMarkSelector('del')
+    testToggleToolbarResult('deleteLine', markSelectorExists(markSelector))
+    // Test input rule
+      .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
+      .type('~These text should be strike through~')
+      .get(markSelector).should('exist')
   })
 })
