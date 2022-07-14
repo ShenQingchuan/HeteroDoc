@@ -47,7 +47,7 @@ export class BoldExtension implements IEditorMark {
   }
 
   inputRules: () => PatternRule[] = () => {
-    const type = this.core.schema.marks.bold
+    const type = this.core.schema.marks.bold!
     return [
       markInputRule({ find: doubleStarInputRegex, type }),
       markInputRule({ find: doubleUnderscoreInputRegex, type }),
@@ -55,7 +55,7 @@ export class BoldExtension implements IEditorMark {
   }
 
   pasteRules: () => PatternRule[] = () => {
-    const type = this.core.schema.marks.bold
+    const type = this.core.schema.marks.bold!
     return [
       markPasteRule({ find: doubleStarPasteRegex, type }),
       markPasteRule({ find: doubleUnderscorePasteRegex, type }),

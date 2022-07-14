@@ -60,14 +60,14 @@ export class DeleteLineExtension implements IEditorExtension {
   }
 
   inputRules: () => PatternRule[] = () => {
-    const type = this.core.schema.marks.deleteLine
+    const type = this.core.schema.marks.deleteLine!
     return [
       markInputRule({ find: deleteLineInputRegex, type }),
     ]
   }
 
   pasteRules: () => PatternRule[] = () => {
-    const type = this.core.schema.marks.code
+    const type = this.core.schema.marks.deleteLine!
     return [
       markPasteRule({ find: deleteLinePasteRegex, type }),
     ]

@@ -42,14 +42,14 @@ export class CodeExtension implements IEditorExtension {
   }
 
   inputRules: () => PatternRule[] = () => {
-    const type = this.core.schema.marks.code
+    const type = this.core.schema.marks.code!
     return [
       markInputRule({ find: inlineCodeInputRegex, type }),
     ]
   }
 
   pasteRules: () => PatternRule[] = () => {
-    const type = this.core.schema.marks.code
+    const type = this.core.schema.marks.code!
     return [
       markPasteRule({ find: inlineCodePasteRegex, type }),
     ]

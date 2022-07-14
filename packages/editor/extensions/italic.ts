@@ -44,7 +44,7 @@ export class ItalicExtension implements IEditorExtension {
   }
 
   inputRules: () => PatternRule[] = () => {
-    const type = this.core.schema.marks.italic
+    const type = this.core.schema.marks.italic!
     return [
       markInputRule({ find: singleStarInputRegex, type }),
       markInputRule({ find: singleUnderscoreInputRegex, type }),
@@ -52,7 +52,7 @@ export class ItalicExtension implements IEditorExtension {
   }
 
   pasteRules: () => PatternRule[] = () => {
-    const type = this.core.schema.marks.italic
+    const type = this.core.schema.marks.italic!
     return [
       markPasteRule({ find: singleStarPasteRegex, type }),
       markPasteRule({ find: singleUnderscorePasteRegex, type }),

@@ -33,7 +33,7 @@ const createMarkRuleHandler = (config: MarkRuleConfig) => ({ state, range, match
   const fullMatch = match[0]
   let markEnd = range.to
 
-  if (captureGroup) {
+  if (fullMatch && captureGroup) {
     const startSpaces = fullMatch.search(/\S/)
     const textStart = range.from + fullMatch.indexOf(captureGroup)
     const textEnd = textStart + captureGroup.length
@@ -119,8 +119,9 @@ function runInputRule(config: {
       state: view.state,
       transaction: tr,
     })
+    const matchFirstItem = match[0]
     const range = {
-      from: from - (match[0].length - text.length),
+      from: from - (matchFirstItem ? (matchFirstItem.length - text.length) : 0),
       to,
     }
     const handler = rule.handler({
@@ -280,7 +281,7 @@ function runPasteRule(config: {
         return
 
       const start = resolvedFrom + match.index + 1
-      const end = start + match[0].length
+      const end = start + (match[0]?.length ?? 0)
       const range = {
         from: state.tr.mapping.map(start),
         to: state.tr.mapping.map(end),
@@ -357,8 +358,8 @@ export function pasteRules(props: { core: EditorCore; rules: PatternRule[] }): P
 
       appendTransaction: (transactions, oldState, state) => {
         const transaction = transactions[0]
-        const isPaste = transaction.getMeta('uiEvent') === 'paste' && !isPastedFromProseMirror
-        const isDrop = transaction.getMeta('uiEvent') === 'drop' && !isDroppedFromProseMirror
+        const isPaste = transaction?.getMeta('uiEvent') === 'paste' && !isPastedFromProseMirror
+        const isDrop = transaction?.getMeta('uiEvent') === 'drop' && !isDroppedFromProseMirror
 
         if (!isPaste && !isDrop)
           return
