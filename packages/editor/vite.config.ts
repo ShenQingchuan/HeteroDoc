@@ -11,5 +11,21 @@ export default defineConfig({
       formats: ['es'],
       fileName: () => 'index.js',
     },
+    rollupOptions: {
+      external: [
+        'lodash',
+        'prosemirror-commands',
+        'prosemirror-history',
+        'prosemirror-keymap',
+        'prosemirror-model',
+        'prosemirror-state',
+        'prosemirror-transform',
+        'prosemirror-view',
+        'y-prosemirror',
+        'y-protocols',
+        'y-websocket',
+        'yjs',
+      ],
+    },
   },
 })

@@ -9,6 +9,9 @@ import App from './App.vue'
 import './styles/prosemirror.css'
 import 'uno.css'
 
+// Override global styles
+import './styles/global.css'
+
 const app = createApp(App)
 
 app.use(mainRouter)

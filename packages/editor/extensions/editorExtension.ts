@@ -2,7 +2,7 @@ import type { SchemaSpec } from 'prosemirror-model'
 import type { Plugin as ProseMirrorPlugin } from 'prosemirror-state'
 import type { EditorCore } from '../core/index'
 import type { PatternRule } from '../core/rule'
-import type { Attribute, Command, KeyboardShortcutCommand } from '../types'
+import type { Attribute, KeyboardShortcutCommand } from '../types'
 
 export enum ExtensionType { func, node, mark }
 
@@ -16,7 +16,7 @@ export interface IEditorExtension<OptionsDefs = {}> {
   inputRules?: () => PatternRule[]
   pasteRules?: () => PatternRule[]
   attributes?: () => Record<string, Attribute>
-  commands?: () => Record<string, Command>
+  commands?: () => Record<string, any>
   keymaps?: () => Record<string, KeyboardShortcutCommand>
   getProseMirrorPlugin?: () => ProseMirrorPlugin[]
 }

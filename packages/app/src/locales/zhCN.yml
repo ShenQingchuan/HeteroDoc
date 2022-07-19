@@ -9,3 +9,9 @@ editor:
   menu:
     command-bold: 粗体
     command-italic: 斜体
+  popover:
+    edit-link-confirm: 确定
+    edit-link-url-label: 链接
+    edit-link-url-placeholder: 编辑链接地址 ...
+    edit-link-text-label: 文本
+    edit-link-text-placeholder: 编辑链接显示文本 ...

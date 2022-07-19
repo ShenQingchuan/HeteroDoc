@@ -34,7 +34,7 @@ const testToggleToolbarResult = (
 }
 const getMarkSelector = (markTagName: string) => `.ProseMirror > p > ${markTagName}`
 const markSelectorExists = (markSelector: string): CypressChainablePipeline => {
-  return ar => ar.get(markSelector).should('exist')
+  return chain => chain.get(markSelector).should('exist')
 }
 
 describe('Editor playground test', () => {
@@ -88,5 +88,18 @@ describe('Editor playground test', () => {
       .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
       .type('~These text should be strike through~')
       .get(markSelector).should('exist')
+  })
+  it('can create hyperlink', () => {
+    const testURL = 'https://heterocube.top'
+    const markSelector = getMarkSelector(`a.hyperlink[href="${testURL}"]`)
+    testToggleToolbarResult('hyperlink', (chain) => {
+      return chain.wait(100)
+        .get('.hetero-editor__link-edit.edit-link input')
+        .focus()
+        .type(testURL)
+        .get('.hetero-editor__link-edit.confirm')
+        .click()
+        .get(markSelector).should('exist')
+    })
   })
 })

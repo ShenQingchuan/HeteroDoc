@@ -5,22 +5,22 @@ defineProps<{
   editorCore?: EditorCore
 }>()
 
+const editorStore = useEditorStore()
 const { selection, rects } = useTextSelection()
-const isSomethingSelected = ref(false)
-const selectionNodeLeft = ref(0)
-const selectionNodeTop = ref(0)
 watch(
   reactive({ selection, rects }),
-  ({ selection: nowSelection, rects: nowRects }) => {
-    const nothingSelected = nowSelection?.isCollapsed
+  ({ selection, rects }) => {
+    const nothingSelected = selection?.isCollapsed
     if (nothingSelected) {
-      isSomethingSelected.value = false
+      editorStore.setShowEditorMenu(false)
     }
     else {
-      selectionNodeLeft.value = nowRects[0]!.left
-      selectionNodeTop.value = nowRects[0]!.top
+      editorStore.setSelectionPosition(
+        rects[0]!.left,
+        rects[0]!.top,
+      )
       nextTick(() => {
-        isSomethingSelected.value = true
+        editorStore.setShowEditorMenu(true)
       })
     }
   },
@@ -29,11 +29,16 @@ watch(
 
 <template>
   <teleport to="body">
-    <transition name="editor-float-menu-slide-fade">
+    <transition name="float-slide-fade">
       <div
-        v-show="isSomethingSelected"
+        v-show="editorStore.isShowEditorMenu"
         class="hetero-editor__float-menu"
-        :style="{ position: 'absolute', left: `${selectionNodeLeft}px`, top: `${selectionNodeTop + 30}px`, zIndex: 99 }"
+        :style="{
+          position: 'absolute',
+          left: `${editorStore.selectionNodeLeft}px`,
+          top: `${editorStore.popoverTop}px`,
+          zIndex: 99,
+        }"
         flex-items-center justify-center p-y-1 p-x-2 border-base bg-base border-round
       >
         <n-button class="hetero-editor__float-menu-item bold" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleBold().run()">
@@ -61,21 +66,13 @@ watch(
             <n-icon><div i-ic:round-format-strikethrough mr1 /></n-icon>
           </template>
         </n-button>
+        <n-divider vertical />
+        <n-button class="hetero-editor__float-menu-item hyperlink" quaternary p-x-1 @click="editorStore.setShowLinkEdit(true)">
+          <template #icon>
+            <n-icon><div i-ic:round-link mr1 /></n-icon>
+          </template>
+        </n-button>
       </div>
     </transition>
   </teleport>
 </template>
-
-<style scoped>
-.editor-float-menu-slide-fade-enter-active {
-  transition: all 0.3s ease-out;
-}
-.editor-float-menu-slide-fade-leave-active {
-  transition: all 0.3s ease-out;
-}
-.editor-float-menu-slide-fade-enter-from,
-.editor-float-menu-slide-fade-leave-to {
-  transform: translateY(4px);
-  opacity: 0;
-}
-</style>

@@ -5,11 +5,15 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    HdEditorContext: typeof import('./../components/editor/hdEditorContext.vue')['default']
+    HdEditorLinkEdit: typeof import('./../components/editor/hdEditorLinkEdit.vue')['default']
     HdFloatMenu: typeof import('./../components/editor/hdFloatMenu.vue')['default']
     HdPageHeader: typeof import('./../components/layouts/hdPageHeader.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
+    NDivider: typeof import('naive-ui')['NDivider']
     NIcon: typeof import('naive-ui')['NIcon']
+    NInput: typeof import('naive-ui')['NInput']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

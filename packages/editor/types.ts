@@ -82,3 +82,9 @@ export interface MarkRange {
 }
 
 export type FocusPosition = 'start' | 'end' | 'all' | number | boolean | null
+
+// extensions' specs
+export interface HyperlinkAttrs {
+  url: string
+  text: string
+}

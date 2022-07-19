@@ -1,7 +1,17 @@
 import type { EditorCore } from '../core'
-import type { AddMarksSchema } from '../types'
+import type { AddMarksSchema, Command, HyperlinkAttrs } from '../types'
 import { ExtensionType } from './editorExtension'
 import type { IEditorExtension } from './editorExtension'
+
+interface HyperlinkCommandsDefs {
+  toggleHyperlink: Command<HyperlinkAttrs>
+}
+
+declare global {
+  interface Commands {
+    toggleHyperlink: HyperlinkCommandsDefs['toggleHyperlink']
+  }
+}
 
 export class HyperlinkExtension implements IEditorExtension {
   type = ExtensionType.node
@@ -39,6 +49,20 @@ export class HyperlinkExtension implements IEditorExtension {
             return ['a', { href: url, class: 'hyperlink' }, displayText]
           },
         },
+      },
+    }
+  }
+
+  commands: () => HyperlinkCommandsDefs = () => {
+    return {
+      toggleHyperlink: ({ url, text }) => ({ commands }) => {
+        return commands.toggleMark({
+          typeOrName: this.name,
+          attrs: { url, text },
+          options: {
+            extendEmptyMarkRange: true,
+          },
+        })
       },
     }
   }

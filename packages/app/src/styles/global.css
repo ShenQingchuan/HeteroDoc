@@ -1,0 +1,11 @@
+.float-slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+.float-slide-fade-leave-active {
+  transition: all 0.3s ease-out;
+}
+.float-slide-fade-enter-from,
+.float-slide-fade-leave-to {
+  transform: translateY(4px);
+  opacity: 0;
+}

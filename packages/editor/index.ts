@@ -9,3 +9,6 @@ export type {
 export type {
   IEditorExtension,
 } from './extensions'
+export type {
+  HyperlinkAttrs,
+} from './types'

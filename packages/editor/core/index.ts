@@ -1,4 +1,5 @@
 import { EditorState } from 'prosemirror-state'
+import type { MarkType } from 'prosemirror-model'
 import { Node, Schema } from 'prosemirror-model'
 import { EditorView } from 'prosemirror-view'
 import type {
@@ -19,6 +20,7 @@ import { mergeSchemaSpecs } from './schema'
 import type { PatternRule } from './rule'
 import { inputRules, pasteRules } from './rule'
 import { CommandManager } from './commandManager'
+import { getMarkAttrs } from './helpers/getMarkAttrs'
 
 export interface EditorOptions {
   container: string | HTMLElement // editor mount point
@@ -171,5 +173,9 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
 
   public get commands() {
     return this.cmdManager.getSingleCommands()
+  }
+
+  public getMarkAttrsFromSelection<T extends Record<string, any>>(typeOrName: string | MarkType) {
+    return getMarkAttrs(this.view.state, typeOrName) as T
   }
 }
