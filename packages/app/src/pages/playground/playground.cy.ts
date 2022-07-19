@@ -27,7 +27,8 @@ const testToggleToolbarResult = (
   const actionResult = mountEditor()
     .type(`Editor test, mark ${toolbarKeyClassName}`)
     .type('{selectAll}')
-    .get(`.editor-toolbar-item.${toolbarKeyClassName}`)
+    .wait(100)
+    .get(`.hetero-editor__float-menu-item.${toolbarKeyClassName}`)
     .click()
   return callback(actionResult)
 }

@@ -5,6 +5,7 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    HdFloatMenu: typeof import('./../components/editor/hdFloatMenu.vue')['default']
     HdPageHeader: typeof import('./../components/layouts/hdPageHeader.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']

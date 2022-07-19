@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { EditorCore } from '@hetero/editor'
-import { useHeteroEditor } from '../../composables/useHeteroEditor'
+import { useHeteroEditor } from '../../composables/useEditor'
+import HdFloatMenu from '../../components/editor/hdFloatMenu.vue'
 
 const naiveUITheme = useNaiveThemeSetup()
 const envStore = useEnvStore()
@@ -38,31 +39,6 @@ onMounted(() => {
           <div v-else i-carbon-light text-6 mr2 font-light />
           <span>{{ themeModeText }}</span>
         </n-button>
-        <n-button class="editor-toolbar-item bold" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleBold().run()">
-          <template #icon>
-            <n-icon><div i-ic:round-format-bold mr1 /></n-icon>
-          </template>
-        </n-button>
-        <n-button class="editor-toolbar-item italic" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleItalic().run()">
-          <template #icon>
-            <n-icon><div i-ic:round-format-italic mr1 /></n-icon>
-          </template>
-        </n-button>
-        <n-button class="editor-toolbar-item code" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleCode().run()">
-          <template #icon>
-            <n-icon><div i-ic:round-code mr1 /></n-icon>
-          </template>
-        </n-button>
-        <n-button class="editor-toolbar-item underline" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleUnderline().run()">
-          <template #icon>
-            <n-icon><div i-ic:round-format-underlined mr1 /></n-icon>
-          </template>
-        </n-button>
-        <n-button class="editor-toolbar-item deleteLine" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleDeleteLine().run()">
-          <template #icon>
-            <n-icon><div i-ic:round-format-strikethrough mr1 /></n-icon>
-          </template>
-        </n-button>
       </div>
       <div
         class="page-misc__editor-test-container"
@@ -76,6 +52,7 @@ onMounted(() => {
         />
       </div>
     </div>
+    <HdFloatMenu :editor-core="editorCore" />
   </n-config-provider>
 </template>
 
