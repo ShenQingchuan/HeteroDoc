@@ -1,0 +1,8 @@
+{
+  "i18n-ally.localesPaths": [
+    "src/locales"
+  ],
+  "volar.takeOverMode.enabled": "auto",
+  "volar.autoCompleteRefs": true,
+  "unocss.root": "packages/app"
+}
