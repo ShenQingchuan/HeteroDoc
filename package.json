@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Collaborative cloud documentation for heterocube teams",
   "scripts": {
+    "prepare": "husky install",
     "dev": "tsx ./scripts/dev.ts",
     "dev:app": "pnpm --filter @hetero/doc-web-app dev",
     "cypress": "pnpm --filter @hetero/doc-web-app cypress",
@@ -15,15 +16,29 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.24.2",
+    "@commitlint/cli": "^17.0.3",
+    "@commitlint/config-conventional": "^17.0.3",
     "@lerna-lite/cli": "^1.5.1",
     "@types/node": "^18.0.0",
     "chalk": "^5.0.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.16.0",
     "execa": "^6.1.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
     "ora": "^6.1.2",
     "tsx": "^3.6.0",
     "typescript": "^4.7.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run cypress:component"
+    }
+  },
+  "lint-staged": {
+    "*.vue": "eslint --fix",
+    "*.ts": "eslint --fix",
+    "*.js": "eslint --fix"
   },
   "keywords": [
     "wiki",
