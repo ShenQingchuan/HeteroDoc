@@ -7,10 +7,10 @@ import type { IEditorMark } from './editorExtension'
 import { ExtensionType } from './editorExtension'
 
 const boldStyleRegExp = /^(bold(er)?|[5-9]\d{2,})$/
-const doubleStarInputRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))$/
-const doubleStarPasteRegex = /(?:^|\s)((?:\*\*)((?:[^*]+))(?:\*\*))/g
-const doubleUnderscoreInputRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))$/
-const doubleUnderscorePasteRegex = /(?:^|\s)((?:__)((?:[^__]+))(?:__))/g
+const doubleStarInputRegex = /(?:^|\s)((?:\*\*)(?<text>(?:[^*]+))(?:\*\*))$/
+const doubleStarPasteRegex = /(?:^|\s)((?:\*\*)(?<text>(?:[^*]+))(?:\*\*))/g
+const doubleUnderscoreInputRegex = /(?:^|\s)((?:__)(?<text>(?:[^_]+))(?:__))$/
+const doubleUnderscorePasteRegex = /(?:^|\s)((?:__)(?<text>(?:[^_]+))(?:__))/g
 const boldDOM: DOMOutputSpec = ['strong', 0]
 
 declare global {

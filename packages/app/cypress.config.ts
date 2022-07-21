@@ -1,4 +1,4 @@
-import cypress, { defineConfig } from 'cypress'
+import { defineConfig } from 'cypress'
 
 export default defineConfig({
   video: process.env.CYPRESS_VIDEO_RECORD === 'true',

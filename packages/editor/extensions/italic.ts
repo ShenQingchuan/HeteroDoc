@@ -5,10 +5,10 @@ import type { AddMarksSchema, NoArgsCommand } from '../types'
 import type { IEditorExtension } from './editorExtension'
 import { ExtensionType } from './editorExtension'
 
-const singleStarInputRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))$/
-const singleStarPasteRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))/g
-const singleUnderscoreInputRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))$/
-const singleUnderscorePasteRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))/g
+const singleStarInputRegex = /(?:^|\s)((?:\*)(?<text>(?:[^*]+))(?:\*))$/
+const singleStarPasteRegex = /(?:^|\s)((?:\*)(?<text>(?:[^*]+))(?:\*))/g
+const singleUnderscoreInputRegex = /(?:^|\s)((?:_)(?<text>(?:[^_]+))(?:_))$/
+const singleUnderscorePasteRegex = /(?:^|\s)((?:_)(?<text>(?:[^_]+))(?:_))/g
 
 declare global {
   interface Commands {

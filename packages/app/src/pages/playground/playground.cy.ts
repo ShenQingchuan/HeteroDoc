@@ -2,6 +2,18 @@ import { createPinia } from 'pinia'
 import { createI18nPlugin } from '../../i18n'
 import Playground from './playground.vue'
 
+// CONSTANTS:
+const testHyperlinkURL = 'https://heterocube.top'
+const isMacOS = (): boolean => {
+  return typeof navigator !== 'undefined'
+    ? /Mac/.test(navigator.platform)
+    : false
+}
+const withModKey = (...keys: string[]) => {
+  const modKey = isMacOS() ? 'meta' : 'ctrl'
+  return [`{${modKey}}`, ...keys].join('')
+}
+
 const mountEditor = () => {
   return cy.viewport(1200, 800)
     .mount(Playground, {
@@ -43,7 +55,7 @@ describe('Editor playground test', () => {
     testToggleToolbarResult('bold', markSelectorExists(markSelector))
     // Test keyboard shortcut
       .type('{selectAll}')
-      .type('{meta}b')
+      .type(withModKey('b'))
       .get(markSelector).should('not.exist')
     // Test input rule
       .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
@@ -55,7 +67,7 @@ describe('Editor playground test', () => {
     testToggleToolbarResult('italic', markSelectorExists(markSelector))
     // Test keyboard shortcut
       .type('{selectAll}')
-      .type('{meta}i')
+      .type(withModKey('i'))
       .get(markSelector).should('not.exist')
     // Test input rule
       .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
@@ -70,7 +82,7 @@ describe('Editor playground test', () => {
     testToggleToolbarResult('underline', markSelectorExists(markSelector))
     // Test keyboard shortcut
       .type('{selectAll}')
-      .type('{meta}u')
+      .type(withModKey('u'))
       .get(markSelector).should('not.exist')
   })
   it('can make inline code', () => {
@@ -90,16 +102,23 @@ describe('Editor playground test', () => {
       .get(markSelector).should('exist')
   })
   it('can create hyperlink', () => {
-    const testURL = 'https://heterocube.top'
-    const markSelector = getMarkSelector(`a.hyperlink[href="${testURL}"]`)
+    const markSelector = getMarkSelector(`a.hyperlink[href="${testHyperlinkURL}"]`)
     testToggleToolbarResult('hyperlink', (chain) => {
       return chain.wait(100)
         .get('.hetero-editor__link-edit.edit-link input')
         .focus()
-        .type(testURL)
+        .type(testHyperlinkURL)
         .get('.hetero-editor__link-edit.confirm')
         .click()
         .get(markSelector).should('exist')
     })
+  })
+  it('can create hyperlink from Markdown format', () => {
+    const markSelector = getMarkSelector(`a.hyperlink[href="${testHyperlinkURL}"]`)
+    const markdownFormat = `[test](${testHyperlinkURL})`
+    mountEditor()
+      .type(markdownFormat).wait(100)
+      .get(markSelector)
+      .should('exist').and('have.text', 'test').and('have.attr', 'href', testHyperlinkURL)
   })
 })

@@ -1,7 +1,17 @@
 import type { EditorCore } from '../core'
 import type { AddMarksSchema, Command, HyperlinkAttrs } from '../types'
+import type { PatternRule } from '../core/rule'
+import { markInputRule, markPasteRule } from '../core/rule'
 import { ExtensionType } from './editorExtension'
 import type { IEditorExtension } from './editorExtension'
+
+const hyperlinkInputRegExp = /(?:^|\s)(?:\[)(?<text>(?:[^\[\]]+))(?:\]\()(?<url>(?:[^\(\)]+))(?:\))$/
+const hyperlinkPasteRegExp = /(?:\[)(?<text>(?:[^\[\]]+))(?:\]\()(?<url>(?:[^\(\)]+))(?:\))/g
+const getHyperlinkAttrsFromMarkdownFormat = (match: RegExpMatchArray) => {
+  const text = match.groups?.text ?? ''
+  const url = match.groups?.url ?? ''
+  return { url, displayText: text }
+}
 
 interface HyperlinkCommandsDefs {
   toggleHyperlink: Command<HyperlinkAttrs>
@@ -65,5 +75,27 @@ export class HyperlinkExtension implements IEditorExtension {
         })
       },
     }
+  }
+
+  inputRules: () => PatternRule[] = () => {
+    const type = this.core.schema.marks.hyperlink!
+    return [
+      markInputRule({
+        find: hyperlinkInputRegExp,
+        type,
+        getAttributes: getHyperlinkAttrsFromMarkdownFormat,
+      }),
+    ]
+  }
+
+  pasteRules: () => PatternRule[] = () => {
+    const type = this.core.schema.marks.hyperlink!
+    return [
+      markPasteRule({
+        find: hyperlinkPasteRegExp,
+        type,
+        getAttributes: getHyperlinkAttrsFromMarkdownFormat,
+      }),
+    ]
   }
 }

@@ -7,8 +7,8 @@ import { ExtensionType } from './editorExtension'
 import type { IEditorExtension } from './editorExtension'
 
 const deleteLineDOM: DOMOutputSpec = ['del', 0]
-const deleteLineInputRegex = /(?:^|\s)((?:~)((?:[^~]+))(?:~))$/
-const deleteLinePasteRegex = /(?:^|\s)((?:~)((?:[^~]+))(?:~))/g
+const deleteLineInputRegex = /(?:^|\s)((?:~)(?<text>(?:[^~]+))(?:~))$/
+const deleteLinePasteRegex = /(?:^|\s)((?:~)(?<text>(?:[^~]+))(?:~))/g
 
 declare global {
   interface Commands {

@@ -29,7 +29,7 @@ const createMarkRuleHandler = (config: MarkRuleConfig) => ({ state, range, match
     return null
 
   const { tr } = state
-  const captureGroup = match[match.length - 1]
+  const captureGroup = match.groups?.text
   const fullMatch = match[0]
   let markEnd = range.to
 
