@@ -65,7 +65,7 @@ const openLink = () => {
           <n-button mr3 class="hetero-editor__link-edit confirm" @click="confirmHyperlinkMark">
             {{ t('editor.popover.edit-link-confirm') }}
           </n-button>
-          <n-button quaternary class="hetero-editor__link-edit open-link" @click="openLink">
+          <n-button v-show="editorStore.linkEditURL" quaternary class="hetero-editor__link-edit open-link" @click="openLink">
             <template #icon>
               <i i-carbon:link text-6 cursor-pointer txt-color-base hover:text-emerald-600 @click="editorStore.setShowLinkEdit(false)" />
             </template>

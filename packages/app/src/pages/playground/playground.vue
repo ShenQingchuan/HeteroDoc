@@ -9,16 +9,17 @@ const editorRef = templateRef<HTMLElement | null>('editor')
 const editorCore = shallowRef<EditorCore>()
 
 onMounted(() => {
-  const editorMountPoint = editorRef.value
-  if (editorMountPoint) {
-    editorCore.value = useHeteroEditor({
-      container: editorMountPoint,
-      isReadOnly: false,
-      autofocus: true,
-    }, {
-      extensions: core => composeExtensions(core),
-    })
-  }
+  const container = editorRef.value!
+  editorCore.value = useHeteroEditor({
+    container,
+    isReadOnly: false,
+    autofocus: true,
+  }, {
+    extensions: core => composeExtensions(core),
+  })
+  container
+    .querySelector('.ProseMirror')
+    ?.setAttribute('spellcheck', 'false')
 })
 </script>
 
