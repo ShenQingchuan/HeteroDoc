@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { EditorCore } from '@hetero/editor'
+import { composeExtensions } from './composeExtensions'
 
 const naiveUITheme = useNaiveThemeSetup()
 const envStore = useEnvStore()
@@ -15,7 +16,7 @@ onMounted(() => {
       isReadOnly: false,
       autofocus: true,
     }, {
-      fromKeys: ['bold', 'italic', 'code', 'underline', 'deleteLine', 'hyperlink'],
+      extensions: core => composeExtensions(core),
     })
   }
 })

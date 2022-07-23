@@ -1,14 +1,20 @@
-export {
-  EditorCore,
-} from './core'
 export type {
   EditorCoreEvent,
   EditorOptions,
 } from './core'
-
 export type {
   IEditorExtension,
-} from './extensions'
-export type {
   HyperlinkAttrs,
-} from './types'
+} from './extensions'
+
+export {
+  EditorCore,
+} from './core'
+export {
+  BoldExtension,
+  ItalicExtension,
+  UnderlineExtension,
+  CodeExtension,
+  DeleteLineExtension,
+  HyperlinkExtension,
+} from './extensions'

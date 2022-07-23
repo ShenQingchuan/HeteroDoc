@@ -1,26 +1,46 @@
 <script lang="ts" setup>
 import type { EditorCore } from '@hetero/editor'
+import { EditorFloatMenuAction } from '../../constants/editor'
 
-defineProps<{
+const props = defineProps<{
   editorCore?: EditorCore
 }>()
 
 const editorStore = useEditorStore()
-const { selection, rects } = useTextSelection()
+const { selection, rects, text } = useTextSelection()
+const isHyperlinkActive = ref(false)
+
+const onHyperlinkBtnClick = () => {
+  const left = rects.value[0]!.left
+  const top = rects.value[0]!.top
+  editorStore
+    .setFloatMenuPosition(
+      { left, top },
+      EditorFloatMenuAction.BySelection,
+    )
+    .setLinkEditText(text.value)
+    .setShowLinkEdit(true)
+}
+const openEditorMenu = useDebounceFn((pos: { left: number; top: number }) => {
+  editorStore.setFloatMenuPosition(pos, EditorFloatMenuAction.BySelection)
+  nextTick(() => {
+    editorStore
+      .setShowLinkEdit(false)
+      .setShowEditorMenu(true)
+  })
+}, 240)
+
 watch(
   reactive({ selection, rects }),
   ({ selection, rects }) => {
     const nothingSelected = selection?.isCollapsed
     if (nothingSelected) {
-      editorStore.setShowEditorMenu(false)
+      editorStore.isShowEditorMenu && editorStore.setShowEditorMenu(false)
     }
     else {
-      editorStore.setSelectionPosition(
-        rects[0]!.left,
-        rects[0]!.top,
-      )
-      nextTick(() => {
-        editorStore.setShowEditorMenu(true)
+      openEditorMenu({
+        left: rects[0]!.left,
+        top: rects[0]!.top,
       })
     }
   },
@@ -29,13 +49,16 @@ watch(
 
 <template>
   <teleport to="body">
-    <transition name="float-slide-fade">
+    <transition
+      name="float-slide-fade"
+      @before-enter="isHyperlinkActive = Boolean(props.editorCore?.activeManager.isHyperlinkActive())"
+    >
       <div
         v-show="editorStore.isShowEditorMenu"
         class="hetero-editor__float-menu"
         :style="{
           position: 'absolute',
-          left: `${editorStore.selectionNodeLeft}px`,
+          left: `${editorStore.floatTargetNodeLeft}px`,
           top: `${editorStore.popoverTop}px`,
           zIndex: 99,
         }"
@@ -67,7 +90,11 @@ watch(
           </template>
         </n-button>
         <n-divider vertical />
-        <n-button class="hetero-editor__float-menu-item hyperlink" quaternary p-x-1 @click="editorStore.setShowLinkEdit(true)">
+        <n-button
+          class="hetero-editor__float-menu-item hyperlink" quaternary p-x-1
+          :disabled="!isHyperlinkActive"
+          @click="onHyperlinkBtnClick"
+        >
           <template #icon>
             <n-icon><div i-ic:round-link mr1 /></n-icon>
           </template>

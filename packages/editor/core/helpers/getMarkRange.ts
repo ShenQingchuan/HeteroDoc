@@ -30,8 +30,9 @@ export function getMarkRange(
     return
 
   let start = $pos.parent.childAfter($pos.parentOffset)
+  const startNodeTextLength = start.node?.text?.length ?? 0
 
-  if ($pos.parentOffset === start.offset && start.offset !== 0)
+  if (startNodeTextLength > 1 && $pos.parentOffset === start.offset && start.offset !== 0)
     start = $pos.parent.childBefore($pos.parentOffset)
 
   if (!start.node)

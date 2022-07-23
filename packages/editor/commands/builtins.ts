@@ -5,9 +5,6 @@ import { command } from './fundamentals/defineCommand'
 import { undoInputRule } from './fundamentals/undoInputRule'
 import { clearNodes } from './fundamentals/clearNodes'
 import { splitBlock } from './fundamentals/splitBlock'
-import { toggleMark } from './markOps/toggleMark'
-import { unsetMark } from './markOps/unsetMark'
-import { setMark } from './markOps/setMark'
 import { setTextSelection } from './fundamentals/setTextSelection'
 import { selectAll } from './fundamentals/selectAll'
 import {
@@ -21,6 +18,9 @@ import {
   selectNodeBackward,
   selectNodeForward,
 } from './fundamentals/adaptProseMirrorCmds'
+import { toggleMark } from './markOps/toggleMark'
+import { setMark } from './markOps/setMark'
+import { unsetMark } from './markOps/unsetMark'
 
 export const builtinsCommands = {
   focus,

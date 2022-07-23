@@ -5,7 +5,6 @@ import { UnderlineExtension } from './underline'
 import { DeleteLineExtension } from './deleteLine'
 import { HyperlinkExtension } from './hyperlink'
 
-export type ExtensionsKeys = keyof typeof extensionsMap
 export const extensionsMap = {
   bold: BoldExtension,
   italic: ItalicExtension,

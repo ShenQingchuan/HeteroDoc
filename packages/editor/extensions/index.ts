@@ -1,13 +1,12 @@
 export type {
   IEditorExtension,
 } from './editorExtension'
-export type {
-  ExtensionsKeys,
-} from './extensionsMap'
+export type { HyperlinkAttrs } from './hyperlink'
 
-export {
-  BoldExtension,
-} from './bold'
-export {
-  extensionsMap,
-} from './extensionsMap'
+export { extensionsMap } from './extensionsMap'
+export { BoldExtension } from './bold'
+export { ItalicExtension } from './italic'
+export { UnderlineExtension } from './underline'
+export { CodeExtension } from './code'
+export { DeleteLineExtension } from './deleteLine'
+export { HyperlinkExtension } from './hyperlink'

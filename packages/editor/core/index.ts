@@ -1,5 +1,4 @@
 import { EditorState } from 'prosemirror-state'
-import type { MarkType } from 'prosemirror-model'
 import { Node, Schema } from 'prosemirror-model'
 import { EditorView } from 'prosemirror-view'
 import type {
@@ -11,8 +10,7 @@ import { keymap } from 'prosemirror-keymap'
 import { TypeEvent } from '../utils/typeEvent'
 import { getLogger } from '../utils/logger'
 import type { EditorLogger } from '../utils/logger'
-import type { ExtensionsKeys, IEditorExtension } from '../extensions'
-import { extensionsMap } from '../extensions'
+import type { IEditorExtension } from '../extensions'
 import type { IEditorMark } from '../extensions/editorExtension'
 import { ExtensionType } from '../extensions/editorExtension'
 import { BaseKeymap } from '../extensions/baseKeymap'
@@ -20,7 +18,8 @@ import { mergeSchemaSpecs } from './schema'
 import type { PatternRule } from './rule'
 import { inputRules, pasteRules } from './rule'
 import { CommandManager } from './commandManager'
-import { getMarkAttrs } from './helpers/getMarkAttrs'
+import { HelpersManager } from './helpers/helpersManager'
+import { ActiveManager } from './activeManager'
 
 export interface EditorOptions {
   container: string | HTMLElement // editor mount point
@@ -39,33 +38,27 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   view: EditorView
   logger: EditorLogger
   cmdManager: CommandManager
+  helpers: HelpersManager
+  activeManager: ActiveManager
 
-  constructor(options: EditorOptions, extensionsConfig: {
-    fromKeys?: ExtensionsKeys[]
-    fromCustom?: IEditorExtension[]
+  constructor(options: EditorOptions, coreConfig: {
+    extensions: (core: EditorCore) => IEditorExtension[]
   }) {
     super()
-    const { fromKeys = [], fromCustom = [] } = extensionsConfig
+    const { extensions } = coreConfig
     this.options = options
     this.extensions = [
       new BaseKeymap(this),
-      ...this.getExtensionsByKeys(fromKeys),
-      ...fromCustom,
+      ...extensions(this),
     ]
 
     // Initialize schema and commands set needs extensions to be ready
     this.schema = this.initSchema()
     this.cmdManager = new CommandManager(this)
+    this.helpers = new HelpersManager(this)
+    this.activeManager = new ActiveManager(this)
     this.logger = getLogger('HeteroEditor core')
     this.view = this.initEditorView()
-  }
-
-  private getExtensionsByKeys(extensions: ExtensionsKeys[]): IEditorExtension[] {
-    return extensions.map((key) => {
-      const ExtensionClass = extensionsMap[key]
-      const extensionInstance = new ExtensionClass(this)
-      return extensionInstance
-    })
   }
 
   private dispatchTransaction = (tr: Transaction) => {
@@ -173,9 +166,5 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
 
   public get commands() {
     return this.cmdManager.getSingleCommands()
-  }
-
-  public getMarkAttrsFromSelection<T extends Record<string, any>>(typeOrName: string | MarkType) {
-    return getMarkAttrs(this.view.state, typeOrName) as T
   }
 }
