@@ -126,7 +126,6 @@ describe('Editor playground test', () => {
       .type('### Heading 3').type('{enter}')
       .type('#### Heading 4').type('{enter}')
       .type('##### Heading 5').type('{enter}')
-      .type('###### Heading 6').type('{enter}')
       .get(headingsSelectors).should('exist')
   })
 })
