@@ -7,6 +7,8 @@ import { clearNodes } from './fundamentals/clearNodes'
 import { splitBlock } from './fundamentals/splitBlock'
 import { setTextSelection } from './fundamentals/setTextSelection'
 import { selectAll } from './fundamentals/selectAll'
+import { setNode } from './fundamentals/setNode'
+import { toggleNode } from './fundamentals/toggleNode'
 import {
   createParagraphNear,
   deleteSelection,
@@ -41,6 +43,8 @@ export const builtinsCommands = {
   createParagraphNear,
   newlineInCode,
   exitCode,
+  setNode,
+  toggleNode,
 
   toggleMark,
   setMark,

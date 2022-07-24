@@ -51,6 +51,7 @@ export interface CommandProps {
   view: EditorView
   commands: PrimitiveCommandsMap
   dispatch?: (tr: Transaction) => void
+  chain: () => RunCommandsChain
 }
 export interface ExtensionAttribute {
   extName: string

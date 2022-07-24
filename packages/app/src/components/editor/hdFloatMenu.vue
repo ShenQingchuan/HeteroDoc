@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import type { EditorCore } from '@hetero/editor'
-import { EditorFloatMenuAction } from '../../constants/editor'
+import {
+  EditorFloatMenuAction,
+  FloatMenuShowTimingGap,
+  FloatMenuZIndex,
+} from '../../constants/editor'
 
 const props = defineProps<{
   editorCore?: EditorCore
@@ -28,7 +32,10 @@ const openEditorMenu = useDebounceFn((pos: { left: number; top: number }) => {
       .setShowLinkEdit(false)
       .setShowEditorMenu(true)
   })
-}, 240)
+}, FloatMenuShowTimingGap)
+const computeIsHyperlinkActive = () => {
+  isHyperlinkActive.value = Boolean(props.editorCore?.activeManager.isHyperlinkActive())
+}
 
 watch(
   reactive({ selection, rects }),
@@ -60,10 +67,12 @@ watch(
           position: 'absolute',
           left: `${editorStore.floatTargetNodeLeft}px`,
           top: `${editorStore.popoverTop}px`,
-          zIndex: 99,
+          zIndex: FloatMenuZIndex,
         }"
-        flex-items-center justify-center p-y-1 p-x-2 border-base bg-base border-round
+        flex-items-center justify-center py1 px2 border-base bg-base border-round
       >
+        <hdEditorHeadingsSubMenu @compute-is-hyperlink-active="computeIsHyperlinkActive" />
+        <n-divider vertical />
         <n-button class="hetero-editor__float-menu-item bold" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleBold().run()">
           <template #icon>
             <n-icon><div i-ic:round-format-bold mr1 /></n-icon>

@@ -4,6 +4,9 @@ import Playground from './playground.vue'
 
 // CONSTANTS:
 const testHyperlinkURL = 'https://heterocube.top'
+const enoughWaitTime = 360 // ms
+
+// METHODS:
 const isMacOS = (): boolean => {
   return typeof navigator !== 'undefined'
     ? /Mac/.test(navigator.platform)
@@ -25,100 +28,105 @@ const mountEditor = () => {
         },
       },
     })
-    .get('.ProseMirror')
-    .focus()
     // clear all content
-    .type('{selectAll}')
-    .type('{del}')
+    .deleteAll()
 }
-type CypressChainablePipeline = (ar: Cypress.Chainable<JQuery<HTMLElement>>) => Cypress.Chainable
 const testToggleToolbarResult = (
   toolbarKeyClassName: string,
-  callback: CypressChainablePipeline,
+  resultMarkSelector?: string,
 ) => {
-  const actionResult = mountEditor()
+  const afterToolbarBtnClick = mountEditor()
     .type(`Editor test, mark ${toolbarKeyClassName}`)
     .type('{selectAll}')
-    .wait(100)
+    .wait(enoughWaitTime)
     .get(`.hetero-editor__float-menu-item.${toolbarKeyClassName}`)
     .click()
-  return callback(actionResult)
+  if (resultMarkSelector) {
+    return afterToolbarBtnClick.shouldExistMarkSelector(resultMarkSelector)
+  }
+  return afterToolbarBtnClick
 }
 const getMarkSelector = (markTagName: string) => `.ProseMirror > p > ${markTagName}`
-const markSelectorExists = (markSelector: string): CypressChainablePipeline => {
-  return chain => chain.get(markSelector).should('exist')
-}
 
 describe('Editor playground test', () => {
   it('can make text bold', () => {
     const markSelector = getMarkSelector('strong')
-    testToggleToolbarResult('bold', markSelectorExists(markSelector))
-    // Test keyboard shortcut
-      .type('{selectAll}')
-      .type(withModKey('b'))
-      .get(markSelector).should('not.exist')
-    // Test input rule
-      .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
+    testToggleToolbarResult('bold', markSelector)
+    // Then test keyboard shortcut
+      .selectAllAndRunShortcut(withModKey('b'))
+      .shouldNotExistMarkSelector(markSelector)
+    // Then test input rule
+      .deleteAll()
       .type('**These text should be bold**')
-      .get(markSelector).should('exist')
+      .shouldExistMarkSelector(markSelector)
   })
   it('can make text italic', () => {
     const markSelector = getMarkSelector('em')
-    testToggleToolbarResult('italic', markSelectorExists(markSelector))
-    // Test keyboard shortcut
-      .type('{selectAll}')
-      .type(withModKey('i'))
-      .get(markSelector).should('not.exist')
-    // Test input rule
-      .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
+    testToggleToolbarResult('italic', markSelector)
+    // Then test keyboard shortcut
+      .selectAllAndRunShortcut(withModKey('i'))
+      .shouldNotExistMarkSelector(markSelector)
+    // Then test input rule
+      .deleteAll()
       .type('*These text should be italic*')
-      .get(markSelector).should('exist')
-      .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
+      .shouldExistMarkSelector(markSelector)
+      .deleteAll()
       .type('_These text should be italic_')
-      .get(markSelector).should('exist')
+      .shouldExistMarkSelector(markSelector)
   })
   it('can make text underline', () => {
     const markSelector = getMarkSelector('u')
-    testToggleToolbarResult('underline', markSelectorExists(markSelector))
-    // Test keyboard shortcut
-      .type('{selectAll}')
-      .type(withModKey('u'))
-      .get(markSelector).should('not.exist')
+    testToggleToolbarResult('underline', markSelector)
+    // Then test keyboard shortcut
+      .selectAllAndRunShortcut(withModKey('u'))
+      .shouldNotExistMarkSelector(markSelector)
   })
   it('can make inline code', () => {
     const markSelector = getMarkSelector('code')
-    testToggleToolbarResult('code', markSelectorExists(markSelector))
-    // Test input rule
-      .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
+    testToggleToolbarResult('code', markSelector)
+    // Then test input rule
+      .deleteAll()
       .type('`These text should be inline code` outside')
-      .get(markSelector).should('exist')
+      .shouldExistMarkSelector(markSelector)
   })
   it('can make text decoration strike-through', () => {
     const markSelector = getMarkSelector('del')
-    testToggleToolbarResult('deleteLine', markSelectorExists(markSelector))
-    // Test input rule
-      .get('.ProseMirror').focus().type('{selectAll}').type('{del}')
+    testToggleToolbarResult('deleteLine', markSelector)
+    // Then test input rule
+      .deleteAll()
       .type('~These text should be strike through~')
-      .get(markSelector).should('exist')
+      .shouldExistMarkSelector(markSelector)
   })
   it('can create hyperlink', () => {
     const markSelector = getMarkSelector(`a.hyperlink[href="${testHyperlinkURL}"]`)
-    testToggleToolbarResult('hyperlink', (chain) => {
-      return chain.wait(100)
-        .get('.hetero-editor__link-edit.edit-link input')
-        .focus()
-        .type(testHyperlinkURL)
-        .get('.hetero-editor__link-edit.confirm')
-        .click()
-        .get(markSelector).should('exist')
-    })
+    testToggleToolbarResult('hyperlink')
+      .fillInputBySelector('.hetero-editor__link-edit.edit-link input', testHyperlinkURL)
+      .clickBySelector('.hetero-editor__link-edit.confirm')
+      .shouldExistMarkSelector(markSelector)
   })
   it('can create hyperlink from Markdown format', () => {
     const markSelector = getMarkSelector(`a.hyperlink[href="${testHyperlinkURL}"]`)
     const markdownFormat = `[test](${testHyperlinkURL})`
     mountEditor()
-      .type(markdownFormat).wait(100)
-      .get(markSelector)
-      .should('exist').and('have.text', 'test').and('have.attr', 'href', testHyperlinkURL)
+      .type(markdownFormat).wait(enoughWaitTime)
+      .shouldExistMarkSelector(markSelector)
+      .and('have.text', 'test')
+      .and('have.attr', 'href', testHyperlinkURL)
+  })
+  it('can create headings', () => {
+    const headingsSelectors = Array
+      .from(
+        { length: 5 },
+        (_, i) => `.ProseMirror h${i + 1}`,
+      )
+      .join(',')
+    mountEditor()
+      .type('# Heading 1').type('{enter}')
+      .type('## Heading 2').type('{enter}')
+      .type('### Heading 3').type('{enter}')
+      .type('#### Heading 4').type('{enter}')
+      .type('##### Heading 5').type('{enter}')
+      .type('###### Heading 6').type('{enter}')
+      .get(headingsSelectors).should('exist')
   })
 })

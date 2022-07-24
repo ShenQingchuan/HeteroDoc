@@ -7,10 +7,10 @@ import type { Attribute, KeyboardShortcutCommand } from '../types'
 export enum ExtensionType { func, node, mark }
 
 export interface IEditorExtension<OptionsDefs = {}> {
+  core: EditorCore
   type: ExtensionType
   name: string
   options: OptionsDefs
-  core: EditorCore
 
   schemaSpec?: () => Partial<SchemaSpec>
   inputRules?: () => PatternRule[]

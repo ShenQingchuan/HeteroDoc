@@ -1,4 +1,4 @@
-import type { MarkType } from 'prosemirror-model'
+import type { Attrs, MarkType, NodeType } from 'prosemirror-model'
 import { Plugin } from 'prosemirror-state'
 import type { EditorState, TextSelection } from 'prosemirror-state'
 import { callOrReturn } from '../utils/callOrReturn'
@@ -397,4 +397,24 @@ export function pasteRules(props: { core: EditorCore; rules: PatternRule[] }): P
   })
 
   return plugins
+}
+
+export function textblockTypeInputRule(
+  regexp: RegExp,
+  nodeType: NodeType,
+  getAttrs: Attrs | null | ((match: RegExpMatchArray) => Attrs | null) = null,
+) {
+  return new PatternRule({
+    find: regexp,
+    handler: ({ state, match, range }) => {
+      const { from: start, to: end } = range
+      const $start = state.doc.resolve(start)
+      const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs
+      if (!$start.node(-1).canReplaceWith($start.index(-1), $start.indexAfter(-1), nodeType))
+        return null
+      state.tr
+        .delete(start, end)
+        .setBlockType(start, start, nodeType, attrs)
+    },
+  })
 }

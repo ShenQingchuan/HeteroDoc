@@ -5,10 +5,9 @@ import { createChainableState } from './helpers/createChainableState'
 import type { EditorCore } from './index'
 
 export class CommandManager {
-  private core: EditorCore
   private rawCommands: Commands
 
-  constructor(core: EditorCore) {
+  constructor(private core: EditorCore) {
     this.core = core
     this.rawCommands = {
       ...builtinsCommands,
@@ -33,6 +32,7 @@ export class CommandManager {
       dispatch: shouldDispatch
         ? () => undefined // Just a placeholder for behaving like a runnable command
         : undefined,
+      chain: () => this.createChain(true, tr),
       get commands() {
         return Object.fromEntries(
           Object.entries(rawCommands).map(([name, command]) => {
@@ -50,10 +50,10 @@ export class CommandManager {
     const { state } = view
     const tr = startTr ?? state.tr
     const callbacks: boolean[] = []
-    const cmdProps = this.buildCommandProps(tr, shouldDispatch)
     const chain = {
       ...Object.fromEntries(
         Object.entries(this.rawCommands).map(([name, command]) => {
+          const cmdProps = this.buildCommandProps(tr, shouldDispatch)
           return [
             name,
             (...args: Parameters<typeof command>) => {
@@ -65,8 +65,12 @@ export class CommandManager {
         }),
       ),
       run: () => {
-        if (shouldDispatch && !tr.getMeta('preventDispatch'))
+        const isNeedDispatch = !startTr
+          && shouldDispatch
+          && !tr.getMeta('preventDispatch')
+        if (isNeedDispatch) {
           view.dispatch(tr)
+        }
 
         return callbacks.every(callback => callback === true)
       },
@@ -94,7 +98,7 @@ export class CommandManager {
 
     return {
       ...primitiveCommands,
-      chain: () => this.createChain(dispatch, tr),
+      chain: () => this.createChain(false, tr),
     }
   }
 

@@ -24,12 +24,9 @@ declare global {
 export class BoldExtension implements IEditorMark {
   type = ExtensionType.mark
   name = 'bold'
-  core: EditorCore
   options = {}
 
-  constructor(core: EditorCore) {
-    this.core = core
-  }
+  constructor(public core: EditorCore) {}
 
   schemaSpec: () => AddMarksSchema<'bold'> = () => {
     return {

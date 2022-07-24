@@ -21,12 +21,9 @@ declare global {
 export class CodeExtension implements IEditorExtension {
   type = ExtensionType.mark
   name = 'code'
-  core: EditorCore
   options = {}
 
-  constructor(core: EditorCore) {
-    this.core = core
-  }
+  constructor(public core: EditorCore) {}
 
   schemaSpec: () => AddMarksSchema<'code'> = () => {
     return {

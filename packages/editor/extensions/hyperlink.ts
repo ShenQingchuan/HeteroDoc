@@ -51,10 +51,8 @@ export class HyperlinkExtension implements IEditorExtension<HyperlinkOptions> {
   type = ExtensionType.node
   name = 'hyperlink'
   options: HyperlinkOptions
-  core: EditorCore
 
-  constructor(core: EditorCore, options: HyperlinkOptions) {
-    this.core = core
+  constructor(public core: EditorCore, options: HyperlinkOptions) {
     this.options = options
   }
 

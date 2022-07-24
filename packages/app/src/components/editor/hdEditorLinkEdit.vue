@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { EditorCore, HyperlinkAttrs } from '@hetero/editor'
-import { EditorFloatMenuAction } from '../../constants/editor'
+import { EditorFloatMenuAction, FloatMenuZIndex } from '../../constants/editor'
 import { URLRegExp } from '../../constants/regExp'
 
 const props = defineProps<{
@@ -52,7 +52,7 @@ watch(
           position: 'absolute',
           left: `${editorStore.floatTargetNodeLeft}px`,
           top: `${editorStore.popoverTop}px`,
-          zIndex: 99,
+          zIndex: FloatMenuZIndex,
         }"
         flex-col items-start p-y-2 p-x-2 border-base bg-base border-round
       >

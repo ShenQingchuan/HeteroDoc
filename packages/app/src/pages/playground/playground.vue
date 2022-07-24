@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { EditorCore } from '@hetero/editor'
+import { EditorProvideKey } from '../../constants/editor'
 import { composeExtensions } from './composeExtensions'
 
 const naiveUITheme = useNaiveThemeSetup()
@@ -7,6 +8,8 @@ const envStore = useEnvStore()
 const themeModeText = useThemeModeText()
 const editorRef = templateRef<HTMLElement | null>('editor')
 const editorCore = shallowRef<EditorCore>()
+
+provide(EditorProvideKey, editorCore)
 
 onMounted(() => {
   const container = editorRef.value!
@@ -54,6 +57,7 @@ onMounted(() => {
         </div>
       </div>
     </HdEditorContext>
+    <div class="heterodoc-teleport-mount-point" />
   </n-config-provider>
 </template>
 

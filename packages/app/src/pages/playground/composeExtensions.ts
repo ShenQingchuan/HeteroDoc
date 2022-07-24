@@ -1,8 +1,10 @@
 import type { EditorCore, IEditorExtension } from '@hetero/editor'
 import {
   BoldExtension, CodeExtension, DeleteLineExtension,
-  HyperlinkExtension, ItalicExtension, UnderlineExtension,
+  HeadingExtension, HyperlinkExtension, ItalicExtension,
+  UnderlineExtension,
 } from '@hetero/editor'
+
 import { EditorFloatMenuAction } from '../../constants/editor'
 
 export function composeExtensions(core: EditorCore): IEditorExtension[] {
@@ -29,5 +31,6 @@ export function composeExtensions(core: EditorCore): IEditorExtension[] {
         }
       },
     }),
+    new HeadingExtension(core),
   ]
 }

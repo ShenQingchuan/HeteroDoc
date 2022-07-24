@@ -21,12 +21,9 @@ declare global {
 export class ItalicExtension implements IEditorExtension {
   type = ExtensionType.mark
   name = 'italic'
-  core: EditorCore
   options = {}
 
-  constructor(core: EditorCore) {
-    this.core = core
-  }
+  constructor(public core: EditorCore) {}
 
   schemaSpec: () => AddMarksSchema<'italic'> = () => {
     return {

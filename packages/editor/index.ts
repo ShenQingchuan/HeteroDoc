@@ -17,4 +17,5 @@ export {
   CodeExtension,
   DeleteLineExtension,
   HyperlinkExtension,
+  HeadingExtension,
 } from './extensions'

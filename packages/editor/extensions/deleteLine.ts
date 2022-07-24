@@ -21,12 +21,9 @@ declare global {
 export class DeleteLineExtension implements IEditorExtension {
   type = ExtensionType.mark
   name = 'deleteLine'
-  core: EditorCore
   options = {}
 
-  constructor(core: EditorCore) {
-    this.core = core
-  }
+  constructor(public core: EditorCore) {}
 
   schemaSpec: () => AddMarksSchema<'deleteLine'> = () => {
     return {

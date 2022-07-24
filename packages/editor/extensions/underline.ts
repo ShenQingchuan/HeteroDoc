@@ -17,12 +17,9 @@ declare global {
 export class UnderlineExtension implements IEditorExtension {
   type = ExtensionType.mark
   name = 'underline'
-  core: EditorCore
   options = {}
 
-  constructor(core: EditorCore) {
-    this.core = core
-  }
+  constructor(public core: EditorCore) {}
 
   schemaSpec: () => AddMarksSchema<'underline'> = () => {
     return {

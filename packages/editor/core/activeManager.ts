@@ -2,11 +2,7 @@ import type { Node } from 'prosemirror-model'
 import type { EditorCore } from './index'
 
 export class ActiveManager {
-  core: EditorCore
-
-  constructor(core: EditorCore) {
-    this.core = core
-  }
+  constructor(private core: EditorCore) {}
 
   isHyperlinkActive(): boolean {
     const { selection, doc } = this.core.view.state
@@ -16,10 +12,9 @@ export class ActiveManager {
     }
     const collectRangeNodes: Node[] = []
     doc.nodesBetween(from, to, (node) => {
-      if (node.type.name === 'text') {
-        collectRangeNodes.push(node)
-      }
+      collectRangeNodes.push(node)
     })
-    return collectRangeNodes.length === 1
+    return !collectRangeNodes.find(n => n.type.name === 'heading')
+      && collectRangeNodes.filter(n => n.type.isText).length === 1
   }
 }
