@@ -4,7 +4,7 @@ export function useThemeModeText() {
 
   return computed(() => `${
     env.isDark
-      ? t('common-header.menu.theme-mode-dark')
-      : t('common-header.menu.theme-mode-light')
+      ? t('common-header.menu.theme-mode-light')
+      : t('common-header.menu.theme-mode-dark')
   }${t('common-header.menu.theme-mode-text')}`)
 }

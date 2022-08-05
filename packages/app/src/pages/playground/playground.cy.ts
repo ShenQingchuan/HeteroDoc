@@ -6,17 +6,6 @@ import Playground from './playground.vue'
 const testHyperlinkURL = 'https://heterocube.top'
 const enoughWaitTime = 360 // ms
 
-// METHODS:
-const isMacOS = (): boolean => {
-  return typeof navigator !== 'undefined'
-    ? /Mac/.test(navigator.platform)
-    : false
-}
-const withModKey = (...keys: string[]) => {
-  const modKey = isMacOS() ? 'meta' : 'ctrl'
-  return [`{${modKey}}`, ...keys].join('')
-}
-
 const mountEditor = () => {
   return cy.viewport(1200, 800)
     .mount(Playground, {
@@ -37,7 +26,7 @@ const testToggleToolbarResult = (
 ) => {
   const afterToolbarBtnClick = mountEditor()
     .type(`Editor test, mark ${toolbarKeyClassName}`)
-    .type('{selectAll}')
+    .typeWithModKey('a')
     .wait(enoughWaitTime)
     .get(`.hetero-editor__float-menu-item.${toolbarKeyClassName}`)
     .click()
@@ -53,7 +42,7 @@ describe('Editor playground test', () => {
     const markSelector = getMarkSelector('strong')
     testToggleToolbarResult('bold', markSelector)
     // Then test keyboard shortcut
-      .selectAllAndRunShortcut(withModKey('b'))
+      .selectAll().typeWithModKey('b')
       .shouldNotExistMarkSelector(markSelector)
     // Then test input rule
       .deleteAll()
@@ -64,7 +53,7 @@ describe('Editor playground test', () => {
     const markSelector = getMarkSelector('em')
     testToggleToolbarResult('italic', markSelector)
     // Then test keyboard shortcut
-      .selectAllAndRunShortcut(withModKey('i'))
+      .selectAll().typeWithModKey('i')
       .shouldNotExistMarkSelector(markSelector)
     // Then test input rule
       .deleteAll()
@@ -78,7 +67,7 @@ describe('Editor playground test', () => {
     const markSelector = getMarkSelector('u')
     testToggleToolbarResult('underline', markSelector)
     // Then test keyboard shortcut
-      .selectAllAndRunShortcut(withModKey('u'))
+      .selectAll().typeWithModKey('u')
       .shouldNotExistMarkSelector(markSelector)
   })
   it('can make inline code', () => {
@@ -127,5 +116,13 @@ describe('Editor playground test', () => {
       .type('#### Heading 4').type('{enter}')
       .type('##### Heading 5').type('{enter}')
       .get(headingsSelectors).should('exist')
+  })
+  it('can display marks\' active state on float menu', () => {
+    let chain = mountEditor();
+    ['bold', 'italic', 'underline', 'deleteLine', 'code'].forEach(
+      (markName) => {
+        chain = chain.testMarkMenuBtnActiveState(markName)
+      },
+    )
   })
 })

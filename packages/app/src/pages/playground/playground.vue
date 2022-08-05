@@ -39,8 +39,8 @@ onMounted(() => {
           flex-items-center justify-center m-y-4
         >
           <n-button m-x-4 @click="envStore.toggleDark()">
-            <div v-if="envStore.isDark" i-carbon-moon text-6 mr2 font-light />
-            <div v-else i-carbon-light text-6 mr2 font-light />
+            <div v-if="envStore.isDark" i-carbon-light text-6 mr2 font-light />
+            <div v-else i-carbon-moon text-6 mr2 font-light />
             <span>{{ themeModeText }}</span>
           </n-button>
         </div>

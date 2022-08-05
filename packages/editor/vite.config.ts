@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [dts()],
   build: {
     sourcemap: true,
+    minify: process.env.NODE_ENV === 'production',
     lib: {
       entry: path.resolve(__dirname, './index.ts'),
       formats: ['es'],
