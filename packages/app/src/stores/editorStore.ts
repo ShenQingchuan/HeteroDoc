@@ -2,6 +2,16 @@ import type { HyperlinkAttrs } from '@hetero/editor'
 import type { EditorFloatMenuAction } from '../constants/editor'
 
 interface EditorStoreState {
+  menuActiveState: {
+    bold: boolean
+    italic: boolean
+    underline: boolean
+    code: boolean
+    deleteLine: boolean
+  }
+  menuAvailableState: {
+    hyperlink: boolean
+  }
   prevLinkAttrs: HyperlinkAttrs | null
   linkEditURL: string
   linkEditText: string
@@ -14,6 +24,16 @@ interface EditorStoreState {
 
 const createInitEditorStoreState = (): EditorStoreState => {
   return {
+    menuActiveState: {
+      bold: false,
+      italic: false,
+      underline: false,
+      code: false,
+      deleteLine: false,
+    },
+    menuAvailableState: {
+      hyperlink: false,
+    },
     prevLinkAttrs: null,
     linkEditURL: '',
     linkEditText: '',

@@ -121,8 +121,9 @@ export class CommandManager {
         .map(([name, command]) => {
           const method = (...args: any[]) => {
             const callback = command(...args)(props)
-            if (!tr.getMeta('preventDispatch'))
+            if (!tr.getMeta('preventDispatch')) {
               view.dispatch(tr)
+            }
 
             return callback
           }

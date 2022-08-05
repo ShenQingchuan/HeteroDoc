@@ -29,6 +29,7 @@ export interface EditorOptions {
 }
 export interface EditorCoreEvent {
   'rendered': { timeCost: number }
+  'dispatchedTransaction': null
 }
 
 export class EditorCore extends TypeEvent<EditorCoreEvent> {
@@ -68,6 +69,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       const newState = view.state.apply(tr)
       // Todo: Traverse all extensions to execute their afterTransaction hooks
       view.updateState(newState)
+      this.emit('dispatchedTransaction')
     }
     catch (err) {
       this.logger.error(err)

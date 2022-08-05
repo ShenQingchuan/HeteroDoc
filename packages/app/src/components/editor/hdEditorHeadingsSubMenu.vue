@@ -3,7 +3,6 @@ import type { EditorCore } from '@hetero/editor'
 import type { ShallowRef } from 'vue'
 import { EditorProvideKey, FloatMenuHeadingSubMenuStyleDark, FloatMenuHeadingSubMenuStyleLight } from '../../constants/editor'
 
-const emit = defineEmits(['computeIsHyperlinkActive'])
 const naiveUITheme = useNaiveThemeSetup()
 const env = useEnvStore()
 const editorCore = inject<ShallowRef<EditorCore>>(EditorProvideKey)
@@ -17,9 +16,6 @@ const headingSubMenuStyle = computed((): Partial<CSSStyleDeclaration> => {
 })
 const runToggleHeading = (level: number) => {
   editorCore?.value.cmdManager.chain.focus().toggleHeading({ level }).run()
-
-  // If toggle heading succeed, should disable set link
-  emit('computeIsHyperlinkActive')
 }
 </script>
 

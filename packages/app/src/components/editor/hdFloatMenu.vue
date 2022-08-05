@@ -6,13 +6,12 @@ import {
   FloatMenuZIndex,
 } from '../../constants/editor'
 
-const props = defineProps<{
+defineProps<{
   editorCore?: EditorCore
 }>()
 
 const editorStore = useEditorStore()
 const { selection, rects, text } = useTextSelection()
-const isHyperlinkActive = ref(false)
 
 const onHyperlinkBtnClick = () => {
   const left = rects.value[0]!.left
@@ -33,9 +32,6 @@ const openEditorMenu = useDebounceFn((pos: { left: number; top: number }) => {
       .setShowEditorMenu(true)
   })
 }, FloatMenuShowTimingGap)
-const computeIsHyperlinkActive = () => {
-  isHyperlinkActive.value = Boolean(props.editorCore?.activeManager.isHyperlinkActive())
-}
 
 watch(
   reactive({ selection, rects }),
@@ -58,7 +54,6 @@ watch(
   <teleport to="body">
     <transition
       name="float-slide-fade"
-      @before-enter="isHyperlinkActive = Boolean(props.editorCore?.activeManager.isHyperlinkActive())"
     >
       <div
         v-show="editorStore.isShowEditorMenu"
@@ -71,37 +66,52 @@ watch(
         }"
         flex-items-center justify-center py1 px2 border-base bg-base border-round
       >
-        <hdEditorHeadingsSubMenu @compute-is-hyperlink-active="computeIsHyperlinkActive" />
+        <hdEditorHeadingsSubMenu />
         <n-divider vertical />
-        <n-button class="hetero-editor__float-menu-item bold" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleBold().run()">
+        <n-button
+          class="hetero-editor__float-menu-item bold" quaternary px1 mx1 :class="{ active: editorStore.menuActiveState.bold }"
+          @click="editorCore?.cmdManager.chain.focus().toggleBold().run()"
+        >
           <template #icon>
             <n-icon><div i-ic:round-format-bold mr1 /></n-icon>
           </template>
         </n-button>
-        <n-button class="hetero-editor__float-menu-item italic" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleItalic().run()">
+        <n-button
+          class="hetero-editor__float-menu-item italic" quaternary px1 mx1 :class="{ active: editorStore.menuActiveState.italic }"
+          @click="editorCore?.cmdManager.chain.focus().toggleItalic().run()"
+        >
           <template #icon>
             <n-icon><div i-ic:round-format-italic mr1 /></n-icon>
           </template>
         </n-button>
-        <n-button class="hetero-editor__float-menu-item code" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleCode().run()">
+        <n-button
+          class="hetero-editor__float-menu-item code" quaternary px1 mx1 :class="{ active: editorStore.menuActiveState.code }"
+          @click="editorCore?.cmdManager.chain.focus().toggleCode().run()"
+        >
           <template #icon>
             <n-icon><div i-ic:round-code mr1 /></n-icon>
           </template>
         </n-button>
-        <n-button class="hetero-editor__float-menu-item underline" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleUnderline().run()">
+        <n-button
+          class="hetero-editor__float-menu-item underline" quaternary px1 mx1 :class="{ active: editorStore.menuActiveState.underline }"
+          @click="editorCore?.cmdManager.chain.focus().toggleUnderline().run()"
+        >
           <template #icon>
             <n-icon><div i-ic:round-format-underlined mr1 /></n-icon>
           </template>
         </n-button>
-        <n-button class="hetero-editor__float-menu-item deleteLine" quaternary p-x-1 @click="editorCore?.cmdManager.chain.focus().toggleDeleteLine().run()">
+        <n-button
+          class="hetero-editor__float-menu-item deleteLine" quaternary px1 mx1 :class="{ active: editorStore.menuActiveState.deleteLine }"
+          @click="editorCore?.cmdManager.chain.focus().toggleDeleteLine().run()"
+        >
           <template #icon>
             <n-icon><div i-ic:round-format-strikethrough mr1 /></n-icon>
           </template>
         </n-button>
         <n-divider vertical />
         <n-button
-          class="hetero-editor__float-menu-item hyperlink" quaternary p-x-1
-          :disabled="!isHyperlinkActive"
+          class="hetero-editor__float-menu-item hyperlink" quaternary px1 mx1
+          :disabled="!editorStore.menuAvailableState.hyperlink"
           @click="onHyperlinkBtnClick"
         >
           <template #icon>
@@ -112,3 +122,12 @@ watch(
     </transition>
   </teleport>
 </template>
+
+<style>
+.hetero-editor__float-menu-item.active {
+  background-color: rgba(46, 51, 56, 0.09);
+}
+.dark .hetero-editor__float-menu-item.active {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+</style>
