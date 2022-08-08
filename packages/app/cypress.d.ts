@@ -7,6 +7,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       mount: typeof mount
+      loop: (times: number, callback: (chain: Chainable, index: number) => Chainable) => Chainable
       focusEditor: () => Chainable<JQuery<HTMLElement>>
       selectAll: () => Chainable<JQuery<HTMLElement>>
       deleteAll: () => Chainable<JQuery<HTMLElement>>

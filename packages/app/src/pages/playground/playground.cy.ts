@@ -5,6 +5,9 @@ import Playground from './playground.vue'
 // CONSTANTS:
 const testHyperlinkURL = 'https://heterocube.top'
 const enoughWaitTime = 360 // ms
+const headingsSelectors = Array
+  .from({ length: 5 }, (_, i) => `.ProseMirror h${i + 1}`)
+  .join(',')
 
 const mountEditor = () => {
   return cy.viewport(1200, 800)
@@ -102,19 +105,31 @@ describe('Editor playground test', () => {
       .and('have.text', 'test')
       .and('have.attr', 'href', testHyperlinkURL)
   })
-  it('can create headings', () => {
-    const headingsSelectors = Array
-      .from(
-        { length: 5 },
-        (_, i) => `.ProseMirror h${i + 1}`,
-      )
-      .join(',')
+  it('can toggle headings by toolbar menu', () => {
     mountEditor()
-      .type('# Heading 1').type('{enter}')
-      .type('## Heading 2').type('{enter}')
-      .type('### Heading 3').type('{enter}')
-      .type('#### Heading 4').type('{enter}')
-      .type('##### Heading 5').type('{enter}')
+      .loop(
+        5,
+        (chain, i) => {
+          const hLevel = i + 1
+          return chain
+            .type(`test toggle heading ${hLevel}`)
+            .selectAll().wait(enoughWaitTime)
+            .get('.hetero-editor__float-menu-item.heading').click()
+            .get(`.hetero-editor__float-menu-item.heading-${hLevel}`).click()
+            .get(`.ProseMirror h${hLevel}`).should('exist')
+            .deleteAll()
+        },
+      )
+  })
+  it('can create headings by Markdown format', () => {
+    mountEditor()
+      .loop(
+        5,
+        (chain, i) => {
+          const prefix = new Array(i + 1).fill('#').join('')
+          return chain.type(`${prefix} Heading ${i + 1}`).type('{enter}')
+        },
+      )
       .get(headingsSelectors).should('exist')
   })
   it('can display marks\' active state on float menu', () => {

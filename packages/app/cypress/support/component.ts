@@ -44,3 +44,11 @@ Cypress.Commands.add('typeWithModKey', { prevSubject: true }, (subject, content)
   const modKey = isMacOS() ? 'meta' : 'ctrl'
   return cy.wrap(subject).type(`{${modKey}}${content}`)
 })
+Cypress.Commands.add('loop', { prevSubject: true }, (subject, times, callback) => {
+  const cyWrap = cy.wrap(subject)
+  let runningChain = cyWrap
+  for (let i = 0; i < times; i++) {
+    runningChain = callback(runningChain, i)
+  }
+  return runningChain
+})
