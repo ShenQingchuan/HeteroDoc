@@ -9,17 +9,18 @@ import type {
 import { keymap } from 'prosemirror-keymap'
 import { TypeEvent } from '../utils/typeEvent'
 import { getLogger } from '../utils/logger'
+import { ExtensionType } from '../extensions/editorExtension'
+import { BaseKeymap } from '../extensions/baseKeymap'
 import type { EditorLogger } from '../utils/logger'
 import type { IEditorExtension } from '../extensions'
 import type { IEditorMark } from '../extensions/editorExtension'
-import { ExtensionType } from '../extensions/editorExtension'
-import { BaseKeymap } from '../extensions/baseKeymap'
 import { mergeSchemaSpecs } from './schema'
-import type { PatternRule } from './rule'
 import { inputRules, pasteRules } from './rule'
 import { CommandManager } from './commandManager'
 import { HelpersManager } from './helpers/helpersManager'
 import { ActiveManager } from './activeManager'
+import { builtinPlugins } from './plugins'
+import type { PatternRule } from './rule'
 
 export interface EditorOptions {
   container: string | HTMLElement // editor mount point
@@ -95,13 +96,17 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
         keyMapPlugin,
       ]
     }, [] as ProseMirrorPlugin[])
-    const proseMirrorPlugins = this.extensions.reduce((prev, curr) => [...prev, ...(curr.getProseMirrorPlugin?.() ?? [])], [] as ProseMirrorPlugin[])
+    const proseMirrorPluginsByExtensions = this.extensions.reduce(
+      (prev, curr) => [...prev, ...(curr.getProseMirrorPlugin?.() ?? [])],
+      [] as ProseMirrorPlugin[],
+    )
 
     return [
+      ...builtinPlugins,
       inputRules({ core: this, rules: allInputRules }),
       ...pasteRules({ core: this, rules: allPasteRules }),
       ...allKeymapPlugins,
-      ...proseMirrorPlugins,
+      ...proseMirrorPluginsByExtensions,
     ]
   }
 
