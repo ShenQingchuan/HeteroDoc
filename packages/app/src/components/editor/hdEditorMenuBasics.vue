@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { EditorCore } from '@hetero/editor'
+import type { Ref } from 'vue'
 import { EditorProvideKey } from '../../constants/editor'
 
-const editorCore = inject<EditorCore>(EditorProvideKey)
+const editorCore = inject<Ref<EditorCore>>(EditorProvideKey)
 const editorStore = useEditorStore()
 </script>
 

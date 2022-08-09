@@ -140,4 +140,17 @@ describe('Editor playground test', () => {
       },
     )
   })
+  it('can set block\'s text alignment', () => {
+    let chain = mountEditor();
+    ['left', 'center', 'right', 'justify'].forEach(
+      (alignDirection) => {
+        chain = chain
+          .type('test text alignment')
+          .selectAll().wait(enoughWaitTime)
+          .get(`.hetero-editor__float-menu-item.align-${alignDirection}`).click()
+          .get('.ProseMirror p').should('have.css', 'text-align', alignDirection)
+          .deleteAll()
+      },
+    )
+  })
 })

@@ -1,16 +1,17 @@
 <script lang="ts" setup>
 import type { EditorCore, HyperlinkAttrs } from '@hetero/editor'
+import type { Ref } from 'vue'
 import { EditorFloatMenuAction, EditorProvideKey, FloatMenuZIndex } from '../../constants/editor'
 import { URLRegExp } from '../../constants/regExp'
 
 const { t } = useI18n()
-const editorCore = inject<EditorCore>(EditorProvideKey)
+const editorCore = inject<Ref<EditorCore>>(EditorProvideKey)
 const editorStore = useEditorStore()
 const linkEditRef = ref<HTMLElement>()
 const isEditLinkValid = computed(() => URLRegExp.test(editorStore.linkEditURL))
 
 const confirmHyperlinkMark = () => {
-  editorCore?.commands.updateHyperlink({
+  editorCore?.value.commands.updateHyperlink({
     current: {
       url: editorStore.linkEditURL,
     },
@@ -30,8 +31,8 @@ watch(
       return
     }
     editorStore.setPrevLinkAttrs()
-    if (editorStore.floatMenuByAction === EditorFloatMenuAction.BySelection && editorCore) {
-      const { url } = editorCore.helpers.getMarkAttrs<HyperlinkAttrs>('hyperlink')
+    if (editorStore.floatMenuByAction === EditorFloatMenuAction.BySelection && editorCore?.value) {
+      const { url = '' } = editorCore.value.helpers.getMarkAttrs<HyperlinkAttrs>('hyperlink') ?? {}
       editorStore.setLinkEditURL(url)
     }
   },
