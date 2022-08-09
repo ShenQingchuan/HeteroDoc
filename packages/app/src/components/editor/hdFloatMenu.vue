@@ -1,14 +1,9 @@
 <script lang="ts" setup>
-import type { EditorCore } from '@hetero/editor'
 import {
   EditorFloatMenuAction,
   FloatMenuShowTimingGap,
   FloatMenuZIndex,
 } from '../../constants/editor'
-
-defineProps<{
-  editorCore?: EditorCore
-}>()
 
 const editorStore = useEditorStore()
 const { selection, rects, text } = useTextSelection()

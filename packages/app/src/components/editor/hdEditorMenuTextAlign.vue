@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { EditorCore } from '@hetero/editor'
+import { EditorProvideKey } from '../../constants/editor'
 
-defineProps<{
-  editorCore?: EditorCore
-}>()
+const editorCore = inject<EditorCore>(EditorProvideKey)
 </script>
 
 <template>

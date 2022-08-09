@@ -28,7 +28,7 @@ onMounted(() => {
 
 <template>
   <n-config-provider :theme="naiveUITheme">
-    <HdEditorContext :editor-core="editorCore">
+    <hdEditorContext>
       <div
         class="page-misc__editor-test"
         bg-base flex-col items-center justify-center
@@ -56,8 +56,7 @@ onMounted(() => {
           />
         </div>
       </div>
-    </HdEditorContext>
-    <div class="heterodoc-teleport-mount-point" />
+    </hdEditorContext>
   </n-config-provider>
 </template>
 

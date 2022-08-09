@@ -31,7 +31,7 @@ export function stylesOfTextBlock(
     style = style + otherStyle(node)
   }
   else {
-    style += otherStyle
+    style += otherStyle ?? ''
   }
   return style
 }

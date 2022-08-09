@@ -23,6 +23,8 @@ import {
 import { toggleMark } from './markOps/toggleMark'
 import { setMark } from './markOps/setMark'
 import { unsetMark } from './markOps/unsetMark'
+import { resetAttributes } from './fundamentals/resetAttributes'
+import { updateAttributes } from './fundamentals/updateAttributes'
 
 export const builtinsCommands = {
   focus,
@@ -45,6 +47,8 @@ export const builtinsCommands = {
   exitCode,
   setNode,
   toggleNode,
+  updateAttributes,
+  resetAttributes,
 
   toggleMark,
   setMark,
