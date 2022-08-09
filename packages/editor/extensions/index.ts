@@ -2,6 +2,7 @@ export type {
   IEditorExtension,
 } from './editorExtension'
 export type { HyperlinkAttrs } from './hyperlink'
+export type { TextAlign } from './textAlign'
 
 export { extensionsMap } from './extensionsMap'
 export { BoldExtension } from './bold'

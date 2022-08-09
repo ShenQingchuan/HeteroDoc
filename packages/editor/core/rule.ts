@@ -164,7 +164,7 @@ export function markInputRule(config: MarkRuleConfig) {
  * input that matches any of the given rules to trigger the rule’s
  * action.
  */
-export function inputRules(props: { core: EditorCore; rules: PatternRule[] }): Plugin {
+export function inputRules(props: { core: EditorCore; rules: PatternRule[] }): Plugin[] {
   const { core, rules } = props
   const plugin = new Plugin({
     state: {
@@ -239,7 +239,7 @@ export function inputRules(props: { core: EditorCore; rules: PatternRule[] }): P
     isInputRules: true,
   }) as Plugin
 
-  return plugin
+  return [plugin]
 }
 
 const pasteRuleMatcherHandler = (text: string, find: RegExp): RegExpMatchArray[] => {

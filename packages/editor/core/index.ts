@@ -10,10 +10,10 @@ import { keymap } from 'prosemirror-keymap'
 import { TypeEvent } from '../utils/typeEvent'
 import { getLogger } from '../utils/logger'
 import { ExtensionType } from '../extensions/editorExtension'
-import { BaseKeymap } from '../extensions/baseKeymap'
 import type { EditorLogger } from '../utils/logger'
 import type { IEditorExtension } from '../extensions'
 import type { IEditorMark } from '../extensions/editorExtension'
+import { createBuiltinFuncExts } from '../extensions/builtinFuncExts'
 import { mergeSchemaSpecs } from './schema'
 import { inputRules, pasteRules } from './rule'
 import { CommandManager } from './commandManager'
@@ -50,7 +50,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     const { extensions } = coreConfig
     this.options = options
     this.extensions = [
-      new BaseKeymap(this),
+      ...createBuiltinFuncExts(this),
       ...extensions(this),
     ]
 
@@ -103,7 +103,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
 
     return [
       ...builtinPlugins,
-      inputRules({ core: this, rules: allInputRules }),
+      ...inputRules({ core: this, rules: allInputRules }),
       ...pasteRules({ core: this, rules: allPasteRules }),
       ...allKeymapPlugins,
       ...proseMirrorPluginsByExtensions,

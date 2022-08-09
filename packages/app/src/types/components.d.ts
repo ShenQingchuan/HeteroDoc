@@ -8,6 +8,8 @@ declare module '@vue/runtime-core' {
     HdEditorContext: typeof import('./../components/editor/hdEditorContext.vue')['default']
     HdEditorHeadingsSubMenu: typeof import('./../components/editor/hdEditorHeadingsSubMenu.vue')['default']
     HdEditorLinkEdit: typeof import('./../components/editor/hdEditorLinkEdit.vue')['default']
+    HdEditorMenuBasics: typeof import('./../components/editor/hdEditorMenuBasics.vue')['default']
+    HdEditorMenuTextAlign: typeof import('./../components/editor/hdEditorMenuTextAlign.vue')['default']
     HdFloatMenu: typeof import('./../components/editor/hdFloatMenu.vue')['default']
     HdPageHeader: typeof import('./../components/layouts/hdPageHeader.vue')['default']
     NButton: typeof import('naive-ui')['NButton']

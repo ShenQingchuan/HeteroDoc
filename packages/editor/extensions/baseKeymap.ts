@@ -7,11 +7,8 @@ export class BaseKeymap implements IEditorExtension {
   type = ExtensionType.func
   name = 'baseKeymap'
   options = {}
-  core: EditorCore
 
-  constructor(core: EditorCore) {
-    this.core = core
-  }
+  constructor(public core: EditorCore) {}
 
   keymaps = () => {
     const handleBackspace = () => this.core.commands.first({
