@@ -3,12 +3,15 @@ import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
 export default defineConfig({
-  plugins: [dts()],
+  plugins: [dts({
+    include: 'src/**/*.ts',
+    exclude: 'node_modules',
+  })],
   build: {
     sourcemap: true,
     minify: process.env.NODE_ENV === 'production',
     lib: {
-      entry: path.resolve(__dirname, './index.ts'),
+      entry: path.resolve(__dirname, './src/index.ts'),
       formats: ['es'],
       fileName: () => 'index.js',
     },
