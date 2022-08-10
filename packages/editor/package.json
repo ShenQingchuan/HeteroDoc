@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development && vite build --watch",
+    "dev": "cross-env NODE_ENV=development && vite build --watch.buildDelay 900",
     "build": "cross-env NODE_ENV=production && vite build"
   },
   "dependencies": {

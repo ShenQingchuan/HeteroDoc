@@ -7,6 +7,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     HdEditorContext: typeof import('./../components/editor/hdEditorContext.vue')['default']
     HdEditorHeadingsSubMenu: typeof import('./../components/editor/hdEditorHeadingsSubMenu.vue')['default']
+    HdEditorInputFastpath: typeof import('./../components/editor/hdEditorInputFastpath.vue')['default']
     HdEditorLinkEdit: typeof import('./../components/editor/hdEditorLinkEdit.vue')['default']
     HdEditorMenuBasics: typeof import('./../components/editor/hdEditorMenuBasics.vue')['default']
     HdEditorMenuTextAlign: typeof import('./../components/editor/hdEditorMenuTextAlign.vue')['default']

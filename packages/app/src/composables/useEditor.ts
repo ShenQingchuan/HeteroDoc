@@ -1,4 +1,6 @@
 import { EditorCore } from '@hetero/editor'
+import type { Ref } from 'vue'
+import { EditorProvideKey } from '../constants/editor'
 
 export function useHeteroEditor(...args: ConstructorParameters<typeof EditorCore>) {
   const editorStore = useEditorStore()
@@ -22,5 +24,10 @@ export function useHeteroEditor(...args: ConstructorParameters<typeof EditorCore
     computeAvailableState()
   })
 
+  return editorCore
+}
+
+export function useEditorCoreInject() {
+  const editorCore = inject<Ref<EditorCore>>(EditorProvideKey)
   return editorCore
 }

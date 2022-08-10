@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import type { EditorCore, HyperlinkAttrs } from '@hetero/editor'
-import type { Ref } from 'vue'
-import { EditorFloatMenuAction, EditorProvideKey, FloatMenuZIndex } from '../../constants/editor'
+import type { HyperlinkAttrs } from '@hetero/editor'
+import { EditorFloatMenuAction, FloatMenuZIndex } from '../../constants/editor'
 import { URLRegExp } from '../../constants/regExp'
 
 const { t } = useI18n()
-const editorCore = inject<Ref<EditorCore>>(EditorProvideKey)
+const editorCore = useEditorCoreInject()
 const editorStore = useEditorStore()
 const linkEditRef = ref<HTMLElement>()
 const isEditLinkValid = computed(() => URLRegExp.test(editorStore.linkEditURL))

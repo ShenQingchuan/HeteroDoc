@@ -15,7 +15,7 @@ function getMarksInSelectionOfState(state: EditorState) {
   return marksCollect
 }
 
-export const pluginResetStoredMarksOnDeleted = new Plugin({
+export const pluginResetStoredMarksOnDeleted = () => new Plugin({
   appendTransaction(trs, prevState, currentState) {
     const newTr = currentState.tr
     const currentStoredMarks = currentState.storedMarks

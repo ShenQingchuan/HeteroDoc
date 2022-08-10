@@ -15,7 +15,7 @@ const headingSubMenuStyle = computed((): Partial<CSSStyleDeclaration> => {
   }
 })
 const runToggleHeading = (level: number) => {
-  editorCore?.value.cmdManager.chain.focus().toggleHeading({ level }).run()
+  editorCore?.value.commands.toggleHeading({ level })
 }
 </script>
 
@@ -30,6 +30,11 @@ const runToggleHeading = (level: number) => {
         </n-button>
       </template>
       <div flex-items-center p1 bg-base>
+        <n-button class="hetero-editor__float-menu-item paragraph" quaternary mr2 p1 @click="runToggleHeading(0)">
+          <template #icon>
+            <n-icon><div i-ci:paragraph txt-color-base /></n-icon>
+          </template>
+        </n-button>
         <n-button class="hetero-editor__float-menu-item heading-1" quaternary mr2 p1 @click="runToggleHeading(1)">
           <template #icon>
             <n-icon><div i-ci:heading-h1 txt-color-base /></n-icon>

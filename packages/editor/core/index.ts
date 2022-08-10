@@ -19,7 +19,7 @@ import { inputRules, pasteRules } from './rule'
 import { CommandManager } from './commandManager'
 import { HelpersManager } from './helpers/helpersManager'
 import { ActiveManager } from './activeManager'
-import { builtinPlugins } from './plugins'
+import { getAllBuiltinPlugins } from './plugins'
 import type { PatternRule } from './rule'
 
 export interface EditorOptions {
@@ -31,6 +31,7 @@ export interface EditorOptions {
 export interface EditorCoreEvent {
   'rendered': { timeCost: number }
   'dispatchedTransaction': null
+  'activateInputFastPath': null
 }
 
 export class EditorCore extends TypeEvent<EditorCoreEvent> {
@@ -102,7 +103,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     )
 
     return [
-      ...builtinPlugins,
+      ...getAllBuiltinPlugins(this),
       ...inputRules({ core: this, rules: allInputRules }),
       ...pasteRules({ core: this, rules: allPasteRules }),
       ...allKeymapPlugins,

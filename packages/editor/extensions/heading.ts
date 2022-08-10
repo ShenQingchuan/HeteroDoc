@@ -89,6 +89,11 @@ export class HeadingExtension implements IEditorExtension {
         })
       },
       toggleHeading: ({ level }) => ({ commands }) => {
+        if (level === 0) {
+          return commands.setNode({
+            typeOrName: 'paragraph',
+          })
+        }
         return commands.toggleNode({
           turnOn: this.name,
           turnOff: 'paragraph',
