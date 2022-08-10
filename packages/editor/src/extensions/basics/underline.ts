@@ -1,8 +1,8 @@
 import type { DOMOutputSpec } from 'prosemirror-model'
-import type { EditorCore } from '../core'
-import type { AddMarksSchema, NoArgsCommand } from '../types'
-import { ExtensionType } from './editorExtension'
-import type { IEditorExtension } from './editorExtension'
+import type { EditorCore } from '../../core'
+import type { AddMarksSchema, NoArgsCommand } from '../../types'
+import { ExtensionType } from '../editorExtension'
+import type { IEditorExtension } from '../editorExtension'
 
 const underlineDOM: DOMOutputSpec = ['u', 0]
 

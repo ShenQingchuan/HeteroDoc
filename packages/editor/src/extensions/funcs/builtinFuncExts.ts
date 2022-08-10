@@ -1,4 +1,4 @@
-import type { EditorCore } from '../core'
+import type { EditorCore } from '../../core'
 import { BaseKeymap } from './baseKeymap'
 import { TextAlign } from './textAlign'
 

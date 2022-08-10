@@ -1,8 +1,8 @@
-import { ItalicExtension } from './italic'
-import { BoldExtension } from './bold'
-import { CodeExtension } from './code'
-import { UnderlineExtension } from './underline'
-import { DeleteLineExtension } from './deleteLine'
+import { ItalicExtension } from './basics/italic'
+import { BoldExtension } from './basics/bold'
+import { CodeExtension } from './basics/code'
+import { UnderlineExtension } from './basics/underline'
+import { DeleteLineExtension } from './basics/deleteLine'
 import { HyperlinkExtension } from './hyperlink'
 import { HeadingExtension } from './heading'
 

@@ -1,7 +1,7 @@
-import type { EditorCore } from '../core'
-import type { Command, NoArgsCommand } from '../types'
-import type { IEditorExtension } from './editorExtension'
-import { ExtensionType } from './editorExtension'
+import type { EditorCore } from '../../core'
+import type { Command, NoArgsCommand } from '../../types'
+import type { IEditorExtension } from '../editorExtension'
+import { ExtensionType } from '../editorExtension'
 
 interface TextAlignCommandDefs {
   setTextAlign: Command<{ alignment: 'left' | 'center' | 'right' | 'justify' }>

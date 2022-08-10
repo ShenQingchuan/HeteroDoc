@@ -1,9 +1,9 @@
-import { markInputRule, markPasteRule } from '../core/rule'
-import type { PatternRule } from '../core/rule'
-import type { EditorCore } from '../core'
-import type { AddMarksSchema, NoArgsCommand } from '../types'
-import type { IEditorExtension } from './editorExtension'
-import { ExtensionType } from './editorExtension'
+import { markInputRule, markPasteRule } from '../../core/rule'
+import type { PatternRule } from '../../core/rule'
+import type { EditorCore } from '../../core'
+import type { AddMarksSchema, NoArgsCommand } from '../../types'
+import type { IEditorExtension } from '../editorExtension'
+import { ExtensionType } from '../editorExtension'
 
 const singleStarInputRegex = /(?:^|\s)((?:\*)(?<text>(?:[^*]+))(?:\*))$/
 const singleStarPasteRegex = /(?:^|\s)((?:\*)(?<text>(?:[^*]+))(?:\*))/g

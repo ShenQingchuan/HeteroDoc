@@ -1,10 +1,10 @@
 import type { DOMOutputSpec } from 'prosemirror-model'
-import type { EditorCore } from '../core'
-import type { PatternRule } from '../core/rule'
-import { markInputRule, markPasteRule } from '../core/rule'
-import type { AddMarksSchema, NoArgsCommand } from '../types'
-import { ExtensionType } from './editorExtension'
-import type { IEditorExtension } from './editorExtension'
+import type { EditorCore } from '../../core'
+import type { PatternRule } from '../../core/rule'
+import { markInputRule, markPasteRule } from '../../core/rule'
+import type { AddMarksSchema, NoArgsCommand } from '../../types'
+import { ExtensionType } from '../editorExtension'
+import type { IEditorExtension } from '../editorExtension'
 
 const inlineCodeInputRegex = /(?:^|\s)((?:`)(?<text>(?:[^`]+))(?:`))$/
 const inlineCodePasteRegex = /(?:^|\s)((?:`)(?<text>(?:[^`]+))(?:`))/g
