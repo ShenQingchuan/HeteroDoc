@@ -4,15 +4,18 @@
   "description": "Collaborative cloud documentation for heterocube teams",
   "scripts": {
     "prepare": "husky install",
-    "dev": "tsx ./scripts/dev.ts",
+    "watch": "tsx ./scripts/watch.ts",
     "dev:app": "pnpm --filter @hetero/doc-web-app dev",
     "cypress": "pnpm --filter @hetero/doc-web-app cypress",
-    "cypress:component": "pnpm --filter @hetero/editor build && pnpm --filter @hetero/doc-web-app cypress:component",
+    "cypress:component": "pnpm build:all && pnpm --filter @hetero/doc-web-app cypress:component",
     "cypress:component-video": "pnpm --filter @hetero/editor build && pnpm --filter @hetero/doc-web-app cypress:component-video",
     "build:app": "pnpm --filter @hetero/doc-web-app build",
     "preview:app": "pnpm --filter @hetero/doc-web-app preview",
     "dev:editor": "pnpm --filter @hetero/editor dev",
-    "build:editor": "pnpm --filter @hetero/editor build"
+    "build:editor": "pnpm --filter @hetero/editor build",
+    "dev:shared": "pnpm --filter @hetero/shared dev",
+    "build:shared": "pnpm --filter @hetero/shared build",
+    "build:all": "pnpm build:shared && pnpm build:editor"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.24.2",
@@ -28,7 +31,8 @@
     "lint-staged": "^13.0.3",
     "ora": "^6.1.2",
     "tsx": "^3.6.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "vite": "^3.0.5"
   },
   "husky": {
     "hooks": {

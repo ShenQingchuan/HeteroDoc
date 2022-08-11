@@ -59,13 +59,14 @@ watch(
           top: `${editorStore.popoverTop}px`,
           zIndex: FloatMenuZIndex,
         }"
-        flex-items-center justify-center py1 px2 border-base bg-base border-round
+        flex-items-center justify-center py1 px2
+        border-base bg-base border-round
       >
-        <hdEditorHeadingsSubMenu />
+        <HdEditorHeadingsSubMenu />
         <n-divider vertical />
-        <hdEditorMenuBasics />
+        <HdEditorMenuBasics />
         <n-divider vertical />
-        <hdEditorMenuTextAlign />
+        <HdEditorMenuTextAlign />
         <n-divider vertical />
         <n-button
           class="hetero-editor__float-menu-item hyperlink" quaternary px1 mx1

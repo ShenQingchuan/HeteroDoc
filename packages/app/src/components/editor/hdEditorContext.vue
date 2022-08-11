@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import HdFloatMenu from './hdFloatMenu.vue'
 import HdEditorLinkEdit from './hdEditorLinkEdit.vue'
+import HdEditorInputFastpath from './hdEditorInputFastpath.vue'
 </script>
 
 <template>
@@ -8,5 +9,6 @@ import HdEditorLinkEdit from './hdEditorLinkEdit.vue'
     <slot name="default"></slot>
     <HdFloatMenu />
     <HdEditorLinkEdit />
+    <HdEditorInputFastpath />
   </div>
 </template>

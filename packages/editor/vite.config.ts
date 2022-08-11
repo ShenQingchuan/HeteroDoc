@@ -10,6 +10,7 @@ export default defineConfig({
   build: {
     sourcemap: true,
     minify: process.env.NODE_ENV === 'production',
+    watch: process.env.NODE_ENV === 'development' ? {} : undefined,
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
       formats: ['es'],
@@ -25,6 +26,8 @@ export default defineConfig({
         'prosemirror-state',
         'prosemirror-transform',
         'prosemirror-view',
+        'prosemirror-utils',
+        'prosemirror-tables',
         'y-prosemirror',
         'y-protocols',
         'y-websocket',

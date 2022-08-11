@@ -1,0 +1,1 @@
+export { TypeEvent } from './typeEvent'

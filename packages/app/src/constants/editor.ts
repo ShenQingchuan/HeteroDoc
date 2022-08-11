@@ -1,6 +1,7 @@
 export enum EditorFloatMenuAction {
   BySelection,
   ByUIEvent,
+  ByInputFastpath,
 }
 
 export const EditorProvideKey = 'provideHeteroEditor'

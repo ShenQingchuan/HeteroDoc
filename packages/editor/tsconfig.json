@@ -15,6 +15,7 @@
     "declarationMap": true                                /* Generates a source map for each .d.ts file. */
   },
   "exclude": [
-    "./dist"
+    "./dist",
+    "./node_modules"
   ]
 }

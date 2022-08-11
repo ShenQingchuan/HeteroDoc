@@ -7,7 +7,7 @@ import type {
   Transaction,
 } from 'prosemirror-state'
 import { keymap } from 'prosemirror-keymap'
-import { TypeEvent } from '../utils/typeEvent'
+import { TypeEvent } from '@hetero/shared'
 import { getLogger } from '../utils/logger'
 import { ExtensionType } from '../extensions/editorExtension'
 import type { EditorLogger } from '../utils/logger'
@@ -31,7 +31,8 @@ export interface EditorOptions {
 export interface EditorCoreEvent {
   'rendered': { timeCost: number }
   'dispatchedTransaction': null
-  'activateInputFastPath': null
+  'activateInputFastPath': { left: number; top: number }
+  'deactivateInputFastPath': { isContentChanged: boolean }
 }
 
 export class EditorCore extends TypeEvent<EditorCoreEvent> {

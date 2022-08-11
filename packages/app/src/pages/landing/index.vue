@@ -4,6 +4,6 @@
 
 <template>
   <div class="hd-page-landing__container" flex-col>
-    <hd-page-header />
+    <HdPageHeader />
   </div>
 </template>

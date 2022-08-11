@@ -9,6 +9,8 @@ editor:
   menu:
     command-bold: Bold
     command-italic: Italic
+    fastpath-option-heading: Heading {level}
+    fastpath-options-title-basic-textblocks: Basic text block
   popover:
     edit-link-confirm: Confirm
     edit-link-url-label: Link

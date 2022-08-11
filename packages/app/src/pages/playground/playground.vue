@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { EditorCore } from '@hetero/editor'
 import { EditorProvideKey } from '../../constants/editor'
+import { editorEventBus } from '../../eventBus'
 import { composeExtensions } from './composeExtensions'
 
 const naiveUITheme = useNaiveThemeSetup()
@@ -23,12 +24,14 @@ onMounted(() => {
   container
     .querySelector('.ProseMirror')
     ?.setAttribute('spellcheck', 'false')
+  editorEventBus.emit('editorMounted', { core: editorCore.value })
+  startReflectActiveState(editorCore.value)
 })
 </script>
 
 <template>
   <n-config-provider :theme="naiveUITheme">
-    <hdEditorContext>
+    <HdEditorContext>
       <div
         class="page-misc__editor-test"
         bg-base flex-col items-center justify-center
@@ -52,11 +55,11 @@ onMounted(() => {
           <div
             ref="editor"
             class="page-misc__editor-test-mount-point"
-            p-12 bg="neutral-200/50 dark:neutral-600/70"
+            p-10 bg="neutral-200/40 dark:neutral-600/70"
           />
         </div>
       </div>
-    </hdEditorContext>
+    </HdEditorContext>
   </n-config-provider>
 </template>
 

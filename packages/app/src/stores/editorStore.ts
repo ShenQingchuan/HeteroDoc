@@ -18,6 +18,7 @@ interface EditorStoreState {
   floatMenuByAction: EditorFloatMenuAction | null
   floatTargetNodeLeft: number
   floatTargetNodeTop: number
+  isShowInputFastpath: boolean
   isShowEditorMenu: boolean
   isShowLinkEdit: boolean
 }
@@ -40,6 +41,7 @@ const createInitEditorStoreState = (): EditorStoreState => {
     floatMenuByAction: null,
     floatTargetNodeLeft: Number.NaN,
     floatTargetNodeTop: Number.NaN,
+    isShowInputFastpath: false,
     isShowEditorMenu: false,
     isShowLinkEdit: false,
   }
@@ -67,6 +69,10 @@ export const useEditorStore = defineStore('editor', {
     },
     setLinkEditText(text: string) {
       this.linkEditText = text
+      return this
+    },
+    setShowInputFastpath(value: boolean) {
+      this.isShowInputFastpath = value
       return this
     },
     setShowEditorMenu(value: boolean) {
