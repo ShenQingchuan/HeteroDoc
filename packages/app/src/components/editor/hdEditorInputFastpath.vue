@@ -17,9 +17,8 @@ editorEventBus.on('editorMounted', ({ core }) => {
   })
 })
 
-const onClickHeadingFastpath = (level: number) => {
-  editorCore?.value.cmdManager
-    .chain.toggleHeading({ level }).run()
+const runInputFastPath = (runActions: (...args: any) => void) => (...args: Parameters<typeof runActions>) => {
+  runActions(...args)
   editorStore.setShowInputFastpath(false)
   editorCore?.value.view.focus()
   editorCore?.value.emit(
@@ -27,6 +26,13 @@ const onClickHeadingFastpath = (level: number) => {
     { isContentChanged: true },
   )
 }
+const onClickHeadingFastpath = runInputFastPath((level: number) => {
+  editorCore?.value.cmdManager
+    .chain.toggleHeading({ level }).run()
+})
+const onClickQuoteFastpath = runInputFastPath(() => {
+  editorCore?.value.commands.setBlockquote()
+})
 const onClickOutside = () => {
   if (editorStore.isShowInputFastpath) {
     editorStore.setShowInputFastpath(false)
@@ -62,19 +68,25 @@ const onClickOutside = () => {
           <div
             v-for="i in 5"
             :key="`heading-${i}`"
-            class="hetero-editor__input-fastpath-option"
-            flex items-center m="0.5" p="y0.5 x1"
-            cursor-pointer
-            hover:bg="neutral-400/30"
+            :class="`hetero-editor__input-fastpath-option heading-${i}`"
+            editor-input-fastpath-option
             @click="onClickHeadingFastpath(i)"
           >
             <i
               class="label-icon" m="r0.5" v-bind="{
                 [`i-ci:heading-h${i}`]: '',
               }"
-              text="4 neutral-700/60 dark:neutral-100/60"
+              editor-input-fastpath-icon
             />
             <span ml="1.2">{{ t('editor.menu.fastpath-option-heading', { level: i }) }}</span>
+          </div>
+          <div
+            class="hetero-editor__input-fastpath-option quote"
+            editor-input-fastpath-option
+            @click="onClickQuoteFastpath"
+          >
+            <i class="label-icon" m="r0.5" i-tabler:blockquote editor-input-fastpath-icon />
+            <span ml="1.2">{{ t('editor.menu.fastpath-option-quote') }}</span>
           </div>
         </div>
       </transition>

@@ -19,6 +19,7 @@ import {
   newlineInCode,
   selectNodeBackward,
   selectNodeForward,
+  wrapIn,
 } from './fundamentals/adaptProseMirrorCmds'
 import { toggleMark } from './markOps/toggleMark'
 import { setMark } from './markOps/setMark'
@@ -42,6 +43,7 @@ export const builtinsCommands = {
   joinBackward,
   joinForward,
   liftEmptyBlock,
+  wrapIn,
   createParagraphNear,
   newlineInCode,
   exitCode,

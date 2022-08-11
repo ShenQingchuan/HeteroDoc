@@ -17,6 +17,7 @@ declare global {
       clickBySelector: (selector: string) => Chainable<JQuery<HTMLElement>>
       testMarkMenuBtnActiveState: (markName: string) => Chainable<JQuery<HTMLElement>>
       typeWithModKey: (content: string) => Chainable<JQuery<HTMLElement>>
+      doFastPath: (optionClassTag: string) => Chainable<JQuery<HTMLElement>>
     }
   }
 }

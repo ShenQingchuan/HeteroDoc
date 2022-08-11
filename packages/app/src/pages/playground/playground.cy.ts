@@ -153,4 +153,21 @@ describe('Editor playground test', () => {
       },
     )
   })
+  it('can use slash to activate input fast-path', () => {
+    mountEditor()
+      .doFastPath('heading-2')
+      .type('test input after fast path')
+      .get('.ProseMirror h2').should('exist')
+  })
+  it('can create blockquote using Markdown format', () => {
+    mountEditor()
+      .type('> ').wait(enoughWaitTime).type('test quote content{enter}test quote content')
+      .get('.ProseMirror blockquote').should('exist')
+  })
+  it('can create blockquote using fast-path', () => {
+    mountEditor()
+      .doFastPath('quote')
+      .type('test input after fast path')
+      .get('.ProseMirror blockquote').should('exist')
+  })
 })

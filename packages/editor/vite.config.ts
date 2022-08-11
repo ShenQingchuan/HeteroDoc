@@ -9,7 +9,7 @@ export default defineConfig({
   })],
   build: {
     sourcemap: true,
-    minify: process.env.NODE_ENV === 'production',
+    minify: process.env.NODE_ENV === 'production' && 'esbuild',
     watch: process.env.NODE_ENV === 'development' ? {} : undefined,
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),

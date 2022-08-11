@@ -52,3 +52,10 @@ Cypress.Commands.add('loop', { prevSubject: true }, (subject, times, callback) =
   }
   return runningChain
 })
+Cypress.Commands.add('doFastPath', { prevSubject: true }, (subject, optionClassTag) => {
+  return cy.wrap(subject)
+    .type('/').wait(enoughWaitTime)
+    .get(`.hetero-editor__input-fastpath-option.${optionClassTag}`)
+    .click().wait(enoughWaitTime)
+    .focusEditor()
+})

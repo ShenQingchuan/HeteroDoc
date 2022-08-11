@@ -10,6 +10,7 @@ editor:
     command-bold: 粗体
     command-italic: 斜体
     fastpath-option-heading: 标题 H{level}
+    fastpath-option-quote: 引述文字
     fastpath-options-title-basic-textblocks: 基础文本块
   popover:
     edit-link-confirm: 确定

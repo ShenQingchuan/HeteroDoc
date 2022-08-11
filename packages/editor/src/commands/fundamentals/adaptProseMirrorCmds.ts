@@ -8,8 +8,11 @@ import {
   newlineInCode as originalNewLineInCode,
   selectNodeBackward as originalSelectNodeBackward,
   selectNodeForward as originalSelectNodeForward,
+  wrapIn as originalWrapIn,
 } from 'prosemirror-commands'
-import type { NoArgsCommand } from '../../types'
+import type { NodeType } from 'prosemirror-model'
+import { getNodeType } from '../../core/helpers/getNodeType'
+import type { Command, NoArgsCommand } from '../../types'
 
 declare global {
   interface Commands {
@@ -22,6 +25,10 @@ declare global {
     createParagraphNear: NoArgsCommand
     newlineInCode: NoArgsCommand
     exitCode: NoArgsCommand
+    wrapIn: Command<{
+      typeOrName: string | NodeType
+      attrs?: Record<string, any>
+    }>
   }
 }
 
@@ -52,3 +59,9 @@ export const newlineInCode: Commands['newlineInCode'] = () => ({ state, dispatch
 export const exitCode: Commands['exitCode'] = () => ({ state, dispatch }) => {
   return originalExitCode(state, dispatch)
 }
+export const wrapIn: Commands['wrapIn'] = ({ typeOrName, attrs = {} }) => ({ state, dispatch }) => {
+  const type = getNodeType(typeOrName, state.schema)
+
+  return originalWrapIn(type, attrs)(state, dispatch)
+}
+

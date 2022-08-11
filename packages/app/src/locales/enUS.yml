@@ -10,6 +10,7 @@ editor:
     command-bold: Bold
     command-italic: Italic
     fastpath-option-heading: Heading {level}
+    fastpath-option-quote: Quoting
     fastpath-options-title-basic-textblocks: Basic text block
   popover:
     edit-link-confirm: Confirm

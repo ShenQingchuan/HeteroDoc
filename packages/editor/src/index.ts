@@ -18,4 +18,5 @@ export {
   DeleteLineExtension,
   HyperlinkExtension,
   HeadingExtension,
+  BlockquoteExtension,
 } from './extensions'
