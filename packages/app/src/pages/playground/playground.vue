@@ -74,6 +74,7 @@ onMounted(() => {
   --heterodoc-link-bottom-color: #70ceab;
   --heterodoc-blockquote-color: #8a8a8a;
   --heterodoc-blockquote-border-left-color: #c0c0c0;
+  --heterodoc-blockquote-bg-color: rgb(239, 237, 237);
 }
 :root.dark {
   --heterodoc-editor-color: rgba(255,255,255,0.85);
@@ -84,6 +85,7 @@ onMounted(() => {
   --heterodoc-link-bottom-color: rgb(189,255,234,25%);
   --heterodoc-blockquote-color: #d5d5d5;
   --heterodoc-blockquote-border-left-color: #d5d5d5;
+  --heterodoc-blockquote-bg-color: rgb(95, 94, 94);
 }
 
 .ProseMirror {
@@ -115,10 +117,12 @@ onMounted(() => {
   }
 
   blockquote {
-    padding-left: 12px;
+    background-color: var(--heterodoc-blockquote-bg-color);
+    padding: 6px 12px;
     color: var(--heterodoc-blockquote-color);
-    border-left: 2px solid var(--heterodoc-blockquote-border-left-color);
+    border-left: 3px solid var(--heterodoc-blockquote-border-left-color);
     margin: 8px 0 14px 0;
+    border-radius: 0 4px 4px 0;
   }
 }
 </style>
