@@ -19,4 +19,5 @@ export {
   HyperlinkExtension,
   HeadingExtension,
   BlockquoteExtension,
+  CodeBlockExtension,
 } from './extensions'

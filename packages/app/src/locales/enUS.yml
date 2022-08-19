@@ -7,10 +7,13 @@ common-header:
     theme-mode-text: Mode
 editor:
   menu:
+    code-block-lang-text-placeholder: Plain text
+    code-block-lang-search-placeholder: Search for language names ...
     command-bold: Bold
     command-italic: Italic
     fastpath-option-heading: Heading {level}
     fastpath-option-quote: Quoting
+    fastpath-option-code-block: Code block
     fastpath-options-title-basic-textblocks: Basic text block
   popover:
     edit-link-confirm: Confirm

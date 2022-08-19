@@ -15,9 +15,12 @@ interface EditorStoreState {
   prevLinkAttrs: HyperlinkAttrs | null
   linkEditURL: string
   linkEditText: string
+  codeBlockLangText: string
   floatMenuByAction: EditorFloatMenuAction | null
   floatTargetNodeLeft: number
+  floatTargetNodeRight: number
   floatTargetNodeTop: number
+  isShowCodeblockLangSelector: boolean
   isShowInputFastpath: boolean
   isShowEditorMenu: boolean
   isShowLinkEdit: boolean
@@ -38,9 +41,12 @@ const createInitEditorStoreState = (): EditorStoreState => {
     prevLinkAttrs: null,
     linkEditURL: '',
     linkEditText: '',
+    codeBlockLangText: '',
     floatMenuByAction: null,
     floatTargetNodeLeft: Number.NaN,
+    floatTargetNodeRight: Number.NaN,
     floatTargetNodeTop: Number.NaN,
+    isShowCodeblockLangSelector: false,
     isShowInputFastpath: false,
     isShowEditorMenu: false,
     isShowLinkEdit: false,
@@ -71,12 +77,20 @@ export const useEditorStore = defineStore('editor', {
       this.linkEditText = text
       return this
     },
+    setCodeBlockLangText(text: string) {
+      this.codeBlockLangText = text
+      return this
+    },
     setShowInputFastpath(value: boolean) {
       this.isShowInputFastpath = value
       return this
     },
     setShowEditorMenu(value: boolean) {
       this.isShowEditorMenu = value
+      return this
+    },
+    setShowCodeBlockLangSelector(value: boolean) {
+      this.isShowCodeblockLangSelector = value
       return this
     },
     setShowLinkEdit(value: boolean) {
@@ -86,10 +100,14 @@ export const useEditorStore = defineStore('editor', {
       }
       return this
     },
-    setFloatMenuPosition(pos: { left: number; top: number }, action: EditorFloatMenuAction) {
-      const { left, top } = pos
-      this.floatTargetNodeLeft = left
-      this.floatTargetNodeTop = top
+    setFloatMenuPosition(
+      pos: Partial<{ left: number; top: number; right: number }>,
+      action: EditorFloatMenuAction,
+    ) {
+      const { left, right, top } = pos
+      this.floatTargetNodeLeft = left ?? Number.NaN
+      this.floatTargetNodeRight = right ?? Number.NaN
+      this.floatTargetNodeTop = top ?? Number.NaN
       this.floatMenuByAction = action
       return this
     },

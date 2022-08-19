@@ -9,8 +9,7 @@ export default defineConfig({
   })],
   build: {
     sourcemap: true,
-    minify: process.env.NODE_ENV === 'production' && 'esbuild',
-    watch: process.env.NODE_ENV === 'development' ? {} : undefined,
+    minify: process.env.NODE_ENV === 'development' ? false : 'esbuild',
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
       formats: ['es'],
@@ -19,6 +18,8 @@ export default defineConfig({
     rollupOptions: {
       external: [
         'lodash',
+        'highlight.js',
+        'prosemirror-highlightjs',
         'prosemirror-commands',
         'prosemirror-history',
         'prosemirror-keymap',

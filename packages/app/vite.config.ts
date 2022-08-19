@@ -1,5 +1,6 @@
 import * as path from 'path'
 import vue from '@vitejs/plugin-vue'
+import vueJSX from '@vitejs/plugin-vue-jsx'
 import vueI18n from '@intlify/vite-plugin-vue-i18n'
 import Unocss from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -22,6 +23,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    vueJSX(),
     vueI18n({
       runtimeOnly: true,
       compositionOnly: true,

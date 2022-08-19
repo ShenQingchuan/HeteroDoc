@@ -1,4 +1,4 @@
-import '../../src/styles/prosemirror.css'
+import '../../src/styles/prosemirror.less'
 import 'uno.css'
 import { mount } from 'cypress/vue'
 

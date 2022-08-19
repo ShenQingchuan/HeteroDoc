@@ -7,10 +7,13 @@ common-header:
     theme-mode-text: 模式
 editor:
   menu:
+    code-block-lang-text-placeholder: 纯文本
+    code-block-lang-search-placeholder: 搜索语言名称 ...
     command-bold: 粗体
     command-italic: 斜体
     fastpath-option-heading: 标题 H{level}
     fastpath-option-quote: 引述文字
+    fastpath-option-code-block: 代码块
     fastpath-options-title-basic-textblocks: 基础文本块
   popover:
     edit-link-confirm: 确定

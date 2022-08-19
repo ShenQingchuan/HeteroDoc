@@ -7,11 +7,10 @@ import { composeExtensions } from './composeExtensions'
 const naiveUITheme = useNaiveThemeSetup()
 const envStore = useEnvStore()
 const themeModeText = useThemeModeText()
-const editorRef = templateRef<HTMLElement | null>('editor')
+const editorRef = ref<HTMLElement>()
 const editorCore = shallowRef<EditorCore>()
 
 provide(EditorProvideKey, editorCore)
-
 onMounted(() => {
   const container = editorRef.value!
   editorCore.value = useHeteroEditor({
@@ -24,7 +23,10 @@ onMounted(() => {
   container
     .querySelector('.ProseMirror')
     ?.setAttribute('spellcheck', 'false')
-  editorEventBus.emit('editorMounted', { core: editorCore.value })
+  editorEventBus.emit('editorMounted', {
+    core: editorCore.value,
+    editorDOM: editorRef.value!,
+  })
   startReflectActiveState(editorCore.value)
 })
 </script>
@@ -53,7 +55,7 @@ onMounted(() => {
           border-base border-rounded
         >
           <div
-            ref="editor"
+            ref="editorRef"
             class="page-misc__editor-test-mount-point"
             p-10 bg="neutral-200/40 dark:neutral-600/70"
           />
@@ -62,67 +64,3 @@ onMounted(() => {
     </HdEditorContext>
   </n-config-provider>
 </template>
-
-<style lang="less">
-:root {
-  --heterodoc-editor-color: rgba(0,0,0,0.85);
-  --heterodoc-link-color: rgb(15,156,115,85%);
-  --heterodoc-caret-color: rgba(0,0,0,0.85);
-  --heterodoc-inline-code-color: #4a84d3;
-  --heterodoc-inline-code-bg-color: rgba(138, 152, 158, 0.2);
-  --heterodoc-inline-code-font: 'Fira Code', Menlo, Monaco, Consolas, 'DejaVu Sans Mono', 'Courier New', Courier, monospace;
-  --heterodoc-link-bottom-color: #70ceab;
-  --heterodoc-blockquote-color: #8a8a8a;
-  --heterodoc-blockquote-border-left-color: #c0c0c0;
-  --heterodoc-blockquote-bg-color: rgb(239, 237, 237);
-}
-:root.dark {
-  --heterodoc-editor-color: rgba(255,255,255,0.85);
-  --heterodoc-link-color: rgb(174,248,206,85%);
-  --heterodoc-caret-color: rgba(255,255,255,0.85);
-  --heterodoc-inline-code-color: #b4d4ff;
-  --heterodoc-inline-code-bg-color: rgba(245, 245, 245, 0.2);
-  --heterodoc-link-bottom-color: rgb(189,255,234,25%);
-  --heterodoc-blockquote-color: #d5d5d5;
-  --heterodoc-blockquote-border-left-color: #d5d5d5;
-  --heterodoc-blockquote-bg-color: rgb(95, 94, 94);
-}
-
-.ProseMirror {
-  min-height: 600px;
-  outline: none;
-  @media screen and (max-width: 768px) {
-    min-height: 300px;
-  }
-
-  color: var(--heterodoc-editor-color);
-  caret-color: var(--heterodoc-caret-color);
-
-  code {
-    margin: 0 2px;
-    padding: 2px 0.4em;
-    border-radius: 6px;
-    font-size: 95%;
-    font-family: var(--heterodoc-inline-code-font);
-    color: var(--heterodoc-inline-code-color);
-    background-color: var(--heterodoc-inline-code-bg-color);
-  }
-
-  a.hyperlink {
-    text-decoration: none;
-    border-bottom: 1px solid var(--heterodoc-link-bottom-color);
-    color: var(--heterodoc-link-color);
-    margin: 0 4px;
-    cursor: pointer;
-  }
-
-  blockquote {
-    background-color: var(--heterodoc-blockquote-bg-color);
-    padding: 6px 12px;
-    color: var(--heterodoc-blockquote-color);
-    border-left: 3px solid var(--heterodoc-blockquote-border-left-color);
-    margin: 8px 0 14px 0;
-    border-radius: 0 4px 4px 0;
-  }
-}
-</style>

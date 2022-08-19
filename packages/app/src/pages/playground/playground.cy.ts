@@ -8,6 +8,9 @@ const enoughWaitTime = 360 // ms
 const headingsSelectors = Array
   .from({ length: 5 }, (_, i) => `.ProseMirror h${i + 1}`)
   .join(',')
+const codeblockTestCode = `function test() {
+  console.log('hello world');
+}`
 
 const mountEditor = () => {
   return cy.viewport(1200, 800)
@@ -96,7 +99,7 @@ describe('Editor playground test', () => {
       .clickBySelector('.hetero-editor__link-edit.confirm')
       .shouldExistMarkSelector(markSelector)
   })
-  it('can create hyperlink from Markdown format', () => {
+  it('can create hyperlink from Markdown shortcut', () => {
     const markSelector = getMarkSelector(`a.hyperlink[href="${testHyperlinkURL}"]`)
     const markdownFormat = `[test](${testHyperlinkURL})`
     mountEditor()
@@ -121,7 +124,7 @@ describe('Editor playground test', () => {
         },
       )
   })
-  it('can create headings by Markdown format', () => {
+  it('can create headings by Markdown shortcut', () => {
     mountEditor()
       .loop(
         5,
@@ -159,15 +162,30 @@ describe('Editor playground test', () => {
       .type('test input after fast path')
       .get('.ProseMirror h2').should('exist')
   })
-  it('can create blockquote using Markdown format', () => {
+  it('can create blockquote by Markdown shortcut', () => {
     mountEditor()
       .type('> ').wait(enoughWaitTime).type('test quote content{enter}test quote content')
       .get('.ProseMirror blockquote').should('exist')
   })
-  it('can create blockquote using fast-path', () => {
+  it('can create blockquote by fast-path', () => {
     mountEditor()
       .doFastPath('quote')
       .type('test input after fast path')
       .get('.ProseMirror blockquote').should('exist')
+  })
+  it('can create code block by Markdown shortcut', () => {
+    mountEditor()
+      .type('```ts ').wait(enoughWaitTime).type(codeblockTestCode)
+      .get('.ProseMirror pre[class="hljs"] code span[class="hljs-keyword"]')
+      .should('exist')
+  })
+  it('can create code block by fast-path and change language setting', () => {
+    mountEditor()
+      .doFastPath('codeBlock')
+      .type(codeblockTestCode)
+      .get('.ProseMirror pre[class="hljs"] code')
+      .should('exist')
+      .trigger('mouseover').wait(enoughWaitTime)
+      .get('.hetero-editor__code-block-lang-search input').type('cpp')
   })
 })

@@ -8,7 +8,7 @@ import type { IEditorExtension } from '../editorExtension'
 
 const inlineCodeInputRegex = /(?:^|\s)((?:`)(?<text>(?:[^`]+))(?:`))$/
 const inlineCodePasteRegex = /(?:^|\s)((?:`)(?<text>(?:[^`]+))(?:`))/g
-const codeDOM: DOMOutputSpec = ['code', 0]
+const codeDOM: DOMOutputSpec = ['code', { 'data-node-type': 'inline' }, 0]
 
 declare global {
   interface Commands {

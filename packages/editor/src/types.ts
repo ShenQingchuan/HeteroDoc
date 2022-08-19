@@ -18,7 +18,11 @@ export type Command<T = {}> = (args: T) => CommandPrimitive
 export type OptionalArgsCommand<T = {}> = (args?: T) => CommandPrimitive
 export type NoArgsCommand = () => CommandPrimitive
 export type CommandPrimitive = (props: CommandProps) => boolean
-export type KeyboardShortcutCommand = (props: { core: EditorCore }) => boolean
+export type KeyboardShortcutCommand = (
+  core: EditorCore,
+  // original params from 'Command'
+  state: EditorState, dispatch?: (tr: Transaction) => void, view?: EditorView,
+) => boolean
 
 type _inferCommandsArgsForExec<K extends keyof Commands> = {
   [N in K]: Commands[N] extends OptionalArgsCommand<infer A1>

@@ -25,6 +25,26 @@ export class ActiveManager {
     return isActive(this.core.view.state, name, attributes)
   }
 
+  isMenuAvailable(): boolean {
+    const { selection, doc } = this.core.view.state
+    const { from, to, empty } = selection
+    if (empty) {
+      return false
+    }
+    const collectRangeNodes: Node[] = []
+    doc.nodesBetween(from, to, (node) => {
+      collectRangeNodes.push(node)
+    })
+    if (
+      // shouldn't display menu in some text block
+      collectRangeNodes.find(n => ['code_block'].includes(n.type.name))
+    ) {
+      return false
+    }
+
+    return true
+  }
+
   isHyperlinkAvailable(): boolean {
     const { selection, doc } = this.core.view.state
     const { from, to, empty } = selection
@@ -35,7 +55,7 @@ export class ActiveManager {
     doc.nodesBetween(from, to, (node) => {
       collectRangeNodes.push(node)
     })
-    return !collectRangeNodes.find(n => n.type.name === 'heading')
+    return !collectRangeNodes.find(n => ['heading', 'code_block'].includes(n.type.name))
       && collectRangeNodes.filter(n => n.type.isText).length === 1
   }
 }

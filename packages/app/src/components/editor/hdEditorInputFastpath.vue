@@ -33,6 +33,9 @@ const onClickHeadingFastpath = runInputFastPath((level: number) => {
 const onClickQuoteFastpath = runInputFastPath(() => {
   editorCore?.value.commands.setBlockquote()
 })
+const onClickCodeblockFastpath = runInputFastPath(() => {
+  editorCore?.value.commands.setCodeblock({ params: '' })
+})
 const onClickOutside = () => {
   if (editorStore.isShowInputFastpath) {
     editorStore.setShowInputFastpath(false)
@@ -78,7 +81,7 @@ const onClickOutside = () => {
               }"
               editor-input-fastpath-icon
             />
-            <span ml="1.2">{{ t('editor.menu.fastpath-option-heading', { level: i }) }}</span>
+            <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-heading', { level: i }) }}</span>
           </div>
           <div
             class="hetero-editor__input-fastpath-option quote"
@@ -86,7 +89,15 @@ const onClickOutside = () => {
             @click="onClickQuoteFastpath"
           >
             <i class="label-icon" m="r0.5" i-tabler:blockquote editor-input-fastpath-icon />
-            <span ml="1.2">{{ t('editor.menu.fastpath-option-quote') }}</span>
+            <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-quote') }}</span>
+          </div>
+          <div
+            class="hetero-editor__input-fastpath-option codeBlock"
+            editor-input-fastpath-option
+            @click="onClickCodeblockFastpath"
+          >
+            <i class="label-icon" m="r0.5" i-tabler:code editor-input-fastpath-icon />
+            <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-code-block') }}</span>
           </div>
         </div>
       </transition>

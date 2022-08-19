@@ -33,6 +33,7 @@ export interface EditorCoreEvent {
   'dispatchedTransaction': null
   'activateInputFastPath': { left: number; top: number }
   'deactivateInputFastPath': { isContentChanged: boolean }
+  'updateCodeBlock': { codeBlockDOM: HTMLElement; langName: string }
 }
 
 export class EditorCore extends TypeEvent<EditorCoreEvent> {
@@ -87,8 +88,15 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       const bindings = Object.fromEntries(
         Object
           .entries(curr.keymaps?.() || {})
-          .map(([shortcut, method]) => {
-            return [shortcut, () => method({ core: this })]
+          .map(([shortcut, keybindingHandler]) => {
+            return [
+              shortcut,
+              (
+                state: EditorState,
+                dispatch?: (tr: Transaction) => void,
+                view?: EditorView,
+              ) => keybindingHandler(this, state, dispatch, view),
+            ]
           }),
       )
 

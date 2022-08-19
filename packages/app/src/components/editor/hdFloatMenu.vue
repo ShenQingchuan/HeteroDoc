@@ -5,6 +5,7 @@ import {
   FloatMenuZIndex,
 } from '../../constants/editor'
 
+const editorCore = useEditorCoreInject()
 const editorStore = useEditorStore()
 const { selection, rects, text } = useTextSelection()
 
@@ -35,7 +36,7 @@ watch(
     if (nothingSelected) {
       editorStore.isShowEditorMenu && editorStore.setShowEditorMenu(false)
     }
-    else {
+    else if (editorCore?.value.activeManager.isMenuAvailable()) {
       openEditorMenu({
         left: rects[0]!.left,
         top: rects[0]!.top,

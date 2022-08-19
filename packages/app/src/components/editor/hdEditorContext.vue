@@ -2,6 +2,7 @@
 import HdFloatMenu from './hdFloatMenu.vue'
 import HdEditorLinkEdit from './hdEditorLinkEdit.vue'
 import HdEditorInputFastpath from './hdEditorInputFastpath.vue'
+import HdCodeBlockLangSelector from './hdCodeBlockLangSelector.vue'
 </script>
 
 <template>
@@ -10,5 +11,6 @@ import HdEditorInputFastpath from './hdEditorInputFastpath.vue'
     <HdFloatMenu />
     <HdEditorLinkEdit />
     <HdEditorInputFastpath />
+    <HdCodeBlockLangSelector />
   </div>
 </template>

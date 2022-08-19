@@ -6,11 +6,11 @@ import { mainRouter } from './routers'
 
 import App from './App.vue'
 
-import './styles/prosemirror.css'
+import './styles/prosemirror.less'
 import 'uno.css'
 
 // Override global styles
-import './styles/global.css'
+import './styles/global.less'
 
 const app = createApp(App)
 
