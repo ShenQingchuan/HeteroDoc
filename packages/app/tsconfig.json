@@ -11,8 +11,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": ["esnext", "dom"],
-    "skipLibCheck": true
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "skipLibCheck": true,
   },
   "include": [
     "vitest.config.ts",
@@ -21,6 +24,11 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
+    "cypress/test/playground.cy.ts",
   ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

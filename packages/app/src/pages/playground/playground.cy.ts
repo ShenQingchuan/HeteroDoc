@@ -185,7 +185,5 @@ describe('Editor playground test', () => {
       .type(codeblockTestCode)
       .get('.ProseMirror pre[class="hljs"] code')
       .should('exist')
-      .trigger('mouseover').wait(enoughWaitTime)
-      .get('.hetero-editor__code-block-lang-search input').type('cpp')
   })
 })

@@ -2,6 +2,22 @@ import type { mount } from 'cypress/vue'
 
 type MountParams = Parameters<typeof mount>
 type OptionsParam = MountParams[1]
+type WaitUntilLog = Pick<Cypress.LogConfig, 'name' | 'message' | 'consoleProps'>
+type ErrorMsgCallback<Subject = any> = (
+  result: Subject,
+  options: WaitUntilOptions<Subject>
+) => string
+interface WaitUntilOptions<Subject = any> {
+  timeout?: number
+  interval?: number
+  errorMsg?: string | ErrorMsgCallback<Subject>
+  description?: string
+  customMessage?: string
+  verbose?: boolean
+  customCheckMessage?: string
+  logger?: (logOptions: WaitUntilLog) => any
+  log?: boolean
+}
 
 declare global {
   namespace Cypress {
@@ -18,6 +34,12 @@ declare global {
       testMarkMenuBtnActiveState: (markName: string) => Chainable<JQuery<HTMLElement>>
       typeWithModKey: (content: string) => Chainable<JQuery<HTMLElement>>
       doFastPath: (optionClassTag: string) => Chainable<JQuery<HTMLElement>>
+      waitUntil<ReturnType = any>(
+        checkFunction: (
+          subject: Subject | undefined
+        ) => ReturnType | Chainable<ReturnType> | Promise<ReturnType>,
+        options?: WaitUntilOptions<Subject>
+      ): Chainable<Subject>
     }
   }
 }
