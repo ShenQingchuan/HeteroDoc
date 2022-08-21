@@ -94,7 +94,7 @@ export const langsMap: Record<string, LanguageFn> = {
   thrift,
   vbscript,
   vim,
-  wasm,
+  'WASM': wasm,
   yaml,
 }
 

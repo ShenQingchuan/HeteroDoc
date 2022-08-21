@@ -11,6 +11,7 @@ const langNameToLangIdAliasMap: Record<string, string> = {
   'c++': 'cpp',
   'c#': 'csharp',
   'f#': 'fsharp',
+  'WASM': 'wasm',
 }
 const langIdToLangNameAliasMap = Object.fromEntries(
   Object

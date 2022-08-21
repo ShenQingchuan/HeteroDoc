@@ -25,7 +25,7 @@ const {
   langNameToLangIdAliasMap,
   langIdToLangNameAliasMap,
 } = useCodeBlockLangSearchOptions()
-const langAliasName = computed(
+const langAliasName = computed<string>(
   () => {
     const langId = editorStore.codeBlockLangText
     return (
@@ -133,6 +133,7 @@ editorEventBus.on('editorMounted', ({ editorDOM }) => {
             ref="codeBlockLangSelectorRef"
             :class="langSelectorBtnClassName"
             secondary size="tiny"
+            capitalize
             @click="handleCodeBlockLangSelectorBtnClick"
           >
             {{ langAliasName }}
