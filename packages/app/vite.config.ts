@@ -6,6 +6,7 @@ import Unocss from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import { VitePluginFonts } from 'vite-plugin-fonts'
 import { defineConfig } from 'vite'
 
 const fromAppPath = (p: string) => path.resolve(__dirname, p)
@@ -44,6 +45,11 @@ export default defineConfig({
       dirs: fromAppPath('src/components'),
       dts: fromAppPath('src/types/components.d.ts'),
       resolvers: [NaiveUiResolver()],
+    }),
+    VitePluginFonts({
+      google: {
+        families: ['JetBrains Mono'],
+      },
     }),
   ],
 })

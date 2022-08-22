@@ -17,6 +17,7 @@ onMounted(() => {
     container,
     isReadOnly: false,
     autofocus: true,
+    isOffline: true,
   }, {
     extensions: core => composeExtensions(core),
   })

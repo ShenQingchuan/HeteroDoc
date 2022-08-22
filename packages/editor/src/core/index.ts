@@ -8,6 +8,8 @@ import type {
 } from 'prosemirror-state'
 import { keymap } from 'prosemirror-keymap'
 import { TypeEvent } from '@hetero/shared'
+import { history, undo } from 'prosemirror-history'
+import { redo } from 'y-prosemirror'
 import { getLogger } from '../utils/logger'
 import { ExtensionType } from '../extensions/editorExtension'
 import type { EditorLogger } from '../utils/logger'
@@ -27,6 +29,7 @@ export interface EditorOptions {
   isReadOnly: boolean // editor mode
   doc?: any // given document data to initialize editor
   autofocus?: boolean
+  isOffline?: boolean
 }
 export interface EditorCoreEvent {
   'rendered': { timeCost: number }
@@ -110,14 +113,30 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       (prev, curr) => [...prev, ...(curr.getProseMirrorPlugin?.() ?? [])],
       [] as ProseMirrorPlugin[],
     )
+    const offlinePlugins = [
+      history(),
+      keymap({
+        'Mod-z': undo,
+        'Mod-y': redo,
+        'Mod-Shift-z': redo,
+      }),
+    ]
 
-    return [
+    let allResolved = [
       ...getAllBuiltinPlugins(this),
       ...inputRules({ core: this, rules: allInputRules }),
       ...pasteRules({ core: this, rules: allPasteRules }),
       ...allKeymapPlugins,
       ...proseMirrorPluginsByExtensions,
     ]
+    if (this.options.isOffline) {
+      allResolved = [
+        ...allResolved,
+        ...offlinePlugins,
+      ]
+    }
+
+    return allResolved
   }
 
   private initEditorView = () => {
