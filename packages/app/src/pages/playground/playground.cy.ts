@@ -179,11 +179,15 @@ describe('Editor playground test', () => {
       .get('.ProseMirror pre[class="hljs"] code span[class="hljs-keyword"]')
       .should('exist')
   })
-  it('can create code block by fast-path and change language setting', () => {
+  it('can undo/redo in offline mode', () => {
     mountEditor()
-      .doFastPath('codeBlock')
-      .type(codeblockTestCode)
-      .get('.ProseMirror pre[class="hljs"] code')
-      .should('exist')
+      .type('test input first part ').wait(1000)
+      .type('test input second part').wait(enoughWaitTime)
+      .typeWithModKey('z') // mock undo action
+      .get('.ProseMirror > p').should('have.text', 'test input first part ')
+      .get('.ProseMirror').typeWithModKey('{shift}z') // mock redo action
+      .waitUntilElementAttached('.ProseMirror > p', (el) => {
+        expect(el).to.text('test input first part test input second part')
+      })
   })
 })

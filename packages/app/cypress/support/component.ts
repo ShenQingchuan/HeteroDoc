@@ -41,7 +41,7 @@ Cypress.Commands.add('testMarkMenuBtnActiveState', { prevSubject: true }, (subje
     .get(menuBtnSelector).should('have.class', 'active')
 })
 Cypress.Commands.add('typeWithModKey', { prevSubject: true }, (subject, content) => {
-  const modKey = isMacOS() ? 'meta' : 'ctrl'
+  const modKey = isMacOS() ? 'cmd' : 'ctrl'
   return cy.wrap(subject).type(`{${modKey}}${content}`)
 })
 Cypress.Commands.add('loop', { prevSubject: true }, (subject, times, callback) => {
@@ -140,4 +140,13 @@ Cypress.Commands.add('waitUntil', { prevSubject: 'optional' }, (subject, checkFu
   }
 
   return resolveValue()
+})
+Cypress.Commands.add('waitUntilElementAttached', { prevSubject: true }, (subject, selector, callback) => {
+  cy.wrap(subject)
+    .waitUntil(() => cy.get(selector).then(el => Cypress.dom.isAttached(el) ? el : undefined))
+    .then((el) => {
+      if (el) {
+        callback(el)
+      }
+    })
 })

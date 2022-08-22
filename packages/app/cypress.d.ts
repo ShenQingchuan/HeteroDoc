@@ -40,6 +40,7 @@ declare global {
         ) => ReturnType | Chainable<ReturnType> | Promise<ReturnType>,
         options?: WaitUntilOptions<Subject>
       ): Chainable<Subject>
+      waitUntilElementAttached: (selector: string, callback: (el: HTMLElement) => void) => Chainable<Subject>
     }
   }
 }
