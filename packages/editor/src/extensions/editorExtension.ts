@@ -19,6 +19,10 @@ export interface IEditorExtension<OptionsDefs = {}> {
   commands?: () => Record<string, any>
   keymaps?: () => Record<string, KeyboardShortcutCommand>
   getProseMirrorPlugin?: () => ProseMirrorPlugin[]
+
+  // hooks
+  beforeTransaction?: () => void
+  afterApplyTransaction?: () => void
 }
 
 export interface IEditorMark extends IEditorExtension {

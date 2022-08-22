@@ -72,10 +72,10 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   private dispatchTransaction = (tr: Transaction) => {
     try {
       const { view } = this
-      // Todo: Traverse all extensions to execute their beforeTransaction hooks
+      this.extensions.forEach(ext => ext.beforeTransaction?.())
       const newState = view.state.apply(tr)
-      // Todo: Traverse all extensions to execute their afterTransaction hooks
       view.updateState(newState)
+      this.extensions.forEach(ext => ext.afterApplyTransaction?.())
       this.emit('dispatchedTransaction')
     }
     catch (err) {
