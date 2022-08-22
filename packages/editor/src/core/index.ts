@@ -8,8 +8,7 @@ import type {
 } from 'prosemirror-state'
 import { keymap } from 'prosemirror-keymap'
 import { TypeEvent } from '@hetero/shared'
-import { history, undo } from 'prosemirror-history'
-import { redo } from 'y-prosemirror'
+import { history, redo, undo } from 'prosemirror-history'
 import { getLogger } from '../utils/logger'
 import { ExtensionType } from '../extensions/editorExtension'
 import type { EditorLogger } from '../utils/logger'
@@ -117,8 +116,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       history(),
       keymap({
         'Mod-z': undo,
-        'Mod-y': redo,
-        'Mod-Shift-z': redo,
+        'Shift-Mod-z': redo,
       }),
     ]
 
