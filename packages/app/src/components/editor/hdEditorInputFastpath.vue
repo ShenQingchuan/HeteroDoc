@@ -3,11 +3,26 @@ import { OnClickOutside } from '@vueuse/components'
 import { EditorFloatMenuAction, FloatMenuZIndex } from '../../constants/editor'
 import { editorEventBus } from '../../eventBus'
 
-const editorCore = useEditorCoreInject()
 const editorStore = useEditorStore()
 const { t } = useI18n()
+const {
+  activeOption,
+  onFastpathActionKey,
+  onClickHeadingFastpath,
+  onClickQuoteFastpath,
+  onClickCodeblockFastpath,
+} = useFastpathHandler()
 
-editorEventBus.on('editorMounted', ({ core }) => {
+const onClickOutside = () => {
+  if (editorStore.isShowInputFastpath) {
+    editorStore.setShowInputFastpath(false)
+  }
+}
+const getActiveClassByOption = (option: string) => {
+  return activeOption.value === option ? 'active' : ''
+}
+
+editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   core.on('activateInputFastPath', (pos) => {
     editorStore.setFloatMenuPosition(pos, EditorFloatMenuAction.ByInputFastpath)
     editorStore.setShowInputFastpath(true)
@@ -15,32 +30,14 @@ editorEventBus.on('editorMounted', ({ core }) => {
   core.on('deactivateInputFastPath', () => {
     editorStore.setShowInputFastpath(false)
   })
+  core.on('fastpathActionKey', ({ event }) => {
+    onFastpathActionKey(event)
+  })
 })
-
-const runInputFastPath = (runActions: (...args: any) => void) => (...args: Parameters<typeof runActions>) => {
-  runActions(...args)
-  editorStore.setShowInputFastpath(false)
-  editorCore?.value.view.focus()
-  editorCore?.value.emit(
-    'deactivateInputFastPath',
-    { isContentChanged: true },
-  )
-}
-const onClickHeadingFastpath = runInputFastPath((level: number) => {
-  editorCore?.value.cmdManager
-    .chain.toggleHeading({ level }).run()
-})
-const onClickQuoteFastpath = runInputFastPath(() => {
-  editorCore?.value.commands.setBlockquote()
-})
-const onClickCodeblockFastpath = runInputFastPath(() => {
-  editorCore?.value.commands.setCodeblock({ params: 'plaintext' })
-})
-const onClickOutside = () => {
-  if (editorStore.isShowInputFastpath) {
-    editorStore.setShowInputFastpath(false)
-  }
-}
+watch(
+  () => editorStore.isShowInputFastpath,
+  (isShow) => { if (isShow) { activeOption.value = '' } },
+)
 </script>
 
 <template>
@@ -71,7 +68,7 @@ const onClickOutside = () => {
           <div
             v-for="i in 5"
             :key="`heading-${i}`"
-            :class="`hetero-editor__input-fastpath-option heading-${i}`"
+            :class="`hetero-editor__input-fastpath-option heading-${i} ${getActiveClassByOption(`h${i}`)}`"
             editor-input-fastpath-option
             @click="onClickHeadingFastpath(i)"
           >
@@ -85,6 +82,7 @@ const onClickOutside = () => {
           </div>
           <div
             class="hetero-editor__input-fastpath-option quote"
+            :class="`${getActiveClassByOption('quote')}`"
             editor-input-fastpath-option
             @click="onClickQuoteFastpath"
           >
@@ -93,6 +91,7 @@ const onClickOutside = () => {
           </div>
           <div
             class="hetero-editor__input-fastpath-option codeBlock"
+            :class="`${getActiveClassByOption('codeblock')}`"
             editor-input-fastpath-option
             @click="onClickCodeblockFastpath"
           >
@@ -104,3 +103,9 @@ const onClickOutside = () => {
     </OnClickOutside>
   </teleport>
 </template>
+
+<style>
+.hetero-editor__input-fastpath-option.active {
+  --at-apply: bg-neutral-400/30;
+}
+</style>

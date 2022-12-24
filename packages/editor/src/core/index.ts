@@ -35,6 +35,7 @@ export interface EditorCoreEvent {
   'dispatchedTransaction': null
   'activateInputFastPath': { left: number; top: number }
   'deactivateInputFastPath': { isContentChanged: boolean }
+  'fastpathActionKey': { event: KeyboardEvent }
   'updateCodeBlock': { codeBlockDOM: HTMLElement; langName: string; alias?: string }
 }
 

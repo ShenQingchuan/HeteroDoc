@@ -155,6 +155,7 @@ declare global {
   const useEventListener: typeof import('@vueuse/core')['useEventListener']
   const useEventSource: typeof import('@vueuse/core')['useEventSource']
   const useEyeDropper: typeof import('@vueuse/core')['useEyeDropper']
+  const useFastpathHandler: typeof import('../composables/useFastpathKeyHandler')['useFastpathHandler']
   const useFavicon: typeof import('@vueuse/core')['useFavicon']
   const useFetch: typeof import('@vueuse/core')['useFetch']
   const useFileSystemAccess: typeof import('@vueuse/core')['useFileSystemAccess']

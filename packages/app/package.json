@@ -29,6 +29,7 @@
     "@cypress/vue": "^4.0.0",
     "@iconify/json": "^2.1.50",
     "@pinia/testing": "^0.0.12",
+    "@unocss/transformer-directives": "^0.48.0",
     "@vitejs/plugin-vue": "^2.3.3",
     "@vitejs/plugin-vue-jsx": "^2.0.0",
     "cypress": "^10.3.0",
