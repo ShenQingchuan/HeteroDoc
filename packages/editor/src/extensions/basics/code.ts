@@ -5,15 +5,16 @@ import { markInputRule, markPasteRule } from '../../core/rule'
 import type { AddMarksSchema, NoArgsCommand } from '../../types'
 import { ExtensionType } from '../editorExtension'
 import type { IEditorExtension } from '../editorExtension'
+import { whiteSpaceDom } from '../../constants'
 
 const inlineCodeInputRegex = /(?:^|\s)((?:`)(?<text>(?:[^`]+))(?:`))$/
 const inlineCodePasteRegex = /(?:^|\s)((?:`)(?<text>(?:[^`]+))(?:`))/g
 const codeDOM: DOMOutputSpec = [
   'code',
   { 'data-node-type': 'inline' },
-  ['wbr'],
+  whiteSpaceDom,
   ['span', 0],
-  ['wbr'],
+  whiteSpaceDom,
 ]
 
 declare global {
