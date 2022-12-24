@@ -13,6 +13,7 @@ const codeblockRegExp = /^(···|```)(?<params>[a-z]+)?[\s\n]$/
 
 export interface CodeBlockSetterAttrs {
   params: string
+  alias?: string
 }
 interface CodeBlockCommandsDefs {
   setCodeblock: Command<CodeBlockSetterAttrs>
@@ -32,7 +33,7 @@ export class CodeBlockExtension implements IEditorExtension {
   options = {}
 
   constructor(public core: EditorCore, public hljs: HLJSApi) {
-    this.core.on('updateCodeBlock', ({ codeBlockDOM, langName }) => {
+    this.core.on('updateCodeBlock', ({ codeBlockDOM, langName, alias }) => {
       this.core.cmdManager
         .chain
         .command({
@@ -43,12 +44,13 @@ export class CodeBlockExtension implements IEditorExtension {
             return true
           },
         })
-        .setCodeblock({ params: langName })
+        .setCodeblock({ params: langName, alias })
         .run()
     })
   }
 
   schemaSpec: () => AddNodesSchema<'code_block'> = () => {
+    const { i18nTr } = this.core
     return {
       nodes: {
         code_block: {
@@ -58,8 +60,8 @@ export class CodeBlockExtension implements IEditorExtension {
           defining: true,
           marks: '',
           attrs: {
-            params: { default: '' },
-            detectedHighlightLanguage: { default: '' },
+            params: { default: 'plaintext' },
+            alias: { default: '' },
           },
           parseDOM: [
             {
@@ -67,7 +69,7 @@ export class CodeBlockExtension implements IEditorExtension {
               preserveWhitespace: 'full',
               getAttrs(node) {
                 return {
-                  params: (node as Element)?.getAttribute('data-params') || '',
+                  params: (node as Element)?.getAttribute('data-params') || 'plaintext',
                 }
               },
             },
@@ -79,6 +81,16 @@ export class CodeBlockExtension implements IEditorExtension {
                 'data-params': node.attrs.params,
                 'class': 'hljs',
               },
+              ['div',
+                {
+                  class: 'code-block-lang',
+                },
+                node.attrs.alias || (
+                  node.attrs.params === 'plaintext'
+                    ? i18nTr('editor.menu.code-block-lang-text-placeholder')
+                    : node.attrs.params
+                ),
+              ],
               ['code', 0],
             ]
           },

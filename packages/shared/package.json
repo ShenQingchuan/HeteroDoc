@@ -5,16 +5,17 @@
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development && vite build --watch.buildDelay 900",
-    "build": "cross-env NODE_ENV=production && vite build"
+    "dev": "cross-env NODE_ENV=development && tsup --watch",
+    "build": "cross-env NODE_ENV=production && tsup"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "typescript": "^4.7.4",
-    "vite": "^3.0.5",
-    "vite-plugin-dts": "^1.2.0"
+    "tsup": "^6.5.0",
+    "typescript": "^4.7.4"
   },
-  "keywords": ["Utilities"],
+  "keywords": [
+    "Utilities"
+  ],
   "author": "ShenQingchuan",
   "license": "MIT"
 }

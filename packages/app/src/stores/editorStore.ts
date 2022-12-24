@@ -15,7 +15,6 @@ interface EditorStoreState {
   prevLinkAttrs: HyperlinkAttrs | null
   linkEditURL: string
   linkEditText: string
-  codeBlockLangText: string
   floatMenuByAction: EditorFloatMenuAction | null
   floatTargetNodeLeft: number
   floatTargetNodeRight: number
@@ -41,7 +40,6 @@ const createInitEditorStoreState = (): EditorStoreState => {
     prevLinkAttrs: null,
     linkEditURL: '',
     linkEditText: '',
-    codeBlockLangText: '',
     floatMenuByAction: null,
     floatTargetNodeLeft: Number.NaN,
     floatTargetNodeRight: Number.NaN,
@@ -75,10 +73,6 @@ export const useEditorStore = defineStore('editor', {
     },
     setLinkEditText(text: string) {
       this.linkEditText = text
-      return this
-    },
-    setCodeBlockLangText(text: string) {
-      this.codeBlockLangText = text
       return this
     },
     setShowInputFastpath(value: boolean) {

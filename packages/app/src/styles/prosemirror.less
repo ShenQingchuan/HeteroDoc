@@ -4,6 +4,7 @@
   --heterodoc-caret-color: rgba(0, 0, 0, 0.85);
   --heterodoc-inline-code-color: #4a84d3;
   --heterodoc-inline-code-bg-color: rgba(138, 152, 158, 0.2);
+  --heterodoc-code-lang-bg-color: rgba(153, 157, 159, 0.2);
   --heterodoc-inline-code-font: 'Fira Code', Menlo, Monaco, Consolas, 'DejaVu Sans Mono', 'Courier New', Courier, monospace;
   --heterodoc-link-bottom-color: #70ceab;
   --heterodoc-blockquote-color: #8a8a8a;
@@ -17,6 +18,7 @@
   --heterodoc-caret-color: rgba(255, 255, 255, 0.85);
   --heterodoc-inline-code-color: #b4d4ff;
   --heterodoc-inline-code-bg-color: rgba(245, 245, 245, 0.2);
+  --heterodoc-code-lang-bg-color: rgba(255, 255, 255, 0.2);
   --heterodoc-link-bottom-color: rgb(189, 255, 234, 25%);
   --heterodoc-blockquote-color: #d5d5d5;
   --heterodoc-blockquote-border-left-color: #d5d5d5;
@@ -79,12 +81,26 @@
 
   pre[class="hljs"] {
     padding: 12px;
+    padding-right: 6rem;
     border-radius: 6px;
     margin: 10px 0;
+    position: relative;
   }
   pre[class="hljs"] code {
     font-family: JetBrains Mono, monospace;
     font-size: 14px;
+  }
+  pre[class="hljs"] .code-block-lang {
+    width: fit-content;
+    position: absolute;
+    right: 1rem;
+    top: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    user-select: none;
+    background-color: var(--heterodoc-code-lang-bg-color);
   }
   .ProseMirrorCodeBlockLightTheme;
   .dark & {

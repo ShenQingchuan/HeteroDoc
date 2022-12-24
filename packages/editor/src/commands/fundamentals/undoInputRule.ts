@@ -9,8 +9,7 @@ declare global {
 export const undoInputRule: Commands['undoInputRule'] = () => ({ state, dispatch }) => {
   const plugins = state.plugins
 
-  for (let i = 0; i < plugins.length; i++) {
-    const plugin = plugins[i]
+  for (const plugin of plugins) {
     const isInputRules: boolean = Reflect.get(plugin.spec, 'isInputRules')
     let undoable: any
 

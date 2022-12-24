@@ -18,7 +18,7 @@
     "@vueuse/core": "^8.5.0",
     "highlight.js": "^11.6.0",
     "lodash": "^4.17.21",
-    "naive-ui": "^2.29.0",
+    "naive-ui": "^2.34.2",
     "pinia": "^2.0.14",
     "vue": "^3.2.25",
     "vue-i18n": "^9.1.10",
@@ -39,6 +39,7 @@
     "unplugin-vue-components": "^0.19.5",
     "vite": "^3.0.5",
     "vite-plugin-fonts": "^0.6.0",
-    "vue-tsc": "^0.34.7"
+    "vitest": "^0.26.2",
+    "vue-tsc": "^0.35.0"
   }
 }

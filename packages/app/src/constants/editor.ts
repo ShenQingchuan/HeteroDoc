@@ -15,3 +15,5 @@ export const FloatMenuHeadingSubMenuStyleDark = {
   background: 'rgba(60,60,60,1)',
   color: 'rgba(17,24,39,1)',
 }
+
+export const EditorCodeBlockLangBtnClassName = 'code-block-lang'

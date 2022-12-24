@@ -4,6 +4,7 @@ export type {
 export type { HyperlinkAttrs } from './hyperlink'
 
 export { extensionsMap } from './extensionsMap'
+export { TextAlign } from './funcs/textAlign'
 export { BoldExtension } from './basics/bold'
 export { ItalicExtension } from './basics/italic'
 export { UnderlineExtension } from './basics/underline'

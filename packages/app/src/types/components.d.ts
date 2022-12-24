@@ -5,10 +5,10 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    HdCodeBlockLangSelector: typeof import('./../components/editor/hdCodeBlockLangSelector.vue')['default']
     HdEditorContext: typeof import('./../components/editor/hdEditorContext.vue')['default']
     HdEditorHeadingsSubMenu: typeof import('./../components/editor/hdEditorHeadingsSubMenu.vue')['default']
     HdEditorInputFastpath: typeof import('./../components/editor/hdEditorInputFastpath.vue')['default']
+    HdEditorLangSelect: typeof import('./../components/editor/hdEditorLangSelect.vue')['default']
     HdEditorLinkEdit: typeof import('./../components/editor/hdEditorLinkEdit.vue')['default']
     HdEditorMenuBasics: typeof import('./../components/editor/hdEditorMenuBasics.vue')['default']
     HdEditorMenuTextAlign: typeof import('./../components/editor/hdEditorMenuTextAlign.vue')['default']

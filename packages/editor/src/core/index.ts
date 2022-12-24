@@ -35,7 +35,7 @@ export interface EditorCoreEvent {
   'dispatchedTransaction': null
   'activateInputFastPath': { left: number; top: number }
   'deactivateInputFastPath': { isContentChanged: boolean }
-  'updateCodeBlock': { codeBlockDOM: HTMLElement; langName: string }
+  'updateCodeBlock': { codeBlockDOM: HTMLElement; langName: string; alias?: string }
 }
 
 export class EditorCore extends TypeEvent<EditorCoreEvent> {
@@ -47,13 +47,16 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   cmdManager: CommandManager
   helpers: HelpersManager
   activeManager: ActiveManager
+  i18nTr: (key: string) => string
 
   constructor(options: EditorOptions, coreConfig: {
+    i18nTr: (key: string) => string
     extensions: (core: EditorCore) => IEditorExtension[]
   }) {
     super()
-    const { extensions } = coreConfig
+    const { extensions, i18nTr } = coreConfig
     this.options = options
+    this.i18nTr = i18nTr
     this.extensions = [
       ...createBuiltinFuncExts(this),
       ...extensions(this),
@@ -116,7 +119,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       history(),
       keymap({
         'Mod-z': undo,
-        'Shift-Mod-z': redo,
+        'Alt-Mod-z': redo,
       }),
     ]
 

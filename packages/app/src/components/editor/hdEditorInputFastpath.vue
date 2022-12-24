@@ -34,7 +34,7 @@ const onClickQuoteFastpath = runInputFastPath(() => {
   editorCore?.value.commands.setBlockquote()
 })
 const onClickCodeblockFastpath = runInputFastPath(() => {
-  editorCore?.value.commands.setCodeblock({ params: '' })
+  editorCore?.value.commands.setCodeblock({ params: 'plaintext' })
 })
 const onClickOutside = () => {
   if (editorStore.isShowInputFastpath) {
@@ -51,7 +51,7 @@ const onClickOutside = () => {
           v-show="editorStore.isShowInputFastpath"
           w300px max-h-400px overflow-y-auto
           flex-col items-center p2 border-rounded
-          bg="neutral-400/20 dark:neutral-900/80"
+          bg="neutral-100 dark:neutral-900/80"
           text="dark:neutral-100"
           border="1 neutral-900/20 dark:neutral-50/50"
           class="hetero-editor__input-fastpath"

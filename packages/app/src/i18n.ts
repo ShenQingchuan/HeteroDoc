@@ -11,7 +11,7 @@ export function createI18nPlugin() {
       Object.entries(import.meta.globEager('./locales/*.y(a)?ml')).map(
         ([key, value]) => {
           const yaml = key.endsWith('.yaml')
-          return [key.slice(10, yaml ? -5 : -4), value.default]
+          return [key.slice(10, yaml ? -5 : -4), (value as any).default]
         },
       ),
     ),

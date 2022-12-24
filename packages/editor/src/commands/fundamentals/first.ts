@@ -14,7 +14,7 @@ export const first: Commands['first'] = ({ commands }) => (props) => {
     : commands
 
   for (let i = 0; i < items.length; i += 1) {
-    if (items[i](props))
+    if (items[i]?.(props))
       return true
   }
 

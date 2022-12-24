@@ -4,6 +4,7 @@ import { EditorProvideKey } from '../../constants/editor'
 import { editorEventBus } from '../../eventBus'
 import { composeExtensions } from './composeExtensions'
 
+const { t } = useI18n()
 const naiveUITheme = useNaiveThemeSetup()
 const envStore = useEnvStore()
 const themeModeText = useThemeModeText()
@@ -19,7 +20,8 @@ onMounted(() => {
     autofocus: true,
     isOffline: true,
   }, {
-    extensions: core => composeExtensions(core),
+    i18nTr: t,
+    extensions: (core: EditorCore) => composeExtensions(core),
   })
   container
     .querySelector('.ProseMirror')

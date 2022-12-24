@@ -185,7 +185,7 @@ describe('Editor playground test', () => {
       .type('test input second part').wait(enoughWaitTime)
       .typeWithModKey('z') // mock undo action
       .get('.ProseMirror > p').should('have.text', 'test input first part ')
-      .get('.ProseMirror').typeWithModKey('{shift}z') // mock redo action
+      .get('.ProseMirror').typeWithModKey('{alt}z') // mock redo action
       .waitUntilElementAttached('.ProseMirror > p', (el) => {
         expect(el).to.text('test input first part test input second part')
       })

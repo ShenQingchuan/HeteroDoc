@@ -47,6 +47,7 @@ import vbscript from 'highlight.js/lib/languages/vbscript'
 import vim from 'highlight.js/lib/languages/vim'
 import wasm from 'highlight.js/lib/languages/wasm'
 import yaml from 'highlight.js/lib/languages/yaml'
+import plaintext from 'highlight.js/lib/languages/plaintext'
 
 export const langsMap: Record<string, LanguageFn> = {
   apache,
@@ -83,6 +84,7 @@ export const langsMap: Record<string, LanguageFn> = {
   powershell,
   protobuf,
   python,
+  plaintext,
   reasonml,
   r,
   rust,
