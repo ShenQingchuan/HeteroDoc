@@ -180,9 +180,10 @@ describe('Editor playground test', () => {
       .should('exist')
   })
   it('can undo/redo in offline mode', () => {
+    const undoTimeGap = 1000
     mountEditor()
-      .type('test input first part ').wait(1000)
-      .type('test input second part').wait(enoughWaitTime)
+      .type('test input first part ').wait(undoTimeGap)
+      .type('test input second part').wait(undoTimeGap)
       .typeWithModKey('z') // mock undo action
       .get('.ProseMirror > p').should('have.text', 'test input first part ')
       .get('.ProseMirror').typeWithModKey('{alt}z') // mock redo action
