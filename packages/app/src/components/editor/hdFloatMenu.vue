@@ -19,6 +19,7 @@ const onHyperlinkBtnClick = () => {
     )
     .setLinkEditText(text.value)
     .setShowLinkEdit(true)
+    .setShowEditorMenu(false)
 }
 const openEditorMenu = useDebounceFn((pos: { left: number; top: number }) => {
   editorStore.setFloatMenuPosition(pos, EditorFloatMenuAction.BySelection)
