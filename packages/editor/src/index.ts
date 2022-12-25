@@ -21,3 +21,5 @@ export {
   BlockquoteExtension,
   CodeBlockExtension,
 } from './extensions'
+
+export * from './commands/exporter'

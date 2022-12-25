@@ -1,5 +1,5 @@
 import type { Transaction } from 'prosemirror-state'
-import { builtinsCommands } from '../commands/builtins'
+import { builtinsCommands } from '../commands/exporter'
 import type { CommandProps, PrimitiveCommandsMap, RunCommandsChain } from '../types'
 import { createChainableState } from './helpers/createChainableState'
 import type { EditorCore } from './index'
