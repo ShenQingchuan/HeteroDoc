@@ -41,6 +41,7 @@ export class CodeBlockExtension implements IEditorExtension {
             const codeBlockPos = tr.doc.resolve(view.posAtDOM(codeBlockDOM, 0))
             const selectionMoveIntoCodeBlock = new TextSelection(codeBlockPos)
             tr.setSelection(selectionMoveIntoCodeBlock)
+            view.focus()
             return true
           },
         })

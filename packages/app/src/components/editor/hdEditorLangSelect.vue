@@ -27,6 +27,7 @@ const handleSelectLangText = (langName: string) => {
     alias,
   })
   editorStore.setShowCodeBlockLangSelector(false)
+  currentCodeBlockElement.value = undefined
 }
 const hideLangSelectorDropdown = () => {
   editorStore.setShowCodeBlockLangSelector(false)
