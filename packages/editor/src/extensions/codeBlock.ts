@@ -84,13 +84,13 @@ export class CodeBlockExtension implements IEditorExtension {
               },
               ['div',
                 {
-                  class: 'code-block-lang',
+                  'class': 'code-block-lang',
+                  'data-lang-name': node.attrs.alias || (
+                    node.attrs.params === 'plaintext'
+                      ? i18nTr('editor.menu.code-block-lang-text-placeholder')
+                      : node.attrs.params
+                  ),
                 },
-                node.attrs.alias || (
-                  node.attrs.params === 'plaintext'
-                    ? i18nTr('editor.menu.code-block-lang-text-placeholder')
-                    : node.attrs.params
-                ),
               ],
               ['code', 0],
             ]

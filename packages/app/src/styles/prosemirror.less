@@ -36,6 +36,7 @@
   /* the above doesn't seem to work in Edge */
   min-height: 600px;
   outline: none;
+  padding: 2.5rem;
 
   @media screen and (max-width: 768px) {
     min-height: 300px;
@@ -102,6 +103,10 @@
     user-select: none;
     background-color: var(--heterodoc-code-lang-bg-color);
     font-family: var(--heterodoc-inline-code-font);
+
+    &::before {
+      content: attr(data-lang-name);
+    }
   }
   .ProseMirrorCodeBlockLightTheme;
   .dark & {

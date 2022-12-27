@@ -7,6 +7,7 @@
 - [ ] Be able to add new line before any block which is at first line
 - [ ] Outline view
 - [ ] Font size & color setting
+- [ ] Heading prefix pseudo-element showing its level
 
 ### Current bugs
 

@@ -1,1 +1,1 @@
-export const whiteSpaceDom = ['span', { class: 'whitespace' }, ' ']
+export const whiteSpaceDom = ['span', { class: 'whitespace' }, '']
