@@ -13,6 +13,8 @@ const {
   onClickCodeblockFastpath,
 } = useFastpathHandler()
 
+const isBlockQuoteAvailable = ref(true)
+
 const onClickOutside = () => {
   if (editorStore.isShowInputFastpath) {
     editorStore.setShowInputFastpath(false)
@@ -23,9 +25,10 @@ const getActiveClassByOption = (option: string) => {
 }
 
 editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
-  core.on('activateInputFastPath', (pos) => {
-    editorStore.setFloatMenuPosition(pos, EditorFloatMenuAction.ByInputFastpath)
+  core.on('activateInputFastPath', ({ left, top, options }) => {
+    editorStore.setFloatMenuPosition({ left, top }, EditorFloatMenuAction.ByInputFastpath)
     editorStore.setShowInputFastpath(true)
+    isBlockQuoteAvailable.value = options.blockQuoteAvailable
   })
   core.on('deactivateInputFastPath', () => {
     editorStore.setShowInputFastpath(false)
@@ -81,6 +84,7 @@ watch(
             <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-heading', { level: i }) }}</span>
           </div>
           <div
+            v-if="isBlockQuoteAvailable"
             class="hetero-editor__input-fastpath-option quote"
             :class="`${getActiveClassByOption('quote')}`"
             editor-input-fastpath-option

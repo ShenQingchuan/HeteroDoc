@@ -1,5 +1,6 @@
 import type { AttributeSpec, Node, SchemaSpec } from 'prosemirror-model'
 import { merge, omit } from 'lodash'
+import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 
 export function extendsTextBlockAttrs(
   others: Record<string, AttributeSpec> = {}, excludes?: string[],
@@ -48,7 +49,7 @@ export function mergeSchemaSpecs(specs: Partial<SchemaSpec>[]): SchemaSpec {
     nodes: {
       doc: { content: 'block+', topNode: true },
       paragraph: {
-        group: 'block',
+        group: 'block non_quote_block',
         content: 'inline*',
         attrs: extendsTextBlockAttrs(),
         parseDOM: [{
@@ -61,7 +62,7 @@ export function mergeSchemaSpecs(specs: Partial<SchemaSpec>[]): SchemaSpec {
         }],
         toDOM(node) {
           const style = stylesOfTextBlock(node)
-          return ['p', { style }, 0]
+          return ['p', { style, [HETERO_BLOCK_NODE_DATA_TAG]: 'true' }, 0]
         },
       },
       text: { group: 'inline' },

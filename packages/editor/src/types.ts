@@ -93,3 +93,7 @@ export interface HyperlinkAttrs {
   url: string
   text: string
 }
+
+export interface InputFastpathOptions {
+  blockQuoteAvailable: boolean
+}

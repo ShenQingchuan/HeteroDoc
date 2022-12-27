@@ -54,7 +54,7 @@ onMounted(() => {
         </div>
         <div
           class="page-misc__editor-test-container"
-          w80vw m-x-auto
+          w90vw m-x-auto
           border-base border-rounded
         >
           <div

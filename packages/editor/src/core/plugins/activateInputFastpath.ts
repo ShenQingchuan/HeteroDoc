@@ -20,7 +20,7 @@ export const activateInputFastPath = (core: EditorCore) => {
 
   return new Plugin({
     props: {
-      // @ts-expect-error ProseMirror's type has an issue here
+      // @ts-expect-error it seems that ProseMirror's type has an issue here
       handleDOMEvents: {
         keydown(view, event) {
           // leave arrow up/down/enter to view layer
@@ -40,14 +40,22 @@ export const activateInputFastPath = (core: EditorCore) => {
           const { selection } = state
           const { empty } = selection
           const paragraphPredicate = (node: Node) => node.type.name === 'paragraph'
+          const blockquotePredicate = (node: Node) => node.type.name === 'blockquote'
           const parentParagraph = findParentNode(paragraphPredicate)(selection)
           if (empty && parentParagraph?.node.textContent === '') {
             const paragraphDOM = findParentDomRef(
               paragraphPredicate, view.domAtPos.bind(view),
             )(selection)
+            const isInsideBlockquote = !!findParentNode(blockquotePredicate)(selection)
             if (paragraphDOM instanceof HTMLElement) {
               const { left, top } = paragraphDOM.getBoundingClientRect()
-              core.emit('activateInputFastPath', { left, top })
+              core.emit('activateInputFastPath', {
+                left,
+                top,
+                options: {
+                  blockQuoteAvailable: !isInsideBlockquote,
+                },
+              })
               isFastPathTriggered = true
             }
           }

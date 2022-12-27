@@ -1,3 +1,4 @@
+import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import type { EditorCore } from '../core'
 import type { PatternRule } from '../core/rule'
 import { wrappingInputRule } from '../core/rule'
@@ -28,14 +29,14 @@ export class BlockquoteExtension implements IEditorExtension {
     return {
       nodes: {
         blockquote: {
-          content: 'block+',
+          content: 'non_quote_block+',
           group: 'block',
           defining: true,
           parseDOM: [
             { tag: 'blockquote' },
           ],
           toDOM() {
-            return ['blockquote', 0]
+            return ['blockquote', { [HETERO_BLOCK_NODE_DATA_TAG]: 'true' }, 0]
           },
         },
       },

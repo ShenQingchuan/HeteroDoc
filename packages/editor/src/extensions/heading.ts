@@ -3,6 +3,7 @@ import type { AddNodesSchema, Command } from '../types'
 import { getUUID } from '../utils/getUUID'
 import type { PatternRule } from '../core/rule'
 import { textblockTypeInputRule } from '../core/rule'
+import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import { ExtensionType } from './editorExtension'
 import type { IEditorExtension } from './editorExtension'
 
@@ -39,7 +40,7 @@ export class HeadingExtension implements IEditorExtension {
             uuid: {},
           },
           content: 'inline*',
-          group: 'block',
+          group: 'block non_quote_block',
           defining: true,
           parseDOM: Array(6).map((_, i) => ({
             tag: `h${i + 1}`,
@@ -54,7 +55,7 @@ export class HeadingExtension implements IEditorExtension {
           })),
           toDOM(node) {
             const { level = 1, uuid = getRandomHeadingID() } = node.attrs
-            return [`h${level}`, { 'data-uuid': uuid }, 0]
+            return [`h${level}`, { 'data-uuid': uuid, [HETERO_BLOCK_NODE_DATA_TAG]: 'true' }, 0]
           },
         },
       },

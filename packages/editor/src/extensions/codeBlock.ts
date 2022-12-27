@@ -2,6 +2,7 @@ import type { HLJSApi } from 'highlight.js'
 import { highlightPlugin } from 'prosemirror-highlightjs'
 import type { Plugin } from 'prosemirror-state'
 import { TextSelection } from 'prosemirror-state'
+import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import type { EditorCore } from '../core'
 import type { PatternRule } from '../core/rule'
 import { textblockTypeInputRule } from '../core/rule'
@@ -56,7 +57,7 @@ export class CodeBlockExtension implements IEditorExtension {
       nodes: {
         code_block: {
           content: 'text*',
-          group: 'block',
+          group: 'block non_quote_block',
           code: true,
           defining: true,
           marks: '',
@@ -81,6 +82,7 @@ export class CodeBlockExtension implements IEditorExtension {
               {
                 'data-params': node.attrs.params,
                 'class': 'hljs',
+                [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
               },
               ['div',
                 {
@@ -108,7 +110,7 @@ export class CodeBlockExtension implements IEditorExtension {
         nodeType,
         (match) => {
           return {
-            params: match.groups?.params || '',
+            params: match.groups?.params || 'plaintext',
           }
         },
       ),

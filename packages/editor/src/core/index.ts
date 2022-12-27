@@ -15,6 +15,7 @@ import type { EditorLogger } from '../utils/logger'
 import type { IEditorExtension } from '../extensions'
 import type { IEditorMark } from '../extensions/editorExtension'
 import { createBuiltinFuncExts } from '../extensions/funcs/builtinFuncExts'
+import type { InputFastpathOptions } from '../types'
 import { mergeSchemaSpecs } from './schema'
 import { inputRules, pasteRules } from './rule'
 import { CommandManager } from './commandManager'
@@ -33,8 +34,10 @@ export interface EditorOptions {
 export interface EditorCoreEvent {
   'rendered': { timeCost: number }
   'dispatchedTransaction': null
-  'activateInputFastPath': { left: number; top: number }
+  'selectionUpdate': { tr: Transaction }
+  'activateInputFastPath': { left: number; top: number; options: InputFastpathOptions }
   'deactivateInputFastPath': { isContentChanged: boolean }
+  'activateSideToolBtn': { left: number; top: number }
   'fastpathActionKey': { event: KeyboardEvent }
   'updateCodeBlock': { codeBlockDOM: HTMLElement; langName: string; alias?: string }
 }
@@ -77,9 +80,14 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       const { view } = this
       this.extensions.forEach(ext => ext.beforeTransaction?.())
       const newState = view.state.apply(tr)
+      const selectionHasChanged = !view.state.selection.eq(newState.selection)
       view.updateState(newState)
       this.extensions.forEach(ext => ext.afterApplyTransaction?.())
       this.emit('dispatchedTransaction')
+      if (selectionHasChanged) {
+        this.emit('selectionUpdate', { tr })
+        this.extensions.forEach(ext => ext.onSelectionChange?.({ tr }))
+      }
     }
     catch (err) {
       this.logger.error(err)
