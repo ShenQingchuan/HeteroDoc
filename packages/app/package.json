@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build:app": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "cypress": "cypress open",
     "cypress:component": "cypress run --component",
@@ -35,7 +35,7 @@
     "cypress": "^10.3.0",
     "less": "^4.1.2",
     "typescript": "^4.7.4",
-    "unocss": "^0.34.1",
+    "unocss": "^0.48.0",
     "unplugin-auto-import": "^0.8.5",
     "unplugin-vue-components": "^0.19.5",
     "vite": "^3.0.5",

@@ -15,7 +15,7 @@ const getClosetTopLevelBlockLeft = (node: HTMLElement): number => {
 
 export const activateSideToolBtn = (core: EditorCore) => {
   const throttleShowBtn = debounce(
-    (left: number, top: number) => core.emit('activateSideToolBtn', { left, top }),
+    (left: number, top: number, pos: number) => core.emit('activateSideToolBtn', { left, top, pos }),
     200,
     { leading: false },
   )
@@ -25,24 +25,25 @@ export const activateSideToolBtn = (core: EditorCore) => {
       // @ts-expect-error it seems that ProseMirror's type has an issue here
       handleDOMEvents: {
         mouseover(view, event) {
-          const to = event.target as HTMLElement; const from = event.relatedTarget as HTMLElement
+          const toElement = event.target as HTMLElement; const fromElement = event.relatedTarget as HTMLElement
           const isGoingIntoOneBlock = isHeteroBlock(event.target)
           const isLeavingFromOneBlock = isHeteroBlock(event.relatedTarget)
 
           if (isGoingIntoOneBlock) {
             if (isLeavingFromOneBlock) {
-              if (from.contains(to)) {
+              if (fromElement.contains(toElement)) {
                 // pass, execute underlaying logic to update y position
               }
-              else if (to.contains(from)) {
+              else if (toElement.contains(fromElement)) {
                 // pass, leave from one block to its parent block
                 // don't need to update y position
                 return false
               }
             }
             const { y } = event.target.getBoundingClientRect()
-            const x = getClosetTopLevelBlockLeft(to)
-            throttleShowBtn(x, y)
+            const x = getClosetTopLevelBlockLeft(toElement)
+            const pos = view.posAtDOM(toElement, 0)
+            throttleShowBtn(x, y, pos)
           }
           return false
         },

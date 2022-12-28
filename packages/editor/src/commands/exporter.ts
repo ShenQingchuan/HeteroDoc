@@ -26,36 +26,26 @@ import { setMark } from './markOps/setMark'
 import { unsetMark } from './markOps/unsetMark'
 import { resetAttributes } from './fundamentals/resetAttributes'
 import { updateAttributes } from './fundamentals/updateAttributes'
+import { insertAfter, insertBefore } from './fundamentals/insertBeforeOrAfter'
 
-export {
-  focus,
-  scrollIntoView,
-  first,
-  command,
-  undoInputRule,
-  clearNodes,
-  splitBlock,
-  setTextSelection,
-  selectAll,
-  deleteSelection,
-  selectNodeBackward,
-  selectNodeForward,
-  joinBackward,
-  joinForward,
-  liftEmptyBlock,
-  wrapIn,
-  createParagraphNear,
-  newlineInCode,
-  exitCode,
-  setNode,
-  toggleNode,
-  updateAttributes,
-  resetAttributes,
-
-  toggleMark,
-  setMark,
-  unsetMark,
-}
+export * from './fundamentals/focus'
+export * from './fundamentals/scrollIntoView'
+export * from './fundamentals/first'
+export * from './fundamentals/defineCommand'
+export * from './fundamentals/undoInputRule'
+export * from './fundamentals/clearNodes'
+export * from './fundamentals/splitBlock'
+export * from './fundamentals/setTextSelection'
+export * from './fundamentals/selectAll'
+export * from './fundamentals/setNode'
+export * from './fundamentals/toggleNode'
+export * from './fundamentals/adaptProseMirrorCmds'
+export * from './markOps/toggleMark'
+export * from './markOps/setMark'
+export * from './markOps/unsetMark'
+export * from './fundamentals/resetAttributes'
+export * from './fundamentals/updateAttributes'
+export * from './fundamentals/insertBeforeOrAfter'
 
 export const builtinsCommands = {
   focus,
@@ -81,6 +71,8 @@ export const builtinsCommands = {
   toggleNode,
   updateAttributes,
   resetAttributes,
+  insertBefore,
+  insertAfter,
 
   toggleMark,
   setMark,

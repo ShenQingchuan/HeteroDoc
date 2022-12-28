@@ -15,6 +15,8 @@ editor:
     fastpath-option-quote: Quoting
     fastpath-option-code-block: Code block
     fastpath-options-title-basic-textblocks: Basic text block
+    sidemenu-insert-before: Insert line before
+    sidemenu-insert-after: append line after
   popover:
     edit-link-confirm: Confirm
     edit-link-url-label: Link

@@ -33,11 +33,12 @@ export interface EditorOptions {
 }
 export interface EditorCoreEvent {
   'rendered': { timeCost: number }
+  'beforeDispatchTransaction': { tr: Transaction }
   'dispatchedTransaction': null
   'selectionUpdate': { tr: Transaction }
   'activateInputFastPath': { left: number; top: number; options: InputFastpathOptions }
   'deactivateInputFastPath': { isContentChanged: boolean }
-  'activateSideToolBtn': { left: number; top: number }
+  'activateSideToolBtn': { left: number; top: number; pos: number }
   'fastpathActionKey': { event: KeyboardEvent }
   'updateCodeBlock': { codeBlockDOM: HTMLElement; langName: string; alias?: string }
 }
@@ -78,6 +79,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   private dispatchTransaction = (tr: Transaction) => {
     try {
       const { view } = this
+      this.emit('beforeDispatchTransaction', { tr })
       this.extensions.forEach(ext => ext.beforeTransaction?.())
       const newState = view.state.apply(tr)
       const selectionHasChanged = !view.state.selection.eq(newState.selection)
