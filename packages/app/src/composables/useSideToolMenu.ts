@@ -21,6 +21,7 @@ export function useSideToolMenu() {
   ]
 
   const editor = useEditorCoreInject()
+  const { width: winWidth, height: winHeight } = useWindowSize()
   const sideToolBtnTop = ref(0)
   const sideToolBtnLeft = ref(0)
   const hoverNodePos = ref(0)
@@ -76,6 +77,9 @@ export function useSideToolMenu() {
     if (!isAlign && isNotHoveringMenu) {
       hideSideToolBtn()
     }
+  })
+  watch([winWidth, winHeight], () => {
+    hideSideToolBtn()
   })
 
   return {

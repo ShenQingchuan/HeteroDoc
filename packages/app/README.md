@@ -5,9 +5,9 @@
 ### Required Features
 
 - [x] Be able to add new line before any block which is at first line
-- [ ] Be able to delete first line when it's empty and the document doesn't just contain that line
-- [ ] Outline view
+- [x] Be able to delete first line when it's empty and the document doesn't just contain that line
 - [ ] Font size & color setting
+- [ ] Outline view
 - [ ] Heading prefix pseudo-element showing its level
 
 ### Current bugs
