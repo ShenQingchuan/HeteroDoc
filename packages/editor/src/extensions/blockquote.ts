@@ -6,7 +6,7 @@ import type { AddNodesSchema, NoArgsCommand } from '../types'
 import type { IEditorExtension } from './editorExtension'
 import { ExtensionType } from './editorExtension'
 
-const blockquoteInputRuleRegExp = /^\>\s/
+const blockquoteInputRuleRegExp = /^[\>》]\s/
 
 interface BlockquoteCommandsDefs {
   setBlockquote: NoArgsCommand

@@ -12,7 +12,7 @@ declare module '@vue/runtime-core' {
     HdEditorLinkEdit: typeof import('./../components/editor/hdEditorLinkEdit.vue')['default']
     HdEditorMenuBasics: typeof import('./../components/editor/hdEditorMenuBasics.vue')['default']
     HdEditorMenuTextAlign: typeof import('./../components/editor/hdEditorMenuTextAlign.vue')['default']
-    HdEditorSideToolButton: typeof import('./../components/editor/hdEditorSideToolButton.vue')['default']
+    HdEditorSideTool: typeof import('./../components/editor/hdEditorSideTool.vue')['default']
     HdFloatMenu: typeof import('./../components/editor/hdFloatMenu.vue')['default']
     HdPageHeader: typeof import('./../components/layouts/hdPageHeader.vue')['default']
     NButton: typeof import('naive-ui')['NButton']

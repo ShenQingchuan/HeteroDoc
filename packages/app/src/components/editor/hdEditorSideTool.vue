@@ -1,40 +1,35 @@
 <script setup lang="ts">
-import { vOnClickOutside } from '@vueuse/components'
 import { editorEventBus } from '../../eventBus'
 
-const sideToolBtn = ref<HTMLElement | null>(null)
-
 const {
+  sideToolBtn,
+  sideToolMenu,
+  isShowHoverElementBouding,
   isSideToolBtnShow,
+  isSideToolMenuShow,
   sideToolBtnTop,
   sideToolBtnLeft,
-  isSideToolMenuShow,
   hoverNodePos,
+  hoverElementRect,
   menuOptions,
   handleMenuClick,
+  controlSideToolStatusForEditorDOMArea,
 } = useSideToolMenu()
 
-const onSideToolBtnHover = () => {
+const onSideToolBtnMouseOver = () => {
   isSideToolBtnShow.value = true
+  isShowHoverElementBouding.value = true
 }
-const hideSideToolBtn = () => {
-  isSideToolBtnShow.value = false
-}
-useEventListener(sideToolBtn, 'mouseover', onSideToolBtnHover)
+useEventListener(sideToolBtn, 'mouseover', onSideToolBtnMouseOver)
 editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
-  core.on('activateSideToolBtn', ({ left, top, pos }) => {
+  core.on('activateSideToolBtn', ({ left, top, hoverCtx: { pos, rect } }) => {
     isSideToolBtnShow.value = true
     hoverNodePos.value = pos
+    hoverElementRect.value = rect
     sideToolBtnLeft.value = left
     sideToolBtnTop.value = top
   })
-  core.on('beforeDispatchTransaction', ({ tr }) => {
-    if (tr.getMeta('pointer') === true) {
-      return
-    }
-    hideSideToolBtn()
-  })
-  useEventListener(editorDOM, 'mouseleave', hideSideToolBtn)
+  controlSideToolStatusForEditorDOMArea(editorDOM)
 })
 </script>
 
@@ -44,7 +39,6 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
       <n-button
         v-show="isSideToolBtnShow"
         ref="sideToolBtn"
-        circle
         secondary bg="cool-gray-300/50 dark:cool-gray-500/50"
         border="neutral-400/50 solid 1px"
         class="hetero-editor__side-toolbar-btn"
@@ -66,9 +60,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   <teleport to="body">
     <transition name="float-slide-fade">
       <div
-        v-show="isSideToolMenuShow" v-on-click-outside="() => {
-          isSideToolMenuShow = false
-        }"
+        v-show="isSideToolMenuShow" ref="sideToolMenu"
         border="1px solid neutral-400/50"
         bg="neutral-100 dark:neutral-700"
         border-rounded w140px
@@ -96,6 +88,25 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
       </div>
     </transition>
   </teleport>
+  <!-- show a highlight layer over the side tool target element -->
+  <teleport to="body">
+    <div
+      v-if="hoverElementRect"
+      class="hetero-editor__side-tool-target-bounding"
+      pointer-events-none fixed
+      border-rounded
+      border="1 sky-700/50"
+      bg="sky-200/50"
+      :style="{
+        display: isShowHoverElementBouding ? 'block' : 'none',
+        width: `${hoverElementRect.width + 8}px`,
+        height: `${hoverElementRect.height + 4}px`,
+        left: `${hoverElementRect.x - 4}px`,
+        top: `${hoverElementRect.y - 2}px`,
+      }"
+    >
+    </div>
+  </teleport>
 </template>
 
 <style scoped lang="less">
@@ -105,11 +116,14 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   height: 24px;
   transform: translateX(-150%);
   transition: all 0.1s ease;
+  padding: 0 !important;
 }
 .hetero-editor__side-toolbar-menu {
   position: absolute;
   width: 200px;
   transition: all 0.1s ease;
+  z-index: 99;
+  transform: translateX(-120%);
 
   .hetero-editor__side-toolbar-menu-item:first-child {
     margin-bottom: 0;
@@ -117,5 +131,8 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   .hetero-editor__side-toolbar-menu-item:last-child {
     margin-top: 0;
   }
+}
+.hetero-editor__side-tool-target-bounding {
+  z-index: 9;
 }
 </style>

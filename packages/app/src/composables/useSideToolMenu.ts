@@ -7,28 +7,45 @@ interface SideMenuOption {
 
 export function useSideToolMenu() {
   const { t } = useI18n()
+  const menuOptions: SideMenuOption[] = [
+    {
+      key: 'insert-before',
+      label: t('editor.menu.sidemenu-insert-before'),
+      icon: 'i-gg:insert-before-o',
+    },
+    {
+      key: 'insert-after',
+      label: t('editor.menu.sidemenu-insert-after'),
+      icon: 'i-gg:insert-after-o',
+    },
+  ]
+
   const editor = useEditorCoreInject()
-  const isSideToolBtnShow = ref(false)
   const sideToolBtnTop = ref(0)
   const sideToolBtnLeft = ref(0)
-  const isSideToolMenuShow = ref(false)
   const hoverNodePos = ref(0)
-
-  const menuOptions = computed<SideMenuOption[]>(() => {
-    return [
-      {
-        key: 'insert-before',
-        label: t('editor.menu.sidemenu-insert-before'),
-        icon: 'i-gg:insert-before-o',
-      },
-      {
-        key: 'insert-after',
-        label: t('editor.menu.sidemenu-insert-after'),
-        icon: 'i-gg:insert-after-o',
-      },
-    ]
+  const hoverElementRect = ref<DOMRect>()
+  const isShowHoverElementBouding = ref(false)
+  const sideToolBtn = ref<HTMLElement | null>(null)
+  const sideToolMenu = ref<HTMLElement | null>(null)
+  const { isOutside: isNotHoveringSideToolBtn } = useMouseInElement(sideToolBtn)
+  const { isOutside: isNotHoveringSideToolMenu } = useMouseInElement(sideToolMenu)
+  const { y: mouseY } = useMouse()
+  const isMouseVerticalAlignWithHoverBlockElm = computed(() => {
+    if (!hoverElementRect.value)
+      return false
+    const { top, bottom } = hoverElementRect.value
+    return mouseY.value >= top && mouseY.value <= bottom
   })
+  const isSideToolBtnShow = ref(false)
+  const isSideToolMenuShow = useDebounce(computed(() => {
+    return !isNotHoveringSideToolBtn.value
+      || !isNotHoveringSideToolMenu.value
+  }), 160)
 
+  const hideSideToolBtn = () => {
+    isSideToolBtnShow.value = false
+  }
   const handleMenuClick = (action: SideMenuAction) => {
     switch (action) {
       case 'insert-before':
@@ -40,8 +57,26 @@ export function useSideToolMenu() {
       default:
         break
     }
-    isSideToolMenuShow.value = false
   }
+  const controlSideToolStatusForEditorDOMArea = (editorDOM: HTMLElement) => {
+    const { isOutside: isOutsideEditorDOM } = useMouseInElement(editorDOM)
+    watch([isOutsideEditorDOM, isNotHoveringSideToolMenu], ([isOutsideEditor, isNotHoveringMenu]) => {
+      if (isOutsideEditor && isNotHoveringMenu) {
+        hideSideToolBtn()
+      }
+    })
+  }
+
+  watch(isNotHoveringSideToolBtn, (isNotHoveringBtn) => {
+    if (isNotHoveringBtn) {
+      isShowHoverElementBouding.value = false
+    }
+  })
+  watch([isMouseVerticalAlignWithHoverBlockElm, isNotHoveringSideToolMenu], ([isAlign, isNotHoveringMenu]) => {
+    if (!isAlign && isNotHoveringMenu) {
+      hideSideToolBtn()
+    }
+  })
 
   return {
     isSideToolBtnShow,
@@ -49,7 +84,13 @@ export function useSideToolMenu() {
     sideToolBtnLeft,
     isSideToolMenuShow,
     hoverNodePos,
+    hoverElementRect,
     menuOptions,
+    isShowHoverElementBouding,
+    sideToolBtn,
+    sideToolMenu,
     handleMenuClick,
+    hideSideToolBtn,
+    controlSideToolStatusForEditorDOMArea,
   }
 }

@@ -15,8 +15,9 @@ const getClosetTopLevelBlockLeft = (node: HTMLElement): number => {
 
 export const activateSideToolBtn = (core: EditorCore) => {
   const throttleShowBtn = debounce(
-    (left: number, top: number, pos: number) => core.emit('activateSideToolBtn', { left, top, pos }),
-    200,
+    (left: number, top: number, pos: number, rect: DOMRect) =>
+      core.emit('activateSideToolBtn', { left, top, hoverCtx: { pos, rect } }),
+    160,
     { leading: false },
   )
 
@@ -40,10 +41,13 @@ export const activateSideToolBtn = (core: EditorCore) => {
                 return false
               }
             }
-            const { y } = event.target.getBoundingClientRect()
-            const x = getClosetTopLevelBlockLeft(toElement)
+            const toElementRect = toElement.getBoundingClientRect()
+            const topBlockX = getClosetTopLevelBlockLeft(toElement)
             const pos = view.posAtDOM(toElement, 0)
-            throttleShowBtn(x, y, pos)
+
+            // why we need topblockX? because we want the side tool btn constantly stick to the same vertical position
+            // and use the toElement's y position as the vertical position
+            throttleShowBtn(topBlockX, toElementRect.y, pos, toElementRect)
           }
           return false
         },

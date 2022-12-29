@@ -3,7 +3,7 @@ import HdFloatMenu from './hdFloatMenu.vue'
 import HdEditorLinkEdit from './hdEditorLinkEdit.vue'
 import HdEditorInputFastpath from './hdEditorInputFastpath.vue'
 import HdEditorLangSelect from './hdEditorLangSelect.vue'
-import HdEditorSideToolButton from './hdEditorSideToolButton.vue'
+import HdEditorSideTool from './hdEditorSideTool.vue'
 </script>
 
 <template>
@@ -13,6 +13,6 @@ import HdEditorSideToolButton from './hdEditorSideToolButton.vue'
     <HdEditorLinkEdit />
     <HdEditorInputFastpath />
     <HdEditorLangSelect />
-    <HdEditorSideToolButton />
+    <HdEditorSideTool />
   </div>
 </template>

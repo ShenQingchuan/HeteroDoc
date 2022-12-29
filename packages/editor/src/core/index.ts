@@ -38,7 +38,7 @@ export interface EditorCoreEvent {
   'selectionUpdate': { tr: Transaction }
   'activateInputFastPath': { left: number; top: number; options: InputFastpathOptions }
   'deactivateInputFastPath': { isContentChanged: boolean }
-  'activateSideToolBtn': { left: number; top: number; pos: number }
+  'activateSideToolBtn': { left: number; top: number; hoverCtx: { pos: number; rect: DOMRect } }
   'fastpathActionKey': { event: KeyboardEvent }
   'updateCodeBlock': { codeBlockDOM: HTMLElement; langName: string; alias?: string }
 }
@@ -190,6 +190,11 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       state: initState,
       dispatchTransaction,
     })
+
+    if (this.options.autofocus) {
+      view.focus()
+    }
+
     return view
   }
 
