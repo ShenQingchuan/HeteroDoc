@@ -16,13 +16,6 @@ declare module '@vue/runtime-core' {
     HdFloatMenu: typeof import('./../components/editor/hdFloatMenu.vue')['default']
     HdFontFancyPicker: typeof import('./../components/editor/hdFontFancyPicker.vue')['default']
     HdPageHeader: typeof import('./../components/layouts/hdPageHeader.vue')['default']
-    NButton: typeof import('naive-ui')['NButton']
-    NConfigProvider: typeof import('naive-ui')['NConfigProvider']
-    NDivider: typeof import('naive-ui')['NDivider']
-    NDropdown: typeof import('naive-ui')['NDropdown']
-    NIcon: typeof import('naive-ui')['NIcon']
-    NInput: typeof import('naive-ui')['NInput']
-    NTooltip: typeof import('naive-ui')['NTooltip']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
