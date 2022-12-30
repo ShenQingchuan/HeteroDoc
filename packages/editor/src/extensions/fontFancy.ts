@@ -107,11 +107,7 @@ export class FontFancyExtension implements IEditorExtension {
             const newSliceJSON = Object.assign({}, slice.toJSON())
             recursiveRemoveFontFancyMark(newSliceJSON)
             const newSlice = Slice.fromJSON(view.state.schema, newSliceJSON)
-            view.dispatch(
-              view.state.tr.replaceSelection(
-                newSlice,
-              ),
-            )
+            slice = newSlice
             return false
           },
         },
