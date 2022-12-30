@@ -24,7 +24,7 @@ export function startReflectActiveState(
     Object.keys(editorStore.menuActiveState).forEach((key) => {
       const markName = key as keyof typeof editorStore.menuActiveState
       editorStore.menuActiveState[markName]
-          = Boolean(editorCore.activeManager.isActive(markName))
+          = editorCore.activeManager.isActive(markName)
     })
   }
   const computeAvailableState = () => {

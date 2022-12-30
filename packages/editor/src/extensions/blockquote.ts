@@ -2,9 +2,8 @@ import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import type { EditorCore } from '../core'
 import type { PatternRule } from '../core/rule'
 import { wrappingInputRule } from '../core/rule'
-import type { AddNodesSchema, NoArgsCommand } from '../types'
-import type { IEditorExtension } from './editorExtension'
-import { ExtensionType } from './editorExtension'
+import type { AddNodesSchema, IEditorExtension, NoArgsCommand } from '../types'
+import { ExtensionType } from '../types'
 
 const blockquoteInputRuleRegExp = /^[\>》]\s/
 

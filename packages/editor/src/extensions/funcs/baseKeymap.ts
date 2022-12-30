@@ -1,7 +1,7 @@
 import { Selection } from 'prosemirror-state'
 import type { EditorCore } from '../../core'
-import type { IEditorExtension } from '../editorExtension'
-import { ExtensionType } from '../editorExtension'
+import type { IEditorExtension } from '../../types'
+import { ExtensionType } from '../../types'
 
 export class BaseKeymap implements IEditorExtension {
   type = ExtensionType.func

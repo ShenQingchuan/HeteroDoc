@@ -1,11 +1,10 @@
 import type { EditorCore } from '../core'
-import type { AddNodesSchema, Command } from '../types'
+import type { AddNodesSchema, Command, IEditorExtension } from '../types'
 import { getUUID } from '../utils/getUUID'
 import type { PatternRule } from '../core/rule'
 import { textblockTypeInputRule } from '../core/rule'
 import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
-import { ExtensionType } from './editorExtension'
-import type { IEditorExtension } from './editorExtension'
+import { ExtensionType } from '../types'
 
 const headingInputRuleRegExp = /^(#{1,5})\s/
 const getRandomHeadingID = () => getUUID(6)

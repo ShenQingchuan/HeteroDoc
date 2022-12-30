@@ -6,9 +6,8 @@ import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import type { EditorCore } from '../core'
 import type { PatternRule } from '../core/rule'
 import { textblockTypeInputRule } from '../core/rule'
-import type { AddNodesSchema, Command, KeyboardShortcutCommand } from '../types'
-import type { IEditorExtension } from './editorExtension'
-import { ExtensionType } from './editorExtension'
+import type { AddNodesSchema, Command, IEditorExtension, KeyboardShortcutCommand } from '../types'
+import { ExtensionType } from '../types'
 
 const codeblockRegExp = /^(···|```)(?<params>[a-z]+)?[\s\n]$/
 

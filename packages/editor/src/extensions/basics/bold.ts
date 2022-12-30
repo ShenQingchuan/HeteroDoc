@@ -2,9 +2,9 @@ import type { DOMOutputSpec } from 'prosemirror-model'
 import { markInputRule, markPasteRule } from '../../core/rule'
 import type { PatternRule } from '../../core/rule'
 import type { EditorCore } from '../../core'
-import type { AddMarksSchema, NoArgsCommand } from '../../types'
-import type { IEditorMark } from '../editorExtension'
-import { ExtensionType } from '../editorExtension'
+import type { AddMarksSchema, IEditorMark, NoArgsCommand } from '../../types'
+
+import { ExtensionType } from '../../types'
 
 const boldStyleRegExp = /^(bold(er)?|[5-9]\d{2,})$/
 const doubleStarInputRegex = /(?:^|\s)((?:\*\*)(?<text>(?:[^*]+))(?:\*\*))$/

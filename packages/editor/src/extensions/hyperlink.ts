@@ -1,12 +1,11 @@
 import { Plugin, PluginKey } from 'prosemirror-state'
 import type { EditorCore } from '../core'
-import type { AddMarksSchema, Command, NoArgsCommand } from '../types'
+import type { AddMarksSchema, Command, IEditorExtension, NoArgsCommand } from '../types'
 import type { PatternRule } from '../core/rule'
 import { markInputRule, markPasteRule } from '../core/rule'
 import { getMarksBetween } from '../core/helpers/getMarksBetween'
 import { getMarkRange } from '../core/helpers/getMarkRange'
-import { ExtensionType } from './editorExtension'
-import type { IEditorExtension } from './editorExtension'
+import { ExtensionType } from '../types'
 
 const hyperlinkInputRegExp = /(?:^|\s)(?:\[)(?<text>(?:[^\[\]]+))(?:\]\()(?<url>(?:[^\(\)]+))(?:\))$/
 const hyperlinkPasteRegExp = /(?:\[)(?<text>(?:[^\[\]]+))(?:\]\()(?<url>(?:[^\(\)]+))(?:\))/g

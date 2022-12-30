@@ -60,7 +60,6 @@ onMounted(() => {
           <div
             ref="editorRef"
             class="page-misc__editor-test-mount-point"
-            bg="neutral-200/40 dark:neutral-600/70"
           />
         </div>
       </div>

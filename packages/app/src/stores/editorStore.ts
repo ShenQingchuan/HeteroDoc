@@ -23,6 +23,7 @@ interface EditorStoreState {
   isShowInputFastpath: boolean
   isShowEditorMenu: boolean
   isShowLinkEdit: boolean
+  isShowFontFancyPicker: boolean
 }
 
 const createInitEditorStoreState = (): EditorStoreState => {
@@ -48,6 +49,7 @@ const createInitEditorStoreState = (): EditorStoreState => {
     isShowInputFastpath: false,
     isShowEditorMenu: false,
     isShowLinkEdit: false,
+    isShowFontFancyPicker: false,
   }
 }
 
@@ -81,6 +83,10 @@ export const useEditorStore = defineStore('editor', {
     },
     setShowEditorMenu(value: boolean) {
       this.isShowEditorMenu = value
+      return this
+    },
+    setShowFontFancyPicker(value: boolean) {
+      this.isShowFontFancyPicker = value
       return this
     },
     setShowCodeBlockLangSelector(value: boolean) {

@@ -3,9 +3,36 @@ import type {
   Node as ProseMirrorNode,
   SchemaSpec,
 } from 'prosemirror-model'
-import type { EditorState, Transaction } from 'prosemirror-state'
+import type { EditorState, Plugin as ProseMirrorPlugin, Transaction } from 'prosemirror-state'
 import type { EditorView } from 'prosemirror-view'
 import type { EditorCore } from './core'
+import type { PatternRule } from './core/rule'
+
+export enum ExtensionType { func, node, mark }
+
+export interface IEditorExtension<OptionsDefs = {}> {
+  core: EditorCore
+  type: ExtensionType
+  name: string
+  options: OptionsDefs
+
+  schemaSpec?: () => Partial<SchemaSpec>
+  inputRules?: () => PatternRule[]
+  pasteRules?: () => PatternRule[]
+  attributes?: () => Record<string, Attribute>
+  commands?: () => Record<string, any>
+  keymaps?: () => Record<string, KeyboardShortcutCommand>
+  getProseMirrorPlugin?: () => ProseMirrorPlugin[]
+
+  // hooks
+  beforeTransaction?: () => void
+  afterApplyTransaction?: () => void
+  onSelectionChange?: (ctx: { tr: Transaction }) => void
+}
+
+export interface IEditorMark extends IEditorExtension {
+  keepOnSplit?: boolean
+}
 
 export type MaybeReturnType<T> = T extends (...args: any) => any
   ? ReturnType<T>
@@ -88,12 +115,8 @@ export interface MarkRange {
 
 export type FocusPosition = 'start' | 'end' | 'all' | number | boolean | null
 
-// extensions' specs
-export interface HyperlinkAttrs {
-  url: string
-  text: string
-}
-
 export interface InputFastpathOptions {
   blockQuoteAvailable: boolean
 }
+
+export interface FontFancyAttrs { color: string; bgColor: string }

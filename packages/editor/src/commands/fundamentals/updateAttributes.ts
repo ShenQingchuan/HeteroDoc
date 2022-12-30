@@ -1,3 +1,4 @@
+import { merge } from 'lodash'
 import type { MarkType, NodeType } from 'prosemirror-model'
 import { getMarkType } from '../../core/helpers/getMarkType'
 import { getNodeType } from '../../core/helpers/getNodeType'
@@ -43,10 +44,11 @@ export const updateAttributes: Commands['updateAttributes'] = ({ typeOrName, att
 
       state.doc.nodesBetween(from, to, (node, pos) => {
         if (nodeType && nodeType === node.type) {
-          tr.setNodeMarkup(pos, undefined, {
-            ...node.attrs,
-            ...attrs,
-          })
+          tr.setNodeMarkup(
+            pos,
+            undefined,
+            merge(node.attrs, attrs),
+          )
         }
 
         if (markType && node.marks.length) {
@@ -55,10 +57,11 @@ export const updateAttributes: Commands['updateAttributes'] = ({ typeOrName, att
               const trimmedFrom = Math.max(pos, from)
               const trimmedTo = Math.min(pos + node.nodeSize, to)
 
-              tr.addMark(trimmedFrom, trimmedTo, markType.create({
-                ...mark.attrs,
-                ...attrs,
-              }))
+              tr.addMark(
+                trimmedFrom,
+                trimmedTo,
+                markType.create(merge(mark.attrs, attrs)),
+              )
             }
           })
         }

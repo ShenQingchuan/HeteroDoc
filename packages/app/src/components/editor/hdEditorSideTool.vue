@@ -62,7 +62,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
       <div
         v-show="isSideToolMenuShow" ref="sideToolMenu"
         border="1px solid neutral-400/50"
-        bg="neutral-100 dark:neutral-700"
+        editor-float-card
         border-rounded w140px
         :style="{
           top: `${sideToolBtnTop}px`,

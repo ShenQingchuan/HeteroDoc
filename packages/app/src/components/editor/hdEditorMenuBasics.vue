@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import HdFontFancyPicker from './hdFontFancyPicker.vue'
+
 const editorCore = useEditorCoreInject()
 const editorStore = useEditorStore()
 </script>
@@ -49,4 +51,5 @@ const editorStore = useEditorStore()
       <n-icon><div i-ic:round-format-strikethrough mr1 /></n-icon>
     </template>
   </n-button>
+  <HdFontFancyPicker />
 </template>

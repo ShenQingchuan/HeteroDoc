@@ -51,9 +51,8 @@ watch(
           v-show="editorStore.isShowInputFastpath"
           w300px max-h-400px overflow-y-auto
           flex-col items-center p2 border-rounded
-          bg="neutral-100 dark:neutral-700"
+          editor-float-card
           text="dark:neutral-100"
-          border="1px solid neutral-900/20 dark:neutral-50/50"
           class="hetero-editor__input-fastpath"
           :style="{
             position: 'absolute',

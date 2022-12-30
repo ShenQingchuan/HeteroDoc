@@ -54,7 +54,7 @@ export function isMarkActive(
     return false
 
   // calculate range of matched mark
-  const matchedRange = markRanges
+  const matchedRangeCount = markRanges
     .filter((markRange) => {
       if (!type)
         return true
@@ -66,7 +66,7 @@ export function isMarkActive(
 
   // calculate range of marks that excludes the searched mark
   // for example `code` doesn’t allow any other marks
-  const excludedRange = markRanges
+  const excludedRangeCount = markRanges
     .filter((markRange) => {
       if (!type)
         return true
@@ -78,9 +78,9 @@ export function isMarkActive(
 
   // we only include the result of `excludedRange`
   // if there is a match at all
-  const range = matchedRange > 0
-    ? matchedRange + excludedRange
-    : matchedRange
+  const range = matchedRangeCount > 0
+    ? matchedRangeCount + excludedRangeCount
+    : matchedRangeCount
 
   return range >= selectionRange
 }

@@ -1,5 +1,6 @@
 :root {
   --heterodoc-editor-color: rgba(0, 0, 0, 0.85);
+  --heterodoc-bg: rgba(239, 239, 239, 0.4);
   --heterodoc-link-color: rgb(15, 156, 115, 85%);
   --heterodoc-caret-color: rgba(0, 0, 0, 0.85);
   --heterodoc-inline-code-color: #4a84d3;
@@ -14,6 +15,7 @@
 
 :root.dark {
   --heterodoc-editor-color: rgba(255, 255, 255, 0.85);
+  --heterodoc-bg: #1a1a1a;
   --heterodoc-link-color: rgb(174, 248, 206, 85%);
   --heterodoc-caret-color: rgba(255, 255, 255, 0.85);
   --heterodoc-inline-code-color: #b4d4ff;
@@ -38,6 +40,7 @@
   min-height: 600px;
   outline: none;
   padding: 2.5rem 4rem;
+  background-color: var(--heterodoc-bg);
 
   @media screen and (max-width: 768px) {
     min-height: 300px;

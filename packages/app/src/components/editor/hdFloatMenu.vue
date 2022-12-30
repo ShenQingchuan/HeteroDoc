@@ -63,6 +63,7 @@ watch(
         }"
         flex-items-center justify-center py1 px2
         border-base bg-base border-round
+        editor-float-card
       >
         <HdEditorHeadingsSubMenu />
         <n-divider vertical />

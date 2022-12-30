@@ -2,9 +2,8 @@ import type { DOMOutputSpec } from 'prosemirror-model'
 import type { EditorCore } from '../../core'
 import type { PatternRule } from '../../core/rule'
 import { markInputRule, markPasteRule } from '../../core/rule'
-import type { AddMarksSchema, NoArgsCommand } from '../../types'
-import { ExtensionType } from '../editorExtension'
-import type { IEditorExtension } from '../editorExtension'
+import type { AddMarksSchema, IEditorExtension, NoArgsCommand } from '../../types'
+import { ExtensionType } from '../../types'
 import { whiteSpaceDom } from '../../constants'
 
 const inlineCodeInputRegex = /(?:^|\s)((?:`)(?<text>(?:[^`]+))(?:`))$/

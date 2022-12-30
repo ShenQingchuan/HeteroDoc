@@ -1,10 +1,9 @@
 import type { DOMOutputSpec } from 'prosemirror-model'
 import type { EditorCore } from '../../core'
-import type { AddMarksSchema, NoArgsCommand } from '../../types'
+import type { AddMarksSchema, IEditorExtension, NoArgsCommand } from '../../types'
 import type { PatternRule } from '../../core/rule'
 import { markInputRule, markPasteRule } from '../../core/rule'
-import { ExtensionType } from '../editorExtension'
-import type { IEditorExtension } from '../editorExtension'
+import { ExtensionType } from '../../types'
 
 const deleteLineDOM: DOMOutputSpec = ['del', 0]
 const deleteLineInputRegex = /(?:^|\s)((?:~)(?<text>(?:[^~]+))(?:~))$/

@@ -17,6 +17,9 @@ editor:
     fastpath-options-title-basic-textblocks: Basic text block
     sidemenu-insert-before: Insert line before
     sidemenu-insert-after: append line after
+    fontfancy-picker-title-tips: First option is "Reset to default"
+    fontfancy-picker-title-textcolor: Text color
+    fontfancy-picker-title-bgcolor: Background color
   popover:
     edit-link-confirm: Confirm
     edit-link-url-label: Link

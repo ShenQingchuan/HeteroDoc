@@ -17,6 +17,9 @@ editor:
     fastpath-options-title-basic-textblocks: 基础文本块
     sidemenu-insert-before: 向前插入一行
     sidemenu-insert-after: 向后插入一行
+    fontfancy-picker-title-tips: 第一个选项都是重设为默认
+    fontfancy-picker-title-textcolor: 文字颜色
+    fontfancy-picker-title-bgcolor: 背景颜色
   popover:
     edit-link-confirm: 确定
     edit-link-url-label: 链接

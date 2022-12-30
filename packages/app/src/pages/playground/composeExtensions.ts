@@ -1,9 +1,10 @@
 import type { EditorCore, IEditorExtension } from '@hetero/editor'
 import {
   BlockquoteExtension,
-  BoldExtension, CodeBlockExtension, CodeExtension,
-  DeleteLineExtension, HeadingExtension, HyperlinkExtension,
-  ItalicExtension, UnderlineExtension,
+  BoldExtension,
+  CodeBlockExtension, CodeExtension, DeleteLineExtension,
+  FontFancyExtension, HeadingExtension,
+  HyperlinkExtension, ItalicExtension, UnderlineExtension,
 } from '@hetero/editor'
 
 import { EditorFloatMenuAction } from '../../constants/editor'
@@ -36,5 +37,6 @@ export function composeExtensions(core: EditorCore): IEditorExtension[] {
     new HeadingExtension(core),
     new BlockquoteExtension(core),
     new CodeBlockExtension(core, setupHightlightJS()),
+    new FontFancyExtension(core),
   ]
 }

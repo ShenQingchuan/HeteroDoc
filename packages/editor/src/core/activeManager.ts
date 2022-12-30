@@ -1,5 +1,6 @@
 import type { Node } from 'prosemirror-model'
 import { isActive } from './helpers/isActive'
+import { isFontFancyActive as _isFontFancyActive } from './helpers/isFontFancyActive'
 import type { EditorCore } from './index'
 
 export class ActiveManager {
@@ -25,7 +26,11 @@ export class ActiveManager {
     return isActive(this.core.view.state, name, attributes)
   }
 
-  isMenuAvailable(): boolean {
+  public isFontFancyActive() {
+    return _isFontFancyActive(this.core.view.state)
+  }
+
+  public isMenuAvailable(): boolean {
     const { selection, doc } = this.core.view.state
     const { from, to, empty } = selection
     if (empty) {
@@ -45,7 +50,7 @@ export class ActiveManager {
     return true
   }
 
-  isHyperlinkAvailable(): boolean {
+  public isHyperlinkAvailable(): boolean {
     const { selection, doc } = this.core.view.state
     const { from, to, empty } = selection
     if (empty) {
