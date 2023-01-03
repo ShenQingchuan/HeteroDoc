@@ -4,11 +4,11 @@ import type { FontFancyAttrs, MarkRange } from '../../types'
 import { getMarkType } from './getMarkType'
 
 const getFancyAttrsFromMark = (mark: Mark): FontFancyAttrs | null => {
-  const { color = '', bgColor = '' } = mark.attrs
-  if (!color && !bgColor) {
+  const { colorIndex = 0, bgColorIndex = 0 } = mark.attrs
+  if (!colorIndex && !bgColorIndex) {
     return null
   }
-  return { color, bgColor }
+  return { colorIndex, bgColorIndex }
 }
 
 export function isFontFancyActive(state: EditorState): FontFancyAttrs | null {

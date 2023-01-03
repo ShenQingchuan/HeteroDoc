@@ -4,6 +4,7 @@ import {
   FloatMenuShowTimingGap,
   FloatMenuZIndex,
 } from '../../constants/editor'
+import { editorEventBus } from '../../eventBus'
 
 const editorCore = useEditorCoreInject()
 const editorStore = useEditorStore()
@@ -30,21 +31,20 @@ const openEditorMenu = useDebounceFn((pos: { left: number; top: number }) => {
   })
 }, FloatMenuShowTimingGap)
 
-watch(
-  reactive({ selection, rects }),
-  ({ selection, rects }) => {
-    const nothingSelected = selection?.isCollapsed
+editorEventBus.on('editorMounted', ({ core }) => {
+  core.on('selectionChange', () => {
+    const nothingSelected = selection.value?.isCollapsed
     if (nothingSelected) {
       editorStore.isShowEditorMenu && editorStore.setShowEditorMenu(false)
     }
     else if (editorCore?.value.activeManager.isMenuAvailable()) {
       openEditorMenu({
-        left: rects[0]!.left,
-        top: rects[0]!.top,
+        left: rects.value[0]!.left,
+        top: rects.value[0]!.top,
       })
     }
-  },
-)
+  })
+})
 </script>
 
 <template>

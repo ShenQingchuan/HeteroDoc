@@ -6,7 +6,7 @@ import { mainRouter } from './routers'
 
 import App from './App.vue'
 
-import './styles/prosemirror.less'
+import '@hetero/editor/dist/styles/index.css'
 import 'uno.css'
 
 // Override global styles

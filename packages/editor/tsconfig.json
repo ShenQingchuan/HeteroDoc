@@ -11,8 +11,9 @@
     "strict": true,                                      /* Enable all strict type-checking options. */
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
-    "declaration": true,                                /* Generates a source file for each .d.ts file. */
-    "declarationMap": true                                /* Generates a source map for each .d.ts file. */
+    "declaration": true,                                 /* Generates a source file for each .d.ts file. */
+    "declarationMap": true,                              /* Generates a source map for each .d.ts file. */
+    "outDir": "./dist",                                  /* Redirect output structure to the directory. */
   },
   "exclude": [
     "./dist",

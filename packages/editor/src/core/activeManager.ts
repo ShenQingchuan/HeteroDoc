@@ -31,15 +31,18 @@ export class ActiveManager {
   }
 
   public isMenuAvailable(): boolean {
-    const { selection, doc } = this.core.view.state
-    const { from, to, empty } = selection
-    if (empty) {
+    const { doc } = this.core.view.state
+    if (this.core.view.state.selection.empty) {
       return false
     }
     const collectRangeNodes: Node[] = []
-    doc.nodesBetween(from, to, (node) => {
-      collectRangeNodes.push(node)
-    })
+    doc.nodesBetween(
+      this.core.view.state.selection.from,
+      this.core.view.state.selection.to,
+      (node) => {
+        collectRangeNodes.push(node)
+      },
+    )
     if (
       // shouldn't display menu in some text block
       collectRangeNodes.find(n => ['code_block'].includes(n.type.name))

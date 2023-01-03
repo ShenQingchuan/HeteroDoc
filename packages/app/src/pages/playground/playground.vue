@@ -20,6 +20,7 @@ onMounted(() => {
     autofocus: true,
     isOffline: true,
   }, {
+    themeMode: envStore.isDark ? 'dark' : 'light',
     i18nTr: t,
     extensions: (core: EditorCore) => composeExtensions(core),
   })

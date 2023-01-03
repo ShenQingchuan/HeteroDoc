@@ -8,8 +8,9 @@ const {
   rerenderKey,
   fontFancyBtnRef,
   fontFancyBtnBounding,
-  fontFancySet,
-  getStyleFromActiveFontFancy,
+  fontColorSetByTheme,
+  fontBgColorSetByTheme,
+  getMenuIconStyleFromActiveFontFancy,
 } = useFontFancyPicker()
 </script>
 
@@ -21,7 +22,7 @@ const {
     px1 mx0.25 quaternary
     @click="() => editorStore.setShowFontFancyPicker(true)"
   >
-    <div p0.25 :style="getStyleFromActiveFontFancy(editorCore)">
+    <div p0.25 :style="getMenuIconStyleFromActiveFontFancy(editorCore)">
       <div i-gridicons:text-color text-4 />
     </div>
   </n-button>
@@ -48,11 +49,11 @@ const {
         </div>
         <div class="hetero-editor__font-fancy-picker-text-color-grid" mb2>
           <n-button
-            v-for="fontColorOption in fontFancySet.textColorSet"
-            :key="fontColorOption" p0 w24px h24px
+            v-for="(fontColor, i) in fontColorSetByTheme"
+            :key="fontColor" p0 w24px h24px
             size="tiny" mr1 mb1 bg="white dark:black"
             @click="() => {
-              editorCore?.commands.setFontColor({ color: fontColorOption })
+              editorCore?.commands.setFontColor({ colorIndex: i })
               editorStore
                 .setShowFontFancyPicker(false)
                 .setShowEditorMenu(false)
@@ -60,7 +61,7 @@ const {
           >
             <template #icon>
               <n-icon size="16">
-                <div i-icomoon-free:text-color :style="{ color: fontColorOption }" />
+                <div i-icomoon-free:text-color :style="{ color: fontColor }" />
               </n-icon>
             </template>
           </n-button>
@@ -70,12 +71,12 @@ const {
         </div>
         <div class="hetero-editor__font-fancy-picker-text-color-grid" mb2>
           <n-button
-            v-for="bgColorOption in fontFancySet.bgColorSet"
-            :key="bgColorOption" p0 w24px h24px
+            v-for="(bgColor, i) in fontBgColorSetByTheme"
+            :key="bgColor" p0 w24px h24px
             size="tiny" mr1 mb1 bg="white dark:black"
-            :style="{ backgroundColor: bgColorOption }"
+            :style="{ backgroundColor: bgColor }"
             @click="() => {
-              editorCore?.commands.setFontBgColor({ bgColor: bgColorOption })
+              editorCore?.commands.setFontBgColor({ bgColorIndex: i })
               editorStore
                 .setShowFontFancyPicker(false)
                 .setShowEditorMenu(false)

@@ -47,7 +47,7 @@ interface HyperlinkOptions {
 }
 
 export class HyperlinkExtension implements IEditorExtension<HyperlinkOptions> {
-  type = ExtensionType.node
+  type = ExtensionType.mark
   name = 'hyperlink'
   options: HyperlinkOptions
 

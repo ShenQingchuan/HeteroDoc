@@ -6,9 +6,9 @@ import type { AddMarksSchema, Command, IEditorExtension, NoArgsCommand } from '.
 import { ExtensionType } from '../types'
 
 interface FontColorCommandDefs {
-  setFontColor: Command<{ color: string }>
+  setFontColor: Command<{ colorIndex: number }>
   unsetFontColor: NoArgsCommand
-  setFontBgColor: Command<{ bgColor: string }>
+  setFontBgColor: Command<{ bgColorIndex: number }>
   unsetFontBgColor: NoArgsCommand
 }
 
@@ -32,35 +32,14 @@ export class FontFancyExtension implements IEditorExtension {
     return {
       marks: {
         fontFancy: {
-          attrs: { color: { default: '' }, bgColor: { default: '' } },
-          parseDOM: [
-            {
-              tag: 'span',
-              style: 'color',
-              getAttrs(el) {
-                return {
-                  color: (el as HTMLElement).style.color,
-                }
-              },
-            },
-            {
-              tag: 'span',
-              style: 'background-color',
-              getAttrs(el) {
-                return {
-                  bgColor: (el as HTMLElement).style.backgroundColor,
-                }
-              },
-            },
-          ],
-          toDOM(mark: Mark) {
+          attrs: { colorIndex: { default: 0 }, bgColorIndex: { default: 0 } },
+          // no parseDOM, because we don't want to parse the color/background-color from the DOM
+          toDOM: (mark: Mark) => {
             const styles: string[] = []
-            if (mark.attrs.color) {
-              styles.push(`color: ${mark.attrs.color};`)
-            }
-            if (mark.attrs.bgColor) {
-              styles.push(`background-color: ${mark.attrs.bgColor};`)
-            }
+            if (mark.attrs.colorIndex)
+              styles.push(`color: var(--heterodoc-fontfancy-text-color-${mark.attrs.colorIndex});`)
+            if (mark.attrs.bgColorIndex)
+              styles.push(`background-color: var(--heterodoc-fontfancy-bg-color-${mark.attrs.bgColorIndex});`)
             return ['span', { style: styles.join(' ') }, 0]
           },
         },
@@ -70,17 +49,17 @@ export class FontFancyExtension implements IEditorExtension {
 
   commands: () => FontColorCommandDefs = () => {
     return {
-      setFontColor: ({ color }) => ({ commands }) => {
-        return commands.setMark({ typeOrName: this.name, attrs: { color, bgColor: '' } })
+      setFontColor: ({ colorIndex }) => ({ commands }) => {
+        return commands.setMark({ typeOrName: this.name, attrs: { colorIndex, bgColorIndex: 0 } })
       },
       unsetFontColor: () => ({ commands }) => {
-        return commands.updateAttributes({ typeOrName: this.name, attrs: { color: '' } })
+        return commands.updateAttributes({ typeOrName: this.name, attrs: { colorIndex: 0 } })
       },
-      setFontBgColor: ({ bgColor }) => ({ commands }) => {
-        return commands.setMark({ typeOrName: this.name, attrs: { bgColor, color: '' } })
+      setFontBgColor: ({ bgColorIndex }) => ({ commands }) => {
+        return commands.setMark({ typeOrName: this.name, attrs: { bgColorIndex, colorIndex: 0 } })
       },
       unsetFontBgColor: () => ({ commands }) => {
-        return commands.updateAttributes({ typeOrName: this.name, attrs: { bgColor: '' } })
+        return commands.updateAttributes({ typeOrName: this.name, attrs: { bgColorIndex: 0 } })
       },
     }
   }
@@ -99,7 +78,7 @@ export class FontFancyExtension implements IEditorExtension {
 
     return [
       new Plugin({
-        key: new PluginKey('fontFancyPaste'),
+        key: new PluginKey('fontFancyReInitOnPaste'),
         props: {
           handlePaste(view, _, slice) {
             // create a new slice, modified from the original slice,

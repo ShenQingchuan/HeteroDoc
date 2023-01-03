@@ -5,8 +5,12 @@
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development && tsup --watch",
-    "build": "cross-env NODE_ENV=production && tsup"
+    "dev": "cross-env NODE_ENV=development && rm -rf ./dist && concurrently 'npm:dev-tsup' 'npm:dev-dts'",
+    "dev-tsup": "tsup --watch",
+    "dev-dts": "tsc -w --emitDeclarationOnly --declaration",
+    "build": "cross-env NODE_ENV=production && rm -rf ./dist && concurrently 'npm:build-tsup' 'npm:build-dts'",
+    "build-tsup": "tsup",
+    "build-dts": "tsc --emitDeclarationOnly --declaration"
   },
   "dependencies": {
     "@hetero/shared": "workspace:*",
@@ -29,7 +33,9 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",
+    "concurrently": "^7.6.0",
     "cross-env": "^7.0.3",
+    "esbuild-plugin-less": "^1.1.11",
     "tsup": "^6.5.0",
     "typescript": "^4.7.4"
   },

@@ -1,7 +1,8 @@
+import { fontBgColorSet, fontColorSet } from '@hetero/editor'
 import type { EditorCore, FontFancyAttrs } from '@hetero/editor'
 import { uniqueId } from 'lodash'
 import type { CSSProperties } from 'vue'
-import { fontBgColorDarkSet, fontBgColorLightSet, fontColorDarkSet, fontColorLightSet } from '../constants/fontFancy'
+import { editorEventBus } from '../eventBus'
 
 export const useFontFancyPicker = () => {
   const editorStore = useEditorStore()
@@ -9,29 +10,36 @@ export const useFontFancyPicker = () => {
   const rerenderKey = ref(uniqueId())
   const fontFancyBtnRef = ref<HTMLElement | null>(null)
   const fontFancyBtnBounding = useElementBounding(fontFancyBtnRef)
-  const fontFancySet = computed(() => {
-    return envStore.isDark
-      ? { textColorSet: fontColorDarkSet, bgColorSet: fontBgColorDarkSet }
-      : { textColorSet: fontColorLightSet, bgColorSet: fontBgColorLightSet }
-  })
   const getStyleFromFancyAttrs = (fontFancyAttrs: FontFancyAttrs | null | undefined) => {
     if (!fontFancyAttrs)
       return {}
-    const { color, bgColor } = fontFancyAttrs
+    const { colorIndex, bgColorIndex } = fontFancyAttrs
     const style: CSSProperties = {}
-    if (color)
-      style.color = color
-    if (bgColor)
-      style.backgroundColor = bgColor
+    const isDarkMode = envStore.isDark
+    if (colorIndex)
+      style.color = isDarkMode ? fontColorSet[colorIndex]![1] : fontColorSet[colorIndex]![0]
+    if (bgColorIndex)
+      style.backgroundColor = isDarkMode ? fontBgColorSet[bgColorIndex]![1] : fontBgColorSet[bgColorIndex]![0]
     return style
   }
-  const getStyleFromActiveFontFancy = (core: EditorCore | undefined) => {
+  const getMenuIconStyleFromActiveFontFancy = (core: EditorCore | undefined) => {
     const isFontFancyActive = core?.activeManager.isFontFancyActive()
     if (!isFontFancyActive)
       return {}
     const gotStyle = getStyleFromFancyAttrs(isFontFancyActive)
     return gotStyle
   }
+
+  const fontColorSetByTheme = computed(() => {
+    return fontColorSet.map((color) => {
+      return envStore.isDark ? color[1] : color[0]
+    })
+  })
+  const fontBgColorSetByTheme = computed(() => {
+    return fontBgColorSet.map((color) => {
+      return envStore.isDark ? color[1] : color[0]
+    })
+  })
 
   watch(() => editorStore.isShowEditorMenu, (
     isShowEditorMenu,
@@ -41,12 +49,20 @@ export const useFontFancyPicker = () => {
       rerenderKey.value = uniqueId()
     }
   })
+  editorEventBus.on('editorMounted', ({ core }) => {
+    watch(() => envStore.isDark, (nowIsDark, preIsDark) => {
+      if (nowIsDark !== preIsDark) {
+        core.emit('changeTheme', { theme: nowIsDark ? 'dark' : 'light' })
+      }
+    })
+  })
 
   return {
     rerenderKey,
     fontFancyBtnRef,
     fontFancyBtnBounding,
-    fontFancySet,
-    getStyleFromActiveFontFancy,
+    fontColorSetByTheme,
+    fontBgColorSetByTheme,
+    getMenuIconStyleFromActiveFontFancy,
   }
 }

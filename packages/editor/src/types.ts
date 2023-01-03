@@ -119,4 +119,9 @@ export interface InputFastpathOptions {
   blockQuoteAvailable: boolean
 }
 
-export interface FontFancyAttrs { color: string; bgColor: string }
+export interface FontFancyAttrs {
+  colorIndex: number
+  bgColorIndex: number
+}
+
+export type EditorThemeMode = 'light' | 'dark'

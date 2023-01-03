@@ -9,10 +9,11 @@ import type {
 import { keymap } from 'prosemirror-keymap'
 import { TypeEvent } from '@hetero/shared'
 import { history, redo, undo } from 'prosemirror-history'
+import { merge } from 'lodash'
 import { getLogger } from '../utils/logger'
 import { ExtensionType } from '../types'
 import type { EditorLogger } from '../utils/logger'
-import type { IEditorExtension, IEditorMark, InputFastpathOptions } from '../types'
+import type { EditorThemeMode, IEditorExtension, IEditorMark, InputFastpathOptions } from '../types'
 import { createBuiltinFuncExts } from '../extensions/funcs/builtinFuncExts'
 import { mergeSchemaSpecs } from './schema'
 import { inputRules, pasteRules } from './rule'
@@ -31,9 +32,10 @@ export interface EditorOptions {
 }
 export interface EditorCoreEvent {
   'rendered': { timeCost: number }
+  'changeTheme': { theme: 'light' | 'dark' }
   'beforeDispatchTransaction': { tr: Transaction }
   'dispatchedTransaction': null
-  'selectionUpdate': { tr: Transaction }
+  'selectionChange': { tr: Transaction }
   'activateInputFastPath': { left: number; top: number; options: InputFastpathOptions }
   'deactivateInputFastPath': { isContentChanged: boolean }
   'activateSideToolBtn': { left: number; top: number; hoverCtx: { pos: number; rect: DOMRect } }
@@ -44,22 +46,26 @@ export interface EditorCoreEvent {
 export class EditorCore extends TypeEvent<EditorCoreEvent> {
   options: EditorOptions
   extensions: IEditorExtension[]
+  themeMode: EditorThemeMode
   schema: Schema
   view: EditorView
   logger: EditorLogger
   cmdManager: CommandManager
   helpers: HelpersManager
   activeManager: ActiveManager
+  isNoEffectDispatch = false
   i18nTr: (key: string) => string
 
   constructor(options: EditorOptions, coreConfig: {
     i18nTr: (key: string) => string
     extensions: (core: EditorCore) => IEditorExtension[]
+    themeMode: EditorThemeMode
   }) {
     super()
-    const { extensions, i18nTr } = coreConfig
+    const { extensions, i18nTr, themeMode } = coreConfig
     this.options = options
     this.i18nTr = i18nTr
+    this.themeMode = themeMode
     this.extensions = [
       ...createBuiltinFuncExts(this),
       ...extensions(this),
@@ -72,26 +78,57 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     this.activeManager = new ActiveManager(this)
     this.logger = getLogger('HeteroEditor core')
     this.view = this.initEditorView()
+
+    // listen the theme mode change event
+    this.listenThemeModeChange()
   }
 
   private dispatchTransaction = (tr: Transaction) => {
+    const emitIfNeedEffect = this.isNoEffectDispatch ? () => {} : this.emit.bind(this)
     try {
       const { view } = this
-      this.emit('beforeDispatchTransaction', { tr })
+      emitIfNeedEffect('beforeDispatchTransaction', { tr })
       this.extensions.forEach(ext => ext.beforeTransaction?.())
       const newState = view.state.apply(tr)
       const selectionHasChanged = !view.state.selection.eq(newState.selection)
+
       view.updateState(newState)
       this.extensions.forEach(ext => ext.afterApplyTransaction?.())
-      this.emit('dispatchedTransaction')
+      emitIfNeedEffect('dispatchedTransaction')
+
       if (selectionHasChanged) {
-        this.emit('selectionUpdate', { tr })
+        this.emit('selectionChange', { tr })
         this.extensions.forEach(ext => ext.onSelectionChange?.({ tr }))
       }
     }
     catch (err) {
       this.logger.error(err)
     }
+  }
+
+  private listenThemeModeChange = () => {
+    this.on('changeTheme', ({ theme }) => {
+      this.themeMode = theme
+      const { tr } = this.view.state
+      let posCursor = 0
+      tr.doc.content.forEach((node) => {
+        tr.doc.nodesBetween(posCursor, node.nodeSize, (node, pos) => {
+          if (node.type.name !== 'fontFancy') {
+            return
+          }
+          // if node has mark 'fontFancy', need to recreate a new mark, but maintain its own attrs,
+          // just for force re-render the marked node
+          tr.setNodeMarkup(
+            pos,
+            undefined,
+            merge(node.attrs, { theme }),
+          )
+        })
+        posCursor += node.nodeSize
+      })
+
+      this.noEffectDispatch(tr)
+    })
   }
 
   private resolveAllPlugins = () => {
@@ -201,6 +238,12 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     return new Schema(mergeSchemaSpecs(allSchemaSpecs))
   }
 
+  public noEffectDispatch(tr?: Transaction) {
+    this.isNoEffectDispatch = true
+    this.view.dispatch(tr ?? this.view.state.tr)
+    this.isNoEffectDispatch = false
+  }
+
   public getMarkExtensions = (): IEditorMark[] => {
     return this.extensions.filter(ext => ext.type === ExtensionType.mark)
   }
@@ -209,6 +252,10 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     return this.getMarkExtensions().filter((markExt) => {
       return markExt.keepOnSplit
     })
+  }
+
+  public getDocJson() {
+    return this.view.state.doc.toJSON()
   }
 
   public get isDestroyed() {

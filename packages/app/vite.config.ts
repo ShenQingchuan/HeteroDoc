@@ -1,4 +1,3 @@
-import * as path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJSX from '@vitejs/plugin-vue-jsx'
 import vueI18n from '@intlify/vite-plugin-vue-i18n'
@@ -8,8 +7,6 @@ import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 import { VitePluginFonts } from 'vite-plugin-fonts'
 import { defineConfig } from 'vite'
-
-const fromAppPath = (p: string) => path.resolve(__dirname, p)
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -28,22 +25,22 @@ export default defineConfig({
     vueI18n({
       runtimeOnly: true,
       compositionOnly: true,
-      include: fromAppPath('src/locales/**'),
+      include: 'src/locales/**',
     }),
-    Unocss(fromAppPath('unocss.config.ts')),
+    Unocss('unocss.config.ts'),
     AutoImport({
       // global imports to register
       imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', 'vue-i18n'],
       dirs: [
-        fromAppPath('src/composables'),
-        fromAppPath('src/stores'),
+        'src/composables',
+        'src/stores',
       ],
-      dts: fromAppPath('src/types/auto-imports.d.ts'),
+      dts: 'src/types/auto-imports.d.ts',
     }),
     Components({
       include: [/\.vue$/, /\.vue\?vue/],
-      dirs: fromAppPath('src/components'),
-      dts: fromAppPath('src/types/components.d.ts'),
+      dirs: 'src/components',
+      dts: 'src/types/components.d.ts',
       resolvers: [NaiveUiResolver()],
     }),
     VitePluginFonts({
