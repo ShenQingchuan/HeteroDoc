@@ -13,8 +13,9 @@
 
 ### Current bugs
 
-- [ ] Pasting copied HTML occurs extra 1 line
-- [ ] Call fastpath in composition input mode would leave `/` character in line
+- [x] Calling float menu is not as soon as selection change
+- [ ] Pasting copied codeblock from external HTML occurs extra 1 line
+- [ ] Call fastpath in RIME pinyin would leave `/` character in line
 
 ### Unit tests
 
