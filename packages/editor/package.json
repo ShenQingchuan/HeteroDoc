@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development && rm -rf ./dist && concurrently 'npm:dev-tsup' 'npm:dev-dts'",
     "dev-tsup": "tsup --watch",
-    "dev-dts": "tsc -w --emitDeclarationOnly --declaration",
+    "dev-dts": "tsc -w --emitDeclarationOnly --declaration --preserveWatchOutput",
     "build": "cross-env NODE_ENV=production && rm -rf ./dist && concurrently 'npm:build-tsup' 'npm:build-dts'",
     "build-tsup": "tsup",
     "build-dts": "tsc --emitDeclarationOnly --declaration"
