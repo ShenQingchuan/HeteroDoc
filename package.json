@@ -23,11 +23,6 @@
     "typescript": "^4.7.4",
     "vite": "^3.0.5"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run cypress:component"
-    }
-  },
   "lint-staged": {
     "*.vue": "eslint --fix",
     "*.ts": "eslint --fix",
