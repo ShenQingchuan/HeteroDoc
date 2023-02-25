@@ -4,6 +4,15 @@
   "description": "Shared library for heterodoc project",
   "type": "module",
   "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "dev": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": "./*"
+  },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "cross-env NODE_ENV=development && tsup --watch",
     "build": "cross-env NODE_ENV=production && tsup"

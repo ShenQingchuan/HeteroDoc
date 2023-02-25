@@ -12,14 +12,14 @@
   "dependencies": {
     "@hetero/editor": "workspace:*",
     "@hetero/shared": "workspace:*",
-    "@intlify/vite-plugin-vue-i18n": "^3.4.0",
+    "@intlify/unplugin-vue-i18n": "^0.8.2",
     "@types/lodash": "^4.14.182",
     "@vueuse/components": "^8.9.4",
     "@vueuse/core": "^8.5.0",
     "highlight.js": "^11.6.0",
     "lodash": "^4.17.21",
     "naive-ui": "^2.34.2",
-    "pinia": "^2.0.14",
+    "pinia": "^2.0.32",
     "vue": "^3.2.25",
     "vue-i18n": "^9.1.10",
     "vue-router": "4"
@@ -38,9 +38,9 @@
     "unocss": "^0.48.0",
     "unplugin-auto-import": "^0.12.1",
     "unplugin-vue-components": "^0.22.12",
-    "vite": "^3.0.5",
+    "vite": "^4.1.4",
     "vite-plugin-fonts": "^0.6.0",
-    "vitest": "^0.26.2",
-    "vue-tsc": "^0.35.0"
+    "vitest": "^0.28.5",
+    "vue-tsc": "^1.2.0"
   }
 }

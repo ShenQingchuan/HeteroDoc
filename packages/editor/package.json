@@ -4,6 +4,15 @@
   "description": "A WYSIWYG editor for heterocube doc",
   "type": "module",
   "main": "./dist/index.js",
+  "exports": {
+    ".": {
+      "dev": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": "./*"
+  },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "cross-env NODE_ENV=development && rm -rf ./dist && concurrently 'npm:dev-tsup' 'npm:dev-dts'",
     "dev-tsup": "tsup --watch",
@@ -16,20 +25,20 @@
     "@hetero/shared": "workspace:*",
     "highlight.js": "^11.6.0",
     "lodash": "^4.17.21",
-    "prosemirror-commands": "^1.3.0",
+    "prosemirror-commands": "^1.5.0",
     "prosemirror-highlightjs": "^0.9.1",
     "prosemirror-history": "^1.3.0",
-    "prosemirror-keymap": "^1.2.0",
-    "prosemirror-model": "^1.18.1",
-    "prosemirror-state": "^1.4.0",
-    "prosemirror-tables": "^1.2.5",
-    "prosemirror-transform": "^1.6.0",
+    "prosemirror-keymap": "^1.2.1",
+    "prosemirror-model": "^1.19.0",
+    "prosemirror-state": "^1.4.2",
+    "prosemirror-tables": "^1.3.2",
+    "prosemirror-transform": "^1.7.1",
     "prosemirror-utils": "^0.9.6",
-    "prosemirror-view": "^1.26.0",
-    "y-prosemirror": "^1.1.2",
+    "prosemirror-view": "^1.30.1",
+    "y-prosemirror": "^1.2.0",
     "y-protocols": "^1.0.5",
-    "y-websocket": "^1.4.3",
-    "yjs": "^13.5.38"
+    "y-websocket": "^1.4.5",
+    "yjs": "^13.5.47"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",

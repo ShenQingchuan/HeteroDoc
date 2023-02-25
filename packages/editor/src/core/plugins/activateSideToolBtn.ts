@@ -23,7 +23,6 @@ export const activateSideToolBtn = (core: EditorCore) => {
 
   return new Plugin({
     props: {
-      // @ts-expect-error it seems that ProseMirror's type has an issue here
       handleDOMEvents: {
         mouseover(view, event) {
           const toElement = event.target as HTMLElement; const fromElement = event.relatedTarget as HTMLElement

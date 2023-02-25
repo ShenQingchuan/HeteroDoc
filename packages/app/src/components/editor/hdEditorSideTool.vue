@@ -29,6 +29,9 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
     sideToolBtnLeft.value = left
     sideToolBtnTop.value = top
   })
+  core.on('selectionChange', () => {
+    isSideToolBtnShow.value = false
+  })
   controlSideToolStatusForEditorDOMArea(editorDOM)
 })
 </script>

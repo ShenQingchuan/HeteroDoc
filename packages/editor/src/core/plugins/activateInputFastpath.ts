@@ -20,7 +20,6 @@ export const activateInputFastPath = (core: EditorCore) => {
 
   return new Plugin({
     props: {
-      // @ts-expect-error it seems that ProseMirror's type has an issue here
       handleDOMEvents: {
         keydown(view, event) {
           // leave arrow up/down/enter to view layer
