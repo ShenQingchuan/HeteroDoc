@@ -46,6 +46,7 @@ export * from './markOps/unsetMark'
 export * from './fundamentals/resetAttributes'
 export * from './fundamentals/updateAttributes'
 export * from './fundamentals/insertBeforeOrAfter'
+export * from './fundamentals/supportRemoveFirstLine'
 
 export const builtinsCommands = {
   focus,

@@ -2,11 +2,12 @@ import type { HLJSApi } from 'highlight.js'
 import { highlightPlugin } from 'prosemirror-highlightjs'
 import type { Plugin } from 'prosemirror-state'
 import { TextSelection } from 'prosemirror-state'
+import { findParentNode } from 'prosemirror-utils'
 import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import type { EditorCore } from '../core'
 import type { PatternRule } from '../core/rule'
 import { textblockTypeInputRule } from '../core/rule'
-import type { AddNodesSchema, Command, IEditorExtension, KeyboardShortcutCommand } from '../types'
+import type { AddNodesSchema, Command, IEditorExtension, KeyboardShortcutCommand, NoArgsCommand } from '../types'
 import { ExtensionType } from '../types'
 
 const codeblockRegExp = /^(···|```)(?<params>[a-z]+)?[\s\n]$/
@@ -18,12 +19,14 @@ export interface CodeBlockSetterAttrs {
 interface CodeBlockCommandsDefs {
   setCodeblock: Command<CodeBlockSetterAttrs>
   toggleCodeblock: Command<CodeBlockSetterAttrs>
+  removeEmptyCodeBlock: NoArgsCommand
 }
 
 declare global {
   interface Commands {
     setCodeblock: CodeBlockCommandsDefs['setCodeblock']
     toggleCodeblock: CodeBlockCommandsDefs['toggleCodeblock']
+    removeEmptyCodeBlock: CodeBlockCommandsDefs['removeEmptyCodeBlock']
   }
 }
 
@@ -151,6 +154,28 @@ export class CodeBlockExtension implements IEditorExtension {
           turnOn: 'code_block',
           turnOff: 'paragraph',
           attrs: { params },
+        })
+      },
+      removeEmptyCodeBlock: () => ({ commands }) => {
+        return commands.command({
+          fn: ({ tr }) => {
+            const { selection } = tr
+            const foundCodeBlock = findParentNode(node => node.type.name === 'code_block')(selection)
+            if (!foundCodeBlock)
+              return false
+
+            const { textContent } = foundCodeBlock.node
+            if (!textContent) {
+              // Empty code block
+              tr.delete(
+                foundCodeBlock.pos,
+                foundCodeBlock.pos + foundCodeBlock.node.nodeSize,
+              )
+              return true
+            }
+
+            return false
+          },
         })
       },
     }

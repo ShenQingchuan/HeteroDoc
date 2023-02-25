@@ -1,4 +1,3 @@
-import { Selection } from 'prosemirror-state'
 import type { EditorCore } from '../../core'
 import type { IEditorExtension } from '../../types'
 import { ExtensionType } from '../../types'
@@ -14,19 +13,8 @@ export class BaseKeymap implements IEditorExtension {
     const handleBackspace = () => this.core.commands.first({
       commands: ({ commands }) => [
         () => commands.undoInputRule(),
-        () => commands.command({
-          fn: ({ tr }) => {
-            const { selection, doc } = tr
-            const { empty, $anchor } = selection
-            const { pos, parent } = $anchor
-            const isAtStart = Selection.atStart(doc).from === pos
-
-            if (!empty || !isAtStart || !parent.type.isTextblock || parent.textContent.length)
-              return false
-
-            return commands.clearNodes()
-          },
-        }),
+        () => commands.removeEmptyCodeBlock(),
+        () => commands.supportRemoveFirstLine(),
         () => commands.deleteSelection(),
         () => commands.joinBackward(),
         () => commands.selectNodeBackward(),
