@@ -27,6 +27,7 @@ import { unsetMark } from './markOps/unsetMark'
 import { resetAttributes } from './fundamentals/resetAttributes'
 import { updateAttributes } from './fundamentals/updateAttributes'
 import { insertAfter, insertBefore } from './fundamentals/insertBeforeOrAfter'
+import { supportRemoveFirstLine } from './fundamentals/supportRemoveFirstLine'
 
 export * from './fundamentals/focus'
 export * from './fundamentals/scrollIntoView'
@@ -74,6 +75,7 @@ export const builtinsCommands = {
   resetAttributes,
   insertBefore,
   insertAfter,
+  supportRemoveFirstLine,
 
   toggleMark,
   setMark,
