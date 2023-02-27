@@ -4,6 +4,7 @@ import type { AddMarksSchema, IEditorExtension, NoArgsCommand } from '../../type
 import type { PatternRule } from '../../core/rule'
 import { markInputRule, markPasteRule } from '../../core/rule'
 import { ExtensionType } from '../../types'
+import { EXTENSION_NAMES } from '../../constants'
 
 const deleteLineDOM: DOMOutputSpec = ['del', 0]
 const deleteLineInputRegex = /(?:^|\s)((?:~)(?<text>(?:[^~]+))(?:~))$/
@@ -19,15 +20,15 @@ declare global {
 
 export class DeleteLineExtension implements IEditorExtension {
   type = ExtensionType.mark
-  name = 'deleteLine'
+  name = EXTENSION_NAMES.DELETE_LINE
   options = {}
 
   constructor(public core: EditorCore) {}
 
-  schemaSpec: () => AddMarksSchema<'deleteLine'> = () => {
+  schemaSpec: () => AddMarksSchema<EXTENSION_NAMES.DELETE_LINE> = () => {
     return {
       marks: {
-        deleteLine: {
+        [EXTENSION_NAMES.DELETE_LINE]: {
           parseDOM: [
             { tag: 'del' },
             {

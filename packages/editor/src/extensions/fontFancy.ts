@@ -1,6 +1,7 @@
 import type { Mark } from 'prosemirror-model'
 import { Slice } from 'prosemirror-model'
 import { Plugin, PluginKey } from 'prosemirror-state'
+import { EXTENSION_NAMES } from '../constants'
 import type { EditorCore } from '../core'
 import type { AddMarksSchema, Command, IEditorExtension, NoArgsCommand } from '../types'
 import { ExtensionType } from '../types'
@@ -23,15 +24,15 @@ declare global {
 
 export class FontFancyExtension implements IEditorExtension {
   type = ExtensionType.mark
-  name = 'fontFancy'
+  name = EXTENSION_NAMES.FONT_FANCY
   options = {}
 
   constructor(public core: EditorCore) {}
 
-  schemaSpec: () => AddMarksSchema<'fontFancy'> = () => {
+  schemaSpec: () => AddMarksSchema<EXTENSION_NAMES.FONT_FANCY> = () => {
     return {
       marks: {
-        fontFancy: {
+        [EXTENSION_NAMES.FONT_FANCY]: {
           attrs: { colorIndex: { default: 0 }, bgColorIndex: { default: 0 } },
           // no parseDOM, because we don't want to parse the color/background-color from the DOM
           toDOM: (mark: Mark) => {

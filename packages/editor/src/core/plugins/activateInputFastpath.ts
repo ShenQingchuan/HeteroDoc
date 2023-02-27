@@ -1,6 +1,7 @@
 import type { Node } from 'prosemirror-model'
 import { Plugin } from 'prosemirror-state'
 import { findParentDomRef, findParentNode } from 'prosemirror-utils'
+import { EXTENSION_NAMES } from '../../constants'
 import type { EditorCore } from '../index'
 
 export const activateInputFastPath = (core: EditorCore) => {
@@ -38,8 +39,8 @@ export const activateInputFastPath = (core: EditorCore) => {
           const { state } = view
           const { selection } = state
           const { empty } = selection
-          const paragraphPredicate = (node: Node) => node.type.name === 'paragraph'
-          const blockquotePredicate = (node: Node) => node.type.name === 'blockquote'
+          const paragraphPredicate = (node: Node) => node.type.name === EXTENSION_NAMES.PARAGRAPH
+          const blockquotePredicate = (node: Node) => node.type.name === EXTENSION_NAMES.BLOCK_QUOTE
           const parentParagraph = findParentNode(paragraphPredicate)(selection)
           if (empty && parentParagraph?.node.textContent === '') {
             const paragraphDOM = findParentDomRef(

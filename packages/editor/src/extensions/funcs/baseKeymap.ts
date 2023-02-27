@@ -1,10 +1,11 @@
+import { EXTENSION_NAMES } from '../../constants'
 import type { EditorCore } from '../../core'
 import type { IEditorExtension } from '../../types'
 import { ExtensionType } from '../../types'
 
 export class BaseKeymap implements IEditorExtension {
   type = ExtensionType.func
-  name = 'baseKeymap'
+  name = EXTENSION_NAMES.UNDERLINE
   options = {}
 
   constructor(public core: EditorCore) {}

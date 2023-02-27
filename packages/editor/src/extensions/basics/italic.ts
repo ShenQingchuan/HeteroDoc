@@ -3,6 +3,7 @@ import type { PatternRule } from '../../core/rule'
 import type { EditorCore } from '../../core'
 import type { AddMarksSchema, IEditorExtension, NoArgsCommand } from '../../types'
 import { ExtensionType } from '../../types'
+import { EXTENSION_NAMES } from '../../constants'
 
 const singleStarInputRegex = /(?:^|\s)((?:\*)(?<text>(?:[^*]+))(?:\*))$/
 const singleStarPasteRegex = /(?:^|\s)((?:\*)(?<text>(?:[^*]+))(?:\*))/g
@@ -19,15 +20,15 @@ declare global {
 
 export class ItalicExtension implements IEditorExtension {
   type = ExtensionType.mark
-  name = 'italic'
+  name = EXTENSION_NAMES.ITALIC
   options = {}
 
   constructor(public core: EditorCore) {}
 
-  schemaSpec: () => AddMarksSchema<'italic'> = () => {
+  schemaSpec: () => AddMarksSchema<EXTENSION_NAMES.ITALIC> = () => {
     return {
       marks: {
-        italic: {
+        [EXTENSION_NAMES.ITALIC]: {
           parseDOM: [
             { tag: 'i' },
             { tag: 'em' },

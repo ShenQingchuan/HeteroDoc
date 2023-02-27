@@ -3,7 +3,7 @@ import type { AddNodesSchema, Command, IEditorExtension } from '../types'
 import { getUUID } from '../utils/getUUID'
 import type { PatternRule } from '../core/rule'
 import { textblockTypeInputRule } from '../core/rule'
-import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
+import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import { ExtensionType } from '../types'
 
 const headingInputRuleRegExp = /^(#{1,5})\s/
@@ -25,15 +25,15 @@ declare global {
 
 export class HeadingExtension implements IEditorExtension {
   type = ExtensionType.node
-  name = 'heading'
+  name = EXTENSION_NAMES.HEADING
   options = {}
 
   constructor(public core: EditorCore) {}
 
-  schemaSpec: () => AddNodesSchema<'heading'> = () => {
+  schemaSpec: () => AddNodesSchema<EXTENSION_NAMES.HEADING> = () => {
     return {
       nodes: {
-        heading: {
+        [EXTENSION_NAMES.HEADING]: {
           attrs: {
             level: { default: 1 },
             uuid: {},
@@ -91,12 +91,12 @@ export class HeadingExtension implements IEditorExtension {
       toggleHeading: ({ level }) => ({ commands }) => {
         if (level === 0) {
           return commands.setNode({
-            typeOrName: 'paragraph',
+            typeOrName: EXTENSION_NAMES.PARAGRAPH,
           })
         }
         return commands.toggleNode({
           turnOn: this.name,
-          turnOff: 'paragraph',
+          turnOff: EXTENSION_NAMES.PARAGRAPH,
           attrs: {
             level,
             uuid: getRandomHeadingID(),

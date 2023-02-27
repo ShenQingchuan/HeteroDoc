@@ -1,4 +1,4 @@
-import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
+import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import type { EditorCore } from '../core'
 import type { PatternRule } from '../core/rule'
 import { wrappingInputRule } from '../core/rule'
@@ -19,15 +19,15 @@ declare global {
 
 export class BlockquoteExtension implements IEditorExtension {
   type = ExtensionType.node
-  name = 'blockquote'
+  name = EXTENSION_NAMES.BLOCK_QUOTE
   options = {}
 
   constructor(public core: EditorCore) {}
 
-  schemaSpec: () => AddNodesSchema<'blockquote'> = () => {
+  schemaSpec: () => AddNodesSchema<EXTENSION_NAMES.BLOCK_QUOTE> = () => {
     return {
       nodes: {
-        blockquote: {
+        [EXTENSION_NAMES.BLOCK_QUOTE]: {
           content: 'non_quote_block+',
           group: 'block',
           defining: true,

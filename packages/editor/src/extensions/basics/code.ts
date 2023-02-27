@@ -4,7 +4,7 @@ import type { PatternRule } from '../../core/rule'
 import { markInputRule, markPasteRule } from '../../core/rule'
 import type { AddMarksSchema, IEditorExtension, NoArgsCommand } from '../../types'
 import { ExtensionType } from '../../types'
-import { whiteSpaceDom } from '../../constants'
+import { EXTENSION_NAMES, whiteSpaceDom } from '../../constants'
 
 const inlineCodeInputRegex = /(?:^|\s)((?:`)(?<text>(?:[^`]+))(?:`))$/
 const inlineCodePasteRegex = /(?:^|\s)((?:`)(?<text>(?:[^`]+))(?:`))/g
@@ -26,15 +26,15 @@ declare global {
 
 export class CodeExtension implements IEditorExtension {
   type = ExtensionType.mark
-  name = 'code'
+  name = EXTENSION_NAMES.CODE
   options = {}
 
   constructor(public core: EditorCore) {}
 
-  schemaSpec: () => AddMarksSchema<'code'> = () => {
+  schemaSpec: () => AddMarksSchema<EXTENSION_NAMES.CODE> = () => {
     return {
       marks: {
-        code: {
+        [EXTENSION_NAMES.CODE]: {
           parseDOM: [
             { tag: 'code' },
           ],

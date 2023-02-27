@@ -1,4 +1,5 @@
 import type { Node } from 'prosemirror-model'
+import { EXTENSION_NAMES } from '../constants'
 import { isActive } from './helpers/isActive'
 import { isFontFancyActive as _isFontFancyActive } from './helpers/isFontFancyActive'
 import type { EditorCore } from './index'
@@ -45,7 +46,9 @@ export class ActiveManager {
     )
     if (
       // shouldn't display menu in some text block
-      collectRangeNodes.find(n => ['code_block'].includes(n.type.name))
+      collectRangeNodes.find(n => (
+        [EXTENSION_NAMES.CODE_BLOCK] as string[]
+      ).includes(n.type.name))
     ) {
       return false
     }
@@ -63,7 +66,10 @@ export class ActiveManager {
     doc.nodesBetween(from, to, (node) => {
       collectRangeNodes.push(node)
     })
-    return !collectRangeNodes.find(n => ['heading', 'code_block'].includes(n.type.name))
+    return !collectRangeNodes.find(n => ([
+      EXTENSION_NAMES.HEADING,
+      EXTENSION_NAMES.CODE_BLOCK,
+    ] as string[]).includes(n.type.name))
       && collectRangeNodes.filter(n => n.type.isText).length === 1
   }
 }

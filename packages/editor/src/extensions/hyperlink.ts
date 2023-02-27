@@ -6,6 +6,7 @@ import { markInputRule, markPasteRule } from '../core/rule'
 import { getMarksBetween } from '../core/helpers/getMarksBetween'
 import { getMarkRange } from '../core/helpers/getMarkRange'
 import { ExtensionType } from '../types'
+import { EXTENSION_NAMES } from '../constants'
 
 const hyperlinkInputRegExp = /(?:^|\s)(?:\[)(?<text>(?:[^\[\]]+))(?:\]\()(?<url>(?:[^\(\)]+))(?:\))$/
 const hyperlinkPasteRegExp = /(?:\[)(?<text>(?:[^\[\]]+))(?:\]\()(?<url>(?:[^\(\)]+))(?:\))/g
@@ -48,17 +49,17 @@ interface HyperlinkOptions {
 
 export class HyperlinkExtension implements IEditorExtension<HyperlinkOptions> {
   type = ExtensionType.mark
-  name = 'hyperlink'
+  name = EXTENSION_NAMES.HYPERLINK
   options: HyperlinkOptions
 
   constructor(public core: EditorCore, options: HyperlinkOptions) {
     this.options = options
   }
 
-  schemaSpec: () => AddMarksSchema<'hyperlink'> = () => {
+  schemaSpec: () => AddMarksSchema<EXTENSION_NAMES.HYPERLINK> = () => {
     return {
       marks: {
-        hyperlink: {
+        [EXTENSION_NAMES.HYPERLINK]: {
           inclusive: false,
           attrs: {
             url: { default: '' },
@@ -78,7 +79,7 @@ export class HyperlinkExtension implements IEditorExtension<HyperlinkOptions> {
           ],
           toDOM(mark) {
             const { url = '' } = mark.attrs as HyperlinkAttrs
-            return ['a', { class: 'hyperlink', href: url }, 0]
+            return ['a', { class: EXTENSION_NAMES.HYPERLINK, href: url }, 0]
           },
         },
       },

@@ -1,4 +1,5 @@
 import type { DOMOutputSpec } from 'prosemirror-model'
+import { EXTENSION_NAMES } from '../../constants'
 import type { EditorCore } from '../../core'
 import type { AddMarksSchema, IEditorExtension, NoArgsCommand } from '../../types'
 import { ExtensionType } from '../../types'
@@ -15,15 +16,15 @@ declare global {
 
 export class UnderlineExtension implements IEditorExtension {
   type = ExtensionType.mark
-  name = 'underline'
+  name = EXTENSION_NAMES.UNDERLINE
   options = {}
 
   constructor(public core: EditorCore) {}
 
-  schemaSpec: () => AddMarksSchema<'underline'> = () => {
+  schemaSpec: () => AddMarksSchema<EXTENSION_NAMES.UNDERLINE> = () => {
     return {
       marks: {
-        underline: {
+        [EXTENSION_NAMES.UNDERLINE]: {
           parseDOM: [
             { tag: 'u' },
             {

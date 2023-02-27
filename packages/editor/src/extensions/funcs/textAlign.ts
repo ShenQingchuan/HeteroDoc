@@ -1,3 +1,4 @@
+import { EXTENSION_NAMES } from '../../constants'
 import type { EditorCore } from '../../core'
 import type { Command, IEditorExtension, NoArgsCommand } from '../../types'
 import { ExtensionType } from '../../types'
@@ -16,7 +17,7 @@ declare global {
 
 export class TextAlign implements IEditorExtension {
   type = ExtensionType.func
-  name = 'textAlign'
+  name = EXTENSION_NAMES.TEXT_ALIGN
   options = {}
 
   constructor(public core: EditorCore) {}

@@ -30,3 +30,19 @@ export const fontBgColorSet = [
   ['rgba(200, 21, 182, 0.2)', 'rgba(218, 78, 143, 0.28)'],
   ['rgba(233, 30, 44, 0.2)', 'rgba(226, 80, 88, 0.28)'],
 ] as const
+
+export enum EXTENSION_NAMES {
+  PARAGRAPH = 'paragraph',
+  BLOCK_QUOTE = 'blockquote',
+  CODE_BLOCK = 'codeBlock',
+  FONT_FANCY = 'fontFancy',
+  HEADING = 'heading',
+  HYPERLINK = 'hyperlink',
+  TEXT_ALIGN = 'textAlign',
+  BASE_KEYMAP = 'baseKeymap',
+  BOLD = 'bold',
+  CODE = 'code',
+  DELETE_LINE = 'deleteLine',
+  ITALIC = 'italic',
+  UNDERLINE = 'underline',
+}

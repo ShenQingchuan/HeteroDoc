@@ -3,7 +3,7 @@ import { highlightPlugin } from 'prosemirror-highlightjs'
 import type { Plugin } from 'prosemirror-state'
 import { TextSelection } from 'prosemirror-state'
 import { findParentNode } from 'prosemirror-utils'
-import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
+import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import type { EditorCore } from '../core'
 import type { PatternRule } from '../core/rule'
 import { textblockTypeInputRule } from '../core/rule'
@@ -32,7 +32,7 @@ declare global {
 
 export class CodeBlockExtension implements IEditorExtension {
   type = ExtensionType.node
-  name = 'codeBlock'
+  name = EXTENSION_NAMES.CODE_BLOCK
   options = {}
 
   constructor(public core: EditorCore, public hljs: HLJSApi) {
@@ -53,11 +53,11 @@ export class CodeBlockExtension implements IEditorExtension {
     })
   }
 
-  schemaSpec: () => AddNodesSchema<'code_block'> = () => {
+  schemaSpec: () => AddNodesSchema<EXTENSION_NAMES.CODE_BLOCK> = () => {
     const { i18nTr } = this.core
     return {
       nodes: {
-        code_block: {
+        [EXTENSION_NAMES.CODE_BLOCK]: {
           content: 'text*',
           group: 'block non_quote_block',
           code: true,
@@ -105,7 +105,7 @@ export class CodeBlockExtension implements IEditorExtension {
   }
 
   inputRules: () => PatternRule[] = () => {
-    const nodeType = this.core.schema.nodes.code_block!
+    const nodeType = this.core.schema.nodes[EXTENSION_NAMES.CODE_BLOCK]!
     return [
       textblockTypeInputRule(
         codeblockRegExp,
@@ -145,14 +145,14 @@ export class CodeBlockExtension implements IEditorExtension {
     return {
       setCodeblock: ({ params }) => ({ commands }) => {
         return commands.setNode({
-          typeOrName: 'code_block',
+          typeOrName: EXTENSION_NAMES.CODE_BLOCK,
           attrs: { params },
         })
       },
       toggleCodeblock: ({ params }) => ({ commands }) => {
         return commands.toggleNode({
-          turnOn: 'code_block',
-          turnOff: 'paragraph',
+          turnOn: EXTENSION_NAMES.CODE_BLOCK,
+          turnOff: EXTENSION_NAMES.PARAGRAPH,
           attrs: { params },
         })
       },

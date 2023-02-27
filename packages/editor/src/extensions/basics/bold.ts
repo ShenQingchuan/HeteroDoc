@@ -5,6 +5,7 @@ import type { EditorCore } from '../../core'
 import type { AddMarksSchema, IEditorMark, NoArgsCommand } from '../../types'
 
 import { ExtensionType } from '../../types'
+import { EXTENSION_NAMES } from '../../constants'
 
 const boldStyleRegExp = /^(bold(er)?|[5-9]\d{2,})$/
 const doubleStarInputRegex = /(?:^|\s)((?:\*\*)(?<text>(?:[^*]+))(?:\*\*))$/
@@ -23,15 +24,15 @@ declare global {
 
 export class BoldExtension implements IEditorMark {
   type = ExtensionType.mark
-  name = 'bold'
+  name = EXTENSION_NAMES.BOLD
   options = {}
 
   constructor(public core: EditorCore) {}
 
-  schemaSpec: () => AddMarksSchema<'bold'> = () => {
+  schemaSpec: () => AddMarksSchema<EXTENSION_NAMES.BOLD> = () => {
     return {
       marks: {
-        bold: {
+        [EXTENSION_NAMES.BOLD]: {
           parseDOM: [
             { tag: 'strong' },
             { tag: 'b', getAttrs: node => (node as HTMLElement).style.fontWeight !== 'normal' && null },
