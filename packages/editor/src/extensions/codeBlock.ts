@@ -121,7 +121,7 @@ export class CodeBlockExtension implements IEditorExtension {
 
   getProseMirrorPlugin: () => Plugin[] = () => {
     return [
-      highlightPlugin(this.hljs),
+      highlightPlugin(this.hljs, [EXTENSION_NAMES.CODE_BLOCK]),
     ]
   }
 
@@ -160,7 +160,7 @@ export class CodeBlockExtension implements IEditorExtension {
         return commands.command({
           fn: ({ tr }) => {
             const { selection } = tr
-            const foundCodeBlock = findParentNode(node => node.type.name === 'code_block')(selection)
+            const foundCodeBlock = findParentNode(node => node.type.name === EXTENSION_NAMES.CODE_BLOCK)(selection)
             if (!foundCodeBlock)
               return false
 
