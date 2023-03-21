@@ -3,5 +3,6 @@
     "src/locales"
   ],
   "volar.autoCompleteRefs": true,
-  "unocss.root": "packages/app"
+  "unocss.root": "packages/app",
+  "files.autoSave": "off"
 }

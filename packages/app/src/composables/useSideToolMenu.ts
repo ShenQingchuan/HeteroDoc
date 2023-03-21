@@ -1,4 +1,3 @@
-import { debounce } from 'lodash'
 import type { Ref } from 'vue'
 
 type SideMenuAction = 'insert-before' | 'insert-after'
@@ -34,13 +33,6 @@ export function useSideToolMenu() {
   const sideToolMenu = ref<HTMLElement | null>(null)
   const { isOutside: isNotHoveringSideToolBtn } = useMouseInElement(sideToolBtn as Ref<HTMLElement | null>)
   const { isOutside: isNotHoveringSideToolMenu } = useMouseInElement(sideToolMenu as Ref<HTMLElement | null>)
-  const { y: mouseY } = useMouse()
-  const isMouseVerticalAlignWithHoverBlockElm = computed(() => {
-    if (!hoverElementRect.value)
-      return false
-    const { top, bottom } = hoverElementRect.value
-    return mouseY.value >= top && mouseY.value <= bottom
-  })
   const isSideToolBtnShow = ref(false)
   const isSideToolMenuShow = useDebounce(computed(() => {
     return !isNotHoveringSideToolBtn.value
@@ -50,7 +42,6 @@ export function useSideToolMenu() {
   const hideSideToolBtn = () => {
     isSideToolBtnShow.value = false
   }
-  const debouncedHideSideToolBtn = () => debounce(hideSideToolBtn, 160)
   const handleMenuClick = (action: SideMenuAction) => {
     switch (action) {
       case 'insert-before':
@@ -75,11 +66,6 @@ export function useSideToolMenu() {
   watch(isNotHoveringSideToolBtn, (isNotHoveringBtn) => {
     if (isNotHoveringBtn) {
       isShowHoverElementBouding.value = false
-    }
-  })
-  watch([isMouseVerticalAlignWithHoverBlockElm, isNotHoveringSideToolMenu], ([isAlign, isNotHoveringMenu]) => {
-    if (!isAlign && isNotHoveringMenu) {
-      debouncedHideSideToolBtn()
     }
   })
   watch([winWidth, winHeight], () => {

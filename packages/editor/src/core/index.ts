@@ -35,7 +35,7 @@ export interface EditorCoreEvent {
   'changeTheme': { theme: 'light' | 'dark' }
   'beforeDispatchTransaction': { tr: Transaction }
   'dispatchedTransaction': null
-  'selectionChange': { tr: Transaction }
+  'selectionChange': { tr: Transaction; prevState: EditorState }
   'activateInputFastPath': { left: number; top: number; options: InputFastpathOptions }
   'deactivateInputFastPath': { isContentChanged: boolean }
   'activateSideToolBtn': { left: number; top: number; hoverCtx: { pos: number; rect: DOMRect } }
@@ -89,6 +89,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       const { view } = this
       emitIfNeedEffect('beforeDispatchTransaction', { tr })
       this.extensions.forEach(ext => ext.beforeTransaction?.())
+      const prevState = view.state
       const newState = view.state.apply(tr)
       const selectionHasChanged = !view.state.selection.eq(newState.selection)
 
@@ -97,8 +98,9 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       emitIfNeedEffect('dispatchedTransaction')
 
       if (selectionHasChanged) {
-        this.emit('selectionChange', { tr })
-        this.extensions.forEach(ext => ext.onSelectionChange?.({ tr }))
+        const onSelectionChangeParams = { tr, prevState }
+        this.emit('selectionChange', onSelectionChangeParams)
+        this.extensions.forEach(ext => ext.onSelectionChange?.(onSelectionChangeParams))
       }
     }
     catch (err) {

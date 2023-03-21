@@ -1,4 +1,3 @@
-import { debounce } from 'lodash'
 import { Plugin } from 'prosemirror-state'
 import { HETERO_BLOCK_NODE_DATA_TAG } from '../../constants'
 import type { EditorCore } from '../index'
@@ -14,12 +13,30 @@ const getClosetTopLevelBlockLeft = (node: HTMLElement): number => {
 }
 
 export const activateSideToolBtn = (core: EditorCore) => {
-  const throttleShowBtn = debounce(
-    (left: number, top: number, pos: number, rect: DOMRect) =>
-      core.emit('activateSideToolBtn', { left, top, hoverCtx: { pos, rect } }),
-    160,
-    { leading: false },
-  )
+  const showSideToolBtn = (left: number, top: number, pos: number, rect: DOMRect) =>
+    core.emit('activateSideToolBtn', { left, top, hoverCtx: { pos, rect } })
+
+  core.on('selectionChange', ({ tr, prevState }) => {
+    const prevCursor = prevState.selection.from
+    const domAtPrevCursor = core.view.domAtPos(prevCursor).node
+    const currentCursor = tr.selection.from
+    const domAtCurrentCursor = core.view.domAtPos(currentCursor).node
+    if (
+      !(domAtPrevCursor instanceof HTMLElement)
+      || !(domAtCurrentCursor instanceof HTMLElement)
+    ) {
+      return
+    }
+
+    const currentRect = domAtCurrentCursor.getBoundingClientRect()
+    const prevRect = domAtPrevCursor.getBoundingClientRect()
+    if (prevRect.y === currentRect.y) {
+      return
+    }
+
+    const currentXPos = getClosetTopLevelBlockLeft(domAtCurrentCursor)
+    showSideToolBtn(currentXPos, currentRect.y, currentCursor, currentRect)
+  })
 
   return new Plugin({
     props: {
@@ -46,7 +63,7 @@ export const activateSideToolBtn = (core: EditorCore) => {
 
             // why we need topblockX? because we want the side tool btn constantly stick to the same vertical position
             // and use the toElement's y position as the vertical position
-            throttleShowBtn(topBlockX, toElementRect.y, pos, toElementRect)
+            showSideToolBtn(topBlockX, toElementRect.y, pos, toElementRect)
           }
           return false
         },
