@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { editorEventBus } from '../../eventBus'
 
+const SIDE_BTN_GAP = 30 // pixels
+const SIDE_BTN_HEIGHT = 24 // pixels
+
 const {
   sideToolBtn,
   sideToolMenu,
@@ -22,12 +25,12 @@ const onSideToolBtnMouseOver = () => {
 }
 useEventListener(sideToolBtn, 'mouseover', onSideToolBtnMouseOver)
 editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
-  core.on('activateSideToolBtn', ({ left, top, hoverCtx: { pos, rect } }) => {
+  core.on('activateSideBtns', ({ left, top, hoverCtx: { pos, rect } }) => {
     isSideToolBtnShow.value = true
     hoverNodePos.value = pos
     hoverElementRect.value = rect
     sideToolBtnLeft.value = left
-    sideToolBtnTop.value = top
+    sideToolBtnTop.value = top + 0.5 * rect.height - 0.5 * SIDE_BTN_HEIGHT
   })
   controlSideToolStatusForEditorDOMArea(editorDOM)
 })
@@ -36,24 +39,40 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
 <template>
   <teleport to="body">
     <transition name="float-slide-fade">
-      <n-button
-        v-show="isSideToolBtnShow"
-        ref="sideToolBtn"
-        secondary bg="cool-gray-300/50 dark:cool-gray-500/50"
-        border="neutral-400/50 solid 1px"
-        class="hetero-editor__side-toolbar-btn"
-        :style="{
-          top: `${sideToolBtnTop}px`,
-          left: `${sideToolBtnLeft}px`,
-        }"
-        @click="isSideToolMenuShow = true"
-      >
-        <template #icon>
-          <n-icon size="24">
-            <div i-carbon:add />
-          </n-icon>
-        </template>
-      </n-button>
+      <div v-show="isSideToolBtnShow" class="flex items-center">
+        <n-button
+          ref="sideToolBtn"
+          secondary bg="cool-gray-300/50 dark:cool-gray-500/50"
+          border="neutral-400/50 solid 1px"
+          class="hetero-editor__side-btn mr1"
+          :style="{
+            top: `${sideToolBtnTop}px`,
+            left: `${sideToolBtnLeft}px`,
+          }"
+          @click="isSideToolMenuShow = true"
+        >
+          <template #icon>
+            <n-icon size="24">
+              <div i-carbon:add />
+            </n-icon>
+          </template>
+        </n-button>
+        <n-button
+          quaternary bg="hover:cool-gray-300/50 hover:dark:cool-gray-500/50"
+          border-none
+          class="hetero-editor__side-btn"
+          :style="{
+            top: `${sideToolBtnTop}px`,
+            left: `${sideToolBtnLeft + SIDE_BTN_GAP}px`,
+          }"
+        >
+          <template #icon>
+            <n-icon size="24">
+              <div i-ph:dots-six-vertical-bold />
+            </n-icon>
+          </template>
+        </n-button>
+      </div>
     </transition>
   </teleport>
   <!-- show menu contains input-fastpath but with more actions -->
@@ -110,11 +129,11 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
 </template>
 
 <style scoped lang="less">
-.hetero-editor__side-toolbar-btn {
+.hetero-editor__side-btn {
   position: absolute;
   width: 24px;
   height: 24px;
-  transform: translateX(-150%);
+  transform: translateX(-250%);
   transition: all 0.1s ease;
   padding: 0 !important;
 }

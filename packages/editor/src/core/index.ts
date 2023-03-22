@@ -38,7 +38,7 @@ export interface EditorCoreEvent {
   'selectionChange': { tr: Transaction; prevState: EditorState }
   'activateInputFastPath': { left: number; top: number; options: InputFastpathOptions }
   'deactivateInputFastPath': { isContentChanged: boolean }
-  'activateSideToolBtn': { left: number; top: number; hoverCtx: { pos: number; rect: DOMRect } }
+  'activateSideBtns': { left: number; top: number; hoverCtx: { pos: number; rect: DOMRect } }
   'fastpathActionKey': { event: KeyboardEvent }
   'updateCodeBlock': { codeBlockDOM: HTMLElement; langName: string; alias?: string }
 }

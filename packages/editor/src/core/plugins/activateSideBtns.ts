@@ -12,9 +12,9 @@ const getClosetTopLevelBlockLeft = (node: HTMLElement): number => {
   return left
 }
 
-export const activateSideToolBtn = (core: EditorCore) => {
+export const activateSideBtns = (core: EditorCore) => {
   const showSideToolBtn = (left: number, top: number, pos: number, rect: DOMRect) =>
-    core.emit('activateSideToolBtn', { left, top, hoverCtx: { pos, rect } })
+    core.emit('activateSideBtns', { left, top, hoverCtx: { pos, rect } })
 
   core.on('selectionChange', ({ tr, prevState }) => {
     const prevCursor = prevState.selection.from

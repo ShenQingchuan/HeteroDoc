@@ -8,7 +8,7 @@ const naiveUITheme = useNaiveThemeSetup()
 <template>
   <n-config-provider
     :theme="naiveUITheme"
-    :locale="naiveUILocale[locale]"
+    :locale="naiveUILocale[locale.value]"
   >
     <router-view />
   </n-config-provider>

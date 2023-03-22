@@ -6,6 +6,7 @@ common-header:
     theme-mode-light: Light
     theme-mode-text: Mode
 editor:
+  placeholder: Type something here...
   menu:
     code-block-lang-text-placeholder: Plain text
     code-block-lang-search-placeholder: Search for language names ...
