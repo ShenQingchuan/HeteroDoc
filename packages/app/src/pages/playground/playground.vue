@@ -3,6 +3,7 @@ import type { EditorCore } from '@hetero/editor'
 import { EditorProvideKey } from '../../constants/editor'
 import { editorEventBus } from '../../eventBus'
 import { composeExtensions } from './composeExtensions'
+import { jsonData } from './mockData'
 
 const { t } = useI18n()
 const naiveUITheme = useNaiveThemeSetup()
@@ -15,6 +16,7 @@ provide(EditorProvideKey, editorCore)
 onMounted(() => {
   const container = editorRef.value!
   editorCore.value = useHeteroEditor({
+    doc: jsonData,
     container,
     isReadOnly: false,
     autofocus: true,
@@ -60,7 +62,7 @@ onMounted(() => {
         >
           <div
             ref="editorRef"
-            class="page-misc__editor-test-mount-point"
+            class="page-misc__editor-test-mount-point heterodoc-editor"
           />
         </div>
       </div>

@@ -4,7 +4,7 @@ import { activateInputFastPath } from './activateInputFastpath'
 import { activateSideBtns } from './activateSideBtns'
 import { canDeleteFirstLine } from './canDeleteFirstLine'
 import { clickEditorDOMCloseSelection } from './clickEditorDomCloseSelection'
-import placeholderPlugin from './placeholder'
+import { placeholderPlugin } from './placeholder'
 import { pluginResetStoredMarksOnDeleted } from './resetStoredMarksOnDeleted'
 
 type builtinPluginConstructor = (core: EditorCore) => Plugin

@@ -36,7 +36,7 @@ export class HeadingExtension implements IEditorExtension {
         [EXTENSION_NAMES.HEADING]: {
           attrs: {
             level: { default: 1 },
-            uuid: {},
+            anchorId: {},
           },
           content: 'inline*',
           group: 'block non_quote_block',
@@ -47,14 +47,14 @@ export class HeadingExtension implements IEditorExtension {
               return dom instanceof HTMLHeadElement
                 ? {
                     level: parseInt(dom.tagName.slice(-1), 10),
-                    uuid: dom.dataset.uuid || getRandomHeadingID(),
+                    anchorId: dom.dataset.anchorId || getRandomHeadingID(),
                   }
                 : {}
             },
           })),
           toDOM(node) {
-            const { level = 1, uuid = getRandomHeadingID() } = node.attrs
-            return [`h${level}`, { 'data-uuid': uuid, [HETERO_BLOCK_NODE_DATA_TAG]: 'true' }, 0]
+            const { level = 1, anchorId = getRandomHeadingID() } = node.attrs
+            return [`h${level}`, { 'id': anchorId, 'data-anchorId': anchorId, [HETERO_BLOCK_NODE_DATA_TAG]: 'true' }, 0]
           },
         },
       },
@@ -70,7 +70,7 @@ export class HeadingExtension implements IEditorExtension {
         (match) => {
           return {
             level: match[1]!.length,
-            uuid: getRandomHeadingID(),
+            anchorId: getRandomHeadingID(),
           }
         },
       ),
@@ -84,7 +84,7 @@ export class HeadingExtension implements IEditorExtension {
           typeOrName: this.name,
           attrs: {
             level,
-            uuid: getRandomHeadingID(),
+            anchorId: getRandomHeadingID(),
           },
         })
       },
@@ -99,7 +99,7 @@ export class HeadingExtension implements IEditorExtension {
           turnOff: EXTENSION_NAMES.PARAGRAPH,
           attrs: {
             level,
-            uuid: getRandomHeadingID(),
+            anchorId: getRandomHeadingID(),
           },
         })
       },

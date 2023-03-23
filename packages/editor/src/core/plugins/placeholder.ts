@@ -2,7 +2,7 @@ import { Decoration, DecorationSet } from 'prosemirror-view'
 import { Plugin } from 'prosemirror-state'
 import type { EditorCore } from '../index'
 
-export default function placeholderPlugin(core: EditorCore) {
+export function placeholderPlugin(core: EditorCore) {
   return new Plugin({
     props: {
       decorations(state) {

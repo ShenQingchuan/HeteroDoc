@@ -34,6 +34,18 @@ export class FontFancyExtension implements IEditorExtension {
       marks: {
         [EXTENSION_NAMES.FONT_FANCY]: {
           attrs: { colorIndex: { default: 0 }, bgColorIndex: { default: 0 } },
+          parseDOM: [
+            {
+              tag: 'span',
+              getAttrs(dom) {
+                if (typeof dom === 'string')
+                  return null
+                const colorIndex = parseInt(dom.getAttribute('data-color-index') ?? '0')
+                const bgColorIndex = parseInt(dom.getAttribute('data-bg-color-index') ?? '0')
+                return { colorIndex, bgColorIndex }
+              },
+            },
+          ],
           // no parseDOM, because we don't want to parse the color/background-color from the DOM
           toDOM: (mark: Mark) => {
             const styles: string[] = []

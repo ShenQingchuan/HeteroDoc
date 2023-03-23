@@ -32,7 +32,11 @@ const openEditorMenu = useDebounceFn((pos: { left: number; top: number }) => {
 }, FloatMenuShowTimingGap)
 
 editorEventBus.on('editorMounted', ({ core }) => {
-  core.on('selectionChange', () => {
+  core.on('selectionChange', ({ tr }) => {
+    if (tr.getMeta('dragging')) {
+      return // skip showing float menu on dragging
+    }
+
     const nothingSelected = selection.value?.isCollapsed
     if (nothingSelected) {
       editorStore.isShowEditorMenu && editorStore.setShowEditorMenu(false)

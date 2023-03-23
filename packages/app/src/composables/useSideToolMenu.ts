@@ -27,17 +27,23 @@ export function useSideToolMenu() {
   const sideToolBtnTop = ref(0)
   const sideToolBtnLeft = ref(0)
   const hoverNodePos = ref(0)
-  const hoverElementRect = ref<DOMRect>()
+  const hoveredTopBlockElement = ref<HTMLElement | null>()
+  const hoverTopBlockElementRect = ref<DOMRect>()
   const isShowHoverElementBouding = ref(false)
   const sideToolBtn = ref<HTMLElement | null>(null)
+  const sideDragBtn = ref<HTMLElement | null>(null)
   const sideToolMenu = ref<HTMLElement | null>(null)
+  const dragingMirror = ref<HTMLElement | null>(null)
+  const isDragging = ref(false)
   const { isOutside: isNotHoveringSideToolBtn } = useMouseInElement(sideToolBtn as Ref<HTMLElement | null>)
+  const { isOutside: isNotHoveringSideDragBtn } = useMouseInElement(sideDragBtn as Ref<HTMLElement | null>)
   const { isOutside: isNotHoveringSideToolMenu } = useMouseInElement(sideToolMenu as Ref<HTMLElement | null>)
   const isSideToolBtnShow = ref(false)
   const isSideToolMenuShow = useDebounce(computed(() => {
     return !isNotHoveringSideToolBtn.value
       || !isNotHoveringSideToolMenu.value
   }), 160)
+  const { x: mouseX, y: mouseY } = useMouse()
 
   const hideSideToolBtn = () => {
     isSideToolBtnShow.value = false
@@ -62,15 +68,80 @@ export function useSideToolMenu() {
       }
     })
   }
+  const onSideBtnMouseOver = () => {
+    isSideToolBtnShow.value = true
+    isShowHoverElementBouding.value = true
+  }
 
-  watch(isNotHoveringSideToolBtn, (isNotHoveringBtn) => {
-    if (isNotHoveringBtn) {
+  // ------ About Drag and Drop ---------
+  const createDraggingMirror = (clonedDOM: HTMLElement) => {
+    const clonedBlockWrapper = document.createElement('div')
+    clonedBlockWrapper.style.position = 'fixed'
+    clonedBlockWrapper.style.zIndex = '9999'
+    clonedBlockWrapper.style.pointerEvents = 'none'
+    clonedBlockWrapper.style.opacity = '0.8'
+    // Add ProseMirror class to make it align with editor,
+    // And append to body
+    clonedBlockWrapper.classList.add('ProseMirror')
+    clonedBlockWrapper.appendChild(clonedDOM)
+    return clonedBlockWrapper
+  }
+  watchEffect(() => {
+    if (!dragingMirror.value) {
+      return
+    }
+    document.body.appendChild(dragingMirror.value as HTMLElement)
+  })
+  const onSideDragBtnMouseDown = () => {
+    if (!hoveredTopBlockElement.value) {
+      // This also means hoverNodePos can't be 0,
+      // because we don't want to drag the whole editor
+      return
+    }
+    // Use VueUse's useMouse to get the position of the mouse,
+    // set the x,y to the cloned block's position
+    dragingMirror.value = createDraggingMirror(hoveredTopBlockElement.value.cloneNode(true) as HTMLElement)
+    editor?.value.emit('dragBlock', { hoverNodePos: hoverNodePos.value })
+    isDragging.value = true
+  }
+  const onMouseUpForDrop = () => {
+    if (!isDragging.value) {
+      return
+    }
+    dragingMirror.value?.remove()
+    // Get current position of the mouse
+    // and find the hovering block in editor
+    const { pos } = editor?.value.view.posAtCoords({
+      left: mouseX.value,
+      top: mouseY.value,
+    }) || {}
+    if (!pos) {
+      return
+    }
+    editor?.value.emit('dropBlock', { dropPos: pos })
+  }
+
+  watch([isNotHoveringSideToolBtn, isNotHoveringSideDragBtn], ([isNotHoveringToolBtn, isNotHoveringDragBtn]) => {
+    if (isNotHoveringToolBtn && isNotHoveringDragBtn) {
       isShowHoverElementBouding.value = false
     }
   })
   watch([winWidth, winHeight], () => {
     hideSideToolBtn()
   })
+  watchEffect(() => {
+    if (!dragingMirror.value) {
+      return
+    }
+    dragingMirror.value.style.left = `${mouseX.value}px`
+    dragingMirror.value.style.top = `${mouseY.value}px`
+  })
+
+  // Bind events
+  useEventListener(sideToolBtn, 'mouseover', onSideBtnMouseOver)
+  useEventListener(sideDragBtn, 'mouseover', onSideBtnMouseOver)
+  useEventListener(sideDragBtn, 'mousedown', onSideDragBtnMouseDown)
+  useEventListener(document, 'mouseup', onMouseUpForDrop)
 
   return {
     isSideToolBtnShow,
@@ -78,10 +149,12 @@ export function useSideToolMenu() {
     sideToolBtnLeft,
     isSideToolMenuShow,
     hoverNodePos,
-    hoverElementRect,
+    hoverTopBlockElementRect,
+    hoveredTopBlockElement,
     menuOptions,
     isShowHoverElementBouding,
     sideToolBtn,
+    sideDragBtn,
     sideToolMenu,
     handleMenuClick,
     hideSideToolBtn,

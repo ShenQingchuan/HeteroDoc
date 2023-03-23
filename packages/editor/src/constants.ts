@@ -39,6 +39,7 @@ export enum EXTENSION_NAMES {
   HEADING = 'heading',
   HYPERLINK = 'hyperlink',
   TEXT_ALIGN = 'textAlign',
+  DRAG_AND_DROP = 'dragAndDrop',
   BASE_KEYMAP = 'baseKeymap',
   BOLD = 'bold',
   CODE = 'code',

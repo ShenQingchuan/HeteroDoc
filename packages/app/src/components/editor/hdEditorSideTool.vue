@@ -1,11 +1,10 @@
 <script setup lang="ts">
+import { SIDE_BTN_GAP, SIDE_BTN_HEIGHT } from '../../constants/editor'
 import { editorEventBus } from '../../eventBus'
-
-const SIDE_BTN_GAP = 30 // pixels
-const SIDE_BTN_HEIGHT = 24 // pixels
 
 const {
   sideToolBtn,
+  sideDragBtn,
   sideToolMenu,
   isShowHoverElementBouding,
   isSideToolBtnShow,
@@ -13,22 +12,21 @@ const {
   sideToolBtnTop,
   sideToolBtnLeft,
   hoverNodePos,
-  hoverElementRect,
+  hoverTopBlockElementRect,
+  hoveredTopBlockElement,
   menuOptions,
   handleMenuClick,
   controlSideToolStatusForEditorDOMArea,
 } = useSideToolMenu()
 
-const onSideToolBtnMouseOver = () => {
-  isSideToolBtnShow.value = true
-  isShowHoverElementBouding.value = true
-}
-useEventListener(sideToolBtn, 'mouseover', onSideToolBtnMouseOver)
 editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
-  core.on('activateSideBtns', ({ left, top, hoverCtx: { pos, rect } }) => {
+  core.on('activateSideBtns', ({ left, hoverCtx: { pos, topBlockElement } }) => {
+    const rect = topBlockElement.getBoundingClientRect()
+    const top = rect.top + window.scrollY
     isSideToolBtnShow.value = true
     hoverNodePos.value = pos
-    hoverElementRect.value = rect
+    hoveredTopBlockElement.value = topBlockElement
+    hoverTopBlockElementRect.value = rect
     sideToolBtnLeft.value = left
     sideToolBtnTop.value = top + 0.5 * rect.height - 0.5 * SIDE_BTN_HEIGHT
   })
@@ -58,6 +56,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
           </template>
         </n-button>
         <n-button
+          ref="sideDragBtn"
           quaternary bg="hover:cool-gray-300/50 hover:dark:cool-gray-500/50"
           border-none
           class="hetero-editor__side-btn"
@@ -110,7 +109,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   <!-- show a highlight layer over the side tool target element -->
   <teleport to="body">
     <div
-      v-if="hoverElementRect"
+      v-if="hoverTopBlockElementRect"
       class="hetero-editor__side-tool-target-bounding"
       pointer-events-none fixed
       border-rounded
@@ -118,10 +117,10 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
       bg="sky-200/50"
       :style="{
         display: isShowHoverElementBouding ? 'block' : 'none',
-        width: `${hoverElementRect.width + 8}px`,
-        height: `${hoverElementRect.height + 4}px`,
-        left: `${hoverElementRect.x - 4}px`,
-        top: `${hoverElementRect.y - 2}px`,
+        width: `${hoverTopBlockElementRect.width + 8}px`,
+        height: `${hoverTopBlockElementRect.height + 4}px`,
+        left: `${hoverTopBlockElementRect.x - 4}px`,
+        top: `${hoverTopBlockElementRect.y - 2}px`,
       }"
     >
     </div>
@@ -142,7 +141,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   width: 200px;
   transition: all 0.1s ease;
   z-index: 99;
-  transform: translateX(-120%);
+  transform: translateX(-135%);
 
   .hetero-editor__side-toolbar-menu-item:first-child {
     margin-bottom: 0;

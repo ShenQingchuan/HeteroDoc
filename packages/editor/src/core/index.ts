@@ -38,9 +38,13 @@ export interface EditorCoreEvent {
   'selectionChange': { tr: Transaction; prevState: EditorState }
   'activateInputFastPath': { left: number; top: number; options: InputFastpathOptions }
   'deactivateInputFastPath': { isContentChanged: boolean }
-  'activateSideBtns': { left: number; top: number; hoverCtx: { pos: number; rect: DOMRect } }
+  'activateSideBtns': { left: number; hoverCtx: { pos: number; topBlockElement: HTMLElement } }
   'fastpathActionKey': { event: KeyboardEvent }
   'updateCodeBlock': { codeBlockDOM: HTMLElement; langName: string; alias?: string }
+  /** Start drag block node, and we need handle the 'mouseover' event to make hovered blocks show a highlight border, in order to indicate the dropable position */
+  'dragBlock': { hoverNodePos: number }
+  /** End of block node dragging. on this event handling, we need to move the dragged node to its target position  */
+  'dropBlock': { dropPos: number }
 }
 
 export class EditorCore extends TypeEvent<EditorCoreEvent> {
@@ -95,7 +99,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
 
       view.updateState(newState)
       this.extensions.forEach(ext => ext.afterApplyTransaction?.())
-      emitIfNeedEffect('dispatchedTransaction')
+      emitIfNeedEffect('dispatchedTransaction', null)
 
       if (selectionHasChanged) {
         const onSelectionChangeParams = { tr, prevState }
@@ -210,16 +214,14 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       schema,
       plugins: this.resolveAllPlugins(),
     }
-    if (isReadOnly) {
+    if (doc) {
+      editorStateConfig.doc = Node.fromJSON(schema, doc)
+    }
+    if (isReadOnly && !doc) {
       // readonly mode must be given document data
-      if (doc) {
-        editorStateConfig.doc = Node.fromJSON(schema, doc)
-      }
-      else {
-        const errMsg = 'editor initialize failed: readonly mode but no doc data'
-        this.logger.error(errMsg)
-        throw new Error(errMsg)
-      }
+      const errMsg = 'editor initialize failed: readonly mode but no doc data'
+      this.logger.error(errMsg)
+      throw new Error(errMsg)
     }
 
     const initState = EditorState.create(editorStateConfig)
