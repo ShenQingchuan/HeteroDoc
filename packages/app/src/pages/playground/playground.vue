@@ -16,7 +16,7 @@ provide(EditorProvideKey, editorCore)
 onMounted(() => {
   const container = editorRef.value!
   editorCore.value = useHeteroEditor({
-    doc: jsonData,
+    doc: import.meta.env.DEV ? jsonData : undefined,
     container,
     isReadOnly: false,
     autofocus: true,

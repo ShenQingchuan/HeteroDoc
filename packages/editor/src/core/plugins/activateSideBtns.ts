@@ -6,10 +6,10 @@ const isHeteroBlock = (node: EventTarget | null): node is HTMLElement => {
   return node instanceof HTMLElement
     && node.getAttribute(HETERO_BLOCK_NODE_DATA_TAG) === 'true'
 }
-const getClosetTopLevelBlockLeft = (node: HTMLElement): [number, HTMLElement] => {
+const getClosetTopLevelBlockLeft = (node: HTMLElement): [number, HTMLElement] | void => {
   const closetTopBlockElement = node.closest(`.ProseMirror > [${HETERO_BLOCK_NODE_DATA_TAG}="true"]`) as HTMLElement | null
   if (!closetTopBlockElement) {
-    throw new Error('Cannot find closet top block element')
+    return
   }
   const { left } = closetTopBlockElement.getBoundingClientRect()
   return [left, closetTopBlockElement]
@@ -38,8 +38,11 @@ export const activateSideBtns = (core: EditorCore) => {
       return
     }
 
-    const [currentXPos, topBlockElement] = getClosetTopLevelBlockLeft(domAtCurrentCursor)
-    showSideToolBtn(currentXPos, currentCursor, topBlockElement)
+    const ret = getClosetTopLevelBlockLeft(domAtCurrentCursor)
+    if (ret) {
+      const [currentXPos, topBlockElement] = ret
+      showSideToolBtn(currentXPos, currentCursor, topBlockElement)
+    }
   })
 
   return new Plugin({
@@ -61,7 +64,11 @@ export const activateSideBtns = (core: EditorCore) => {
                 return false
               }
             }
-            const [topBlockX, topBlockElement] = getClosetTopLevelBlockLeft(toElement)
+            const ret = getClosetTopLevelBlockLeft(toElement)
+            if (!ret) {
+              return false
+            }
+            const [topBlockX, topBlockElement] = ret
             const topBlockRect = topBlockElement.getBoundingClientRect()
             const posAtTopBlockCoords = view.posAtCoords({
               left: topBlockRect.left,

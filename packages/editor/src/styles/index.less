@@ -167,12 +167,16 @@ img.ProseMirror-separator {
 }
 
 /* Placeholder */
-.ProseMirror .placeholder {
+.ProseMirror .heterodoc-placeholder {
   color: #aaa;
   pointer-events: none;
-  height: 0;
+  width: fit-content;
 }
 
-.ProseMirror:focus .placeholder {
+.ProseMirror:focus .heterodoc-placeholder {
   display: none;
+}
+
+.ProseMirror-selectednode {
+  border: none;
 }

@@ -47,3 +47,5 @@ export enum EXTENSION_NAMES {
   ITALIC = 'italic',
   UNDERLINE = 'underline',
 }
+
+export const HETERODOC_PLACEHOLER_CLASS_NAME = 'heterodoc-placeholder'

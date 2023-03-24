@@ -48,6 +48,21 @@ editorEventBus.on('editorMounted', ({ core }) => {
       })
     }
   })
+
+  useEventListener(document, 'click', (event) => {
+    // if click outside of editor, hide float menu
+    if (!editorStore.isShowEditorMenu) {
+      return
+    }
+    const editorDOM = editorCore?.value.view.dom
+    if (!editorDOM) {
+      return
+    }
+    const isClickInsideEditor = editorDOM.contains(event.target as Node)
+    if (!isClickInsideEditor) {
+      editorStore.setShowEditorMenu(false)
+    }
+  })
 })
 </script>
 
