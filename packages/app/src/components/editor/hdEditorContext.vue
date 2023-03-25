@@ -4,6 +4,7 @@ import HdEditorLinkEdit from './hdEditorLinkEdit.vue'
 import HdEditorInputFastpath from './hdEditorInputFastpath.vue'
 import HdEditorLangSelect from './hdEditorLangSelect.vue'
 import HdEditorSideTool from './hdEditorSideTool.vue'
+import HdEditorDropCursor from './hdEditorDropCursor.vue'
 </script>
 
 <template>
@@ -14,5 +15,6 @@ import HdEditorSideTool from './hdEditorSideTool.vue'
     <HdEditorInputFastpath />
     <HdEditorLangSelect />
     <HdEditorSideTool />
+    <HdEditorDropCursor />
   </div>
 </template>

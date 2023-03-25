@@ -1,11 +1,8 @@
 import { Plugin } from 'prosemirror-state'
 import { HETERO_BLOCK_NODE_DATA_TAG } from '../../constants'
+import { isHeteroBlock } from '../../utils/isSomewhat'
 import type { EditorCore } from '../index'
 
-const isHeteroBlock = (node: EventTarget | null): node is HTMLElement => {
-  return node instanceof HTMLElement
-    && node.getAttribute(HETERO_BLOCK_NODE_DATA_TAG) === 'true'
-}
 const getClosetTopLevelBlockLeft = (node: HTMLElement): [number, HTMLElement] | void => {
   const closetTopBlockElement = node.closest(`.ProseMirror > [${HETERO_BLOCK_NODE_DATA_TAG}="true"]`) as HTMLElement | null
   if (!closetTopBlockElement) {

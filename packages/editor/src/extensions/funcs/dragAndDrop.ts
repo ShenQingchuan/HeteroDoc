@@ -1,10 +1,11 @@
 import type { Node, Slice } from 'prosemirror-model'
-import { NodeSelection } from 'prosemirror-state'
+import { NodeSelection, Plugin, PluginKey } from 'prosemirror-state'
 import { findParentNodeClosestToPos } from 'prosemirror-utils'
 import { EXTENSION_NAMES } from '../../constants'
 import type { EditorCore } from '../../core'
 import type { IEditorExtension } from '../../types'
 import { ExtensionType } from '../../types'
+import { isHeteroBlock } from '../../utils/isSomewhat'
 
 export class DragAndDrop implements IEditorExtension {
   type = ExtensionType.func
@@ -40,22 +41,19 @@ export class DragAndDrop implements IEditorExtension {
       }
       core.logger.debug({ dropOnBlockPos: dropAreaClosetBlock.pos, dropOnBlockNodeType: dropAreaClosetBlock.node.type.name })
       core.logger.debug('dragging slice', this.draggingSlice)
-      const { pos: dropAreaClosetBlockPos, node: dropAreaClosetBlockNode } = dropAreaClosetBlock
-      const { tr, doc } = core.view.state
-      // Switch the dragging node and the closet block node
-      // 1. Save the closet block node to a slice
-      const closetBlockSlice = NodeSelection.create(doc, dropAreaClosetBlockPos).content()
-      // 2. replace the drop area closet block node with the dragging node
-      tr.replace(dropAreaClosetBlockPos, dropAreaClosetBlockPos + dropAreaClosetBlockNode.nodeSize, this.draggingSlice)
-      // 3. replace the dragging node original area with the drop area closet block node
-      // before replacing, we need to get the new pos of the dragging node
-      // because the dragging node has been replaced by the closet block node
-      // and the doc structure has been changed.
-      const newDraggingNodePos = tr.mapping.map(this.draggingPos)
-      tr.replace(newDraggingNodePos, newDraggingNodePos + this.draggingNode.nodeSize, closetBlockSlice)
-      // 4. clear the dragging status
+      const { pos: dropAreaClosetBlockPos } = dropAreaClosetBlock
+      const { tr } = core.view.state
+      // 1. Insert the dragging node before the drop area's closet block
+      tr.insert(dropAreaClosetBlockPos, this.draggingNode)
+      // 2. Removing the dragging node original position
+      // before removing the dragging node, we need to re-compute the `draggingPos` by `tr.map`
+      // because the `draggingPos` is based on the original document
+      const draggingPosAfterInsert = tr.mapping.map(this.draggingPos)
+      tr.delete(draggingPosAfterInsert, draggingPosAfterInsert + this.draggingNode.nodeSize)
+
+      // Clear the dragging status
       this.clearDraggingStatus()
-      // 5. set the dragging meta to prevent `selectionChange` event
+      // Set the dragging meta to prevent `selectionChange` event
       // because this case is special and handled by this extension
       tr.setMeta('dragging', true)
       core.view.dispatch(tr)
@@ -66,5 +64,28 @@ export class DragAndDrop implements IEditorExtension {
     this.draggingPos = Number.NaN
     this.draggingNode = null
     this.draggingSlice = null
+  }
+
+  getProseMirrorPlugin: () => Plugin[] = () => {
+    return [
+      new Plugin({
+        key: new PluginKey('dragMoving'),
+        props: {
+          handleDOMEvents: {
+            mouseover: (view, event) => {
+              // For drag moving, we need to select the hovered DOM element from mouseover event.
+              // It could be done by `event.target` as HTMLElement
+              const hoverElement = event.target
+
+              // Only emit dragMoving event when the `hoverElement` is a hetero block
+              const isHoveringHeteroBlock = isHeteroBlock(hoverElement)
+              if (isHoveringHeteroBlock) {
+                this.core.emit('dragMoving', { hoverElement })
+              }
+            },
+          },
+        },
+      }),
+    ]
   }
 }

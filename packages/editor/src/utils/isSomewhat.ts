@@ -1,4 +1,5 @@
 import { TextSelection } from 'prosemirror-state'
+import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 
 export function isClass(value: any): boolean {
   if (value.constructor?.toString().substring(0, 5) !== 'class')
@@ -52,3 +53,7 @@ export function isTextSelection(value: unknown): value is TextSelection {
   return isObject(value) && value instanceof TextSelection
 }
 
+export const isHeteroBlock = (node: EventTarget | null): node is HTMLElement => {
+  return node instanceof HTMLElement
+    && node.getAttribute(HETERO_BLOCK_NODE_DATA_TAG) === 'true'
+}

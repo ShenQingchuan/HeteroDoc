@@ -43,6 +43,7 @@ export interface EditorCoreEvent {
   'updateCodeBlock': { codeBlockDOM: HTMLElement; langName: string; alias?: string }
   /** Start drag block node, and we need handle the 'mouseover' event to make hovered blocks show a highlight border, in order to indicate the dropable position */
   'dragBlock': { hoverNodePos: number }
+  'dragMoving': { hoverElement: HTMLElement }
   /** End of block node dragging. on this event handling, we need to move the dragged node to its target position  */
   'dropBlock': { dropPos: number }
 }
