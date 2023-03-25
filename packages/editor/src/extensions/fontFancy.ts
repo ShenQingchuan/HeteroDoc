@@ -33,13 +33,21 @@ export class FontFancyExtension implements IEditorExtension {
     return {
       marks: {
         [EXTENSION_NAMES.FONT_FANCY]: {
-          attrs: { colorIndex: { default: 0 }, bgColorIndex: { default: 0 } },
+          attrs: {
+            colorIndex: {
+              default: 0,
+            },
+            bgColorIndex: {
+              default: 0,
+            },
+          },
           parseDOM: [
             {
               tag: 'span',
               getAttrs(dom) {
                 if (typeof dom === 'string')
                   return null
+
                 const colorIndex = parseInt(dom.getAttribute('data-color-index') ?? '0')
                 const bgColorIndex = parseInt(dom.getAttribute('data-bg-color-index') ?? '0')
                 return { colorIndex, bgColorIndex }
@@ -53,7 +61,11 @@ export class FontFancyExtension implements IEditorExtension {
               styles.push(`color: var(--heterodoc-fontfancy-text-color-${mark.attrs.colorIndex});`)
             if (mark.attrs.bgColorIndex)
               styles.push(`background-color: var(--heterodoc-fontfancy-bg-color-${mark.attrs.bgColorIndex});`)
-            return ['span', { style: styles.join(' ') }, 0]
+            return ['span', {
+              'data-color-index': mark.attrs.colorIndex,
+              'data-bg-color-index': mark.attrs.bgColorIndex,
+              'style': styles.join(' '),
+            }, 0]
           },
         },
       },

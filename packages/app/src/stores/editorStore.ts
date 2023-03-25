@@ -83,6 +83,7 @@ export const useEditorStore = defineStore('editor', {
     },
     setShowEditorMenu(value: boolean) {
       this.isShowEditorMenu = value
+      this.resetFloatMenuPos()
       return this
     },
     setShowFontFancyPicker(value: boolean) {

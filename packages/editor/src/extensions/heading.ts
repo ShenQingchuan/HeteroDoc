@@ -5,6 +5,7 @@ import type { PatternRule } from '../core/rule'
 import { textblockTypeInputRule } from '../core/rule'
 import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import { ExtensionType } from '../types'
+import { extendsTextBlockAttrs, stylesOfTextBlock } from '../utils/textBlockStyles'
 
 const headingInputRuleRegExp = /^(#{1,5})\s/
 const getRandomHeadingID = () => getUUID(6)
@@ -34,10 +35,10 @@ export class HeadingExtension implements IEditorExtension {
     return {
       nodes: {
         [EXTENSION_NAMES.HEADING]: {
-          attrs: {
+          attrs: extendsTextBlockAttrs({
             level: { default: 1 },
             anchorId: {},
-          },
+          }),
           content: 'inline*',
           group: 'block non_quote_block',
           defining: true,
@@ -54,7 +55,12 @@ export class HeadingExtension implements IEditorExtension {
           })),
           toDOM(node) {
             const { level = 1, anchorId = getRandomHeadingID() } = node.attrs
-            return [`h${level}`, { 'id': anchorId, 'data-anchorId': anchorId, [HETERO_BLOCK_NODE_DATA_TAG]: 'true' }, 0]
+            return [`h${level}`, {
+              'style': stylesOfTextBlock(node),
+              'id': anchorId,
+              'data-anchorId': anchorId,
+              [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+            }, 0]
           },
         },
       },

@@ -1,4 +1,3 @@
-import { merge } from 'lodash'
 import type { MarkType, NodeType } from 'prosemirror-model'
 import { getMarkType } from '../../core/helpers/getMarkType'
 import { getNodeType } from '../../core/helpers/getNodeType'
@@ -17,26 +16,21 @@ declare global {
 export const updateAttributes: Commands['updateAttributes'] = ({ typeOrName, attrs = {} }) => ({ tr, state, dispatch }) => {
   let nodeType: NodeType | null = null
   let markType: MarkType | null = null
-
   const schemaType = getSchemaTypeNameByName(
     typeof typeOrName === 'string'
       ? typeOrName
       : typeOrName.name,
     state.schema,
   )
-
   if (!schemaType) {
     return false
   }
-
   if (schemaType === 'node') {
     nodeType = getNodeType(typeOrName as NodeType, state.schema)
   }
-
   if (schemaType === 'mark') {
     markType = getMarkType(typeOrName as MarkType, state.schema)
   }
-
   if (dispatch) {
     tr.selection.ranges.forEach((range) => {
       const from = range.$from.pos
@@ -44,11 +38,10 @@ export const updateAttributes: Commands['updateAttributes'] = ({ typeOrName, att
 
       state.doc.nodesBetween(from, to, (node, pos) => {
         if (nodeType && nodeType === node.type) {
-          tr.setNodeMarkup(
-            pos,
-            undefined,
-            merge(node.attrs, attrs),
-          )
+          tr.setNodeMarkup(pos, undefined, {
+            ...node.attrs,
+            ...attrs,
+          })
         }
 
         if (markType && node.marks.length) {
@@ -57,17 +50,15 @@ export const updateAttributes: Commands['updateAttributes'] = ({ typeOrName, att
               const trimmedFrom = Math.max(pos, from)
               const trimmedTo = Math.min(pos + node.nodeSize, to)
 
-              tr.addMark(
-                trimmedFrom,
-                trimmedTo,
-                markType.create(merge(mark.attrs, attrs)),
-              )
+              tr.addMark(trimmedFrom, trimmedTo, markType.create({
+                ...mark.attrs,
+                ...attrs,
+              }))
             }
           })
         }
       })
     })
   }
-
   return true
 }

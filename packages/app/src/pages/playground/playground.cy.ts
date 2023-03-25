@@ -24,7 +24,10 @@ const mountEditor = () => {
       },
     })
     // clear all content
-    .deleteAll()
+    .focusEditor()
+    .typeWithModKey('a')
+    .type('{backspace}')
+    .type('{backspace}')
 }
 const testToggleToolbarResult = (
   toolbarKeyClassName: string,
@@ -151,7 +154,7 @@ describe('Editor playground test', () => {
           .type('test text alignment')
           .selectAll().wait(enoughWaitTime)
           .get(`.hetero-editor__float-menu-item.align-${alignDirection}`).click()
-          .get('.ProseMirror p').should('have.css', 'text-align', alignDirection)
+          .get('.ProseMirror > p').should('have.css', 'text-align', alignDirection)
           .deleteAll()
       },
     )
@@ -160,7 +163,7 @@ describe('Editor playground test', () => {
     mountEditor()
       .doFastPath('heading-2')
       .type('test input after fast path')
-      .get('.ProseMirror h2').should('exist')
+      .get('.ProseMirror > h2').should('exist')
   })
   it('can create blockquote by Markdown shortcut', () => {
     mountEditor()

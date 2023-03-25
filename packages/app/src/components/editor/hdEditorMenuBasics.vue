@@ -51,5 +51,5 @@ const editorStore = useEditorStore()
       <n-icon><div i-ic:round-format-strikethrough mr1 /></n-icon>
     </template>
   </n-button>
-  <HdFontFancyPicker />
+  <!-- <HdFontFancyPicker /> -->
 </template>

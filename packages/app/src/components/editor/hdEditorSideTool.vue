@@ -132,7 +132,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   position: absolute;
   width: 24px;
   height: 24px;
-  transform: translateX(-250%);
+  transform: translateX(-275%);
   transition: all 0.1s ease;
   padding: 0 !important;
 }
@@ -141,7 +141,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   width: 200px;
   transition: all 0.1s ease;
   z-index: 99;
-  transform: translateX(-135%);
+  transform: translateX(-150%);
 
   .hetero-editor__side-toolbar-menu-item:first-child {
     margin-bottom: 0;
