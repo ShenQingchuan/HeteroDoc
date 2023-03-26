@@ -13,7 +13,7 @@ const codeblockTestCode = `function test() {
 }`
 
 const mountEditor = () => {
-  return cy.viewport(1200, 800)
+  return cy.viewport(1368, 1000)
     .mount(Playground, {
       extensions: {
         plugins: [createPinia(), createI18nPlugin()],
@@ -193,5 +193,15 @@ describe('Editor playground test', () => {
       .waitUntilElementAttached('.ProseMirror > p', (el) => {
         expect(el).to.text('test input first part test input second part')
       })
+  })
+  it('can increase/decrease text ident of text block', () => {
+    mountEditor()
+      .type('test text ident')
+      .typeWithModKey(']').wait(enoughWaitTime)
+      .get('.ProseMirror > p').should('have.css', 'padding-left', '16px')
+      .typeWithModKey(']').wait(enoughWaitTime)
+      .get('.ProseMirror > p').should('have.css', 'padding-left', '32px')
+      .typeWithModKey('[').wait(enoughWaitTime)
+      .get('.ProseMirror > p').should('have.css', 'padding-left', '16px')
   })
 })

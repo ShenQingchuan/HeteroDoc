@@ -11,7 +11,7 @@ const isNodeHasAttribute = (node: Node, attrName: string) => Boolean(node.attrs 
 
 export class Blockify implements IEditorExtension {
   type = ExtensionType.func
-  name = EXTENSION_NAMES.DRAG_AND_DROP
+  name = EXTENSION_NAMES.BLOCKIFY
   options = {}
 
   constructor(public core: EditorCore) {}
