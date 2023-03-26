@@ -9,6 +9,7 @@ import type { PatternRule } from '../core/rule'
 import { textblockTypeInputRule } from '../core/rule'
 import type { AddNodesSchema, Command, IEditorExtension, KeyboardShortcutCommand, NoArgsCommand } from '../types'
 import { ExtensionType } from '../types'
+import { blockIdDataAttrAtDOM, extendsBlockAttrs, getBlockAttrsFromElement } from '../utils/blockSchema'
 
 const codeblockRegExp = /^(···|```)(?<params>[a-z]+)?[\s\n]$/
 
@@ -66,14 +67,16 @@ export class CodeBlockExtension implements IEditorExtension {
           attrs: {
             params: { default: 'plaintext' },
             alias: { default: '' },
+            ...extendsBlockAttrs(),
           },
           parseDOM: [
             {
               tag: 'pre',
               preserveWhitespace: 'full',
-              getAttrs(node) {
+              getAttrs(el) {
                 return {
-                  params: (node as Element)?.getAttribute('data-params') || 'plaintext',
+                  params: (el as Element)?.getAttribute('data-params') || 'plaintext',
+                  ...getBlockAttrsFromElement(el as HTMLElement),
                 }
               },
             },
@@ -85,6 +88,7 @@ export class CodeBlockExtension implements IEditorExtension {
                 'data-params': node.attrs.params,
                 'class': 'hljs',
                 [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+                ...blockIdDataAttrAtDOM(node),
               },
               ['div',
                 {

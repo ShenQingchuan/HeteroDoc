@@ -5,7 +5,8 @@ import type { PatternRule } from '../core/rule'
 import { textblockTypeInputRule } from '../core/rule'
 import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import { ExtensionType } from '../types'
-import { extendsTextBlockAttrs, stylesOfTextBlock } from '../utils/textBlockStyles'
+import { extendsTextBlockAttrs, getTextBlockAttrsFromElement, stylesOfTextBlock } from '../utils/textBlockSchema'
+import { blockIdDataAttrAtDOM, createBlockIdAttr } from '../utils/blockSchema'
 
 const headingInputRuleRegExp = /^(#{1,5})\s/
 const getRandomHeadingID = () => getUUID(6)
@@ -44,11 +45,12 @@ export class HeadingExtension implements IEditorExtension {
           defining: true,
           parseDOM: Array(6).map((_, i) => ({
             tag: `h${i + 1}`,
-            getAttrs(dom) {
-              return dom instanceof HTMLHeadElement
+            getAttrs(el) {
+              return el instanceof HTMLHeadElement
                 ? {
-                    level: parseInt(dom.tagName.slice(-1), 10),
-                    anchorId: dom.dataset.anchorId || getRandomHeadingID(),
+                    level: parseInt(el.tagName.slice(-1), 10),
+                    anchorId: el.dataset.anchorId || getRandomHeadingID(),
+                    ...getTextBlockAttrsFromElement(el),
                   }
                 : {}
             },
@@ -60,6 +62,7 @@ export class HeadingExtension implements IEditorExtension {
               'id': anchorId,
               'data-anchorId': anchorId,
               [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+              ...blockIdDataAttrAtDOM(node),
             }, 0]
           },
         },
@@ -77,6 +80,7 @@ export class HeadingExtension implements IEditorExtension {
           return {
             level: match[1]!.length,
             anchorId: getRandomHeadingID(),
+            ...createBlockIdAttr(),
           }
         },
       ),
@@ -91,6 +95,7 @@ export class HeadingExtension implements IEditorExtension {
           attrs: {
             level,
             anchorId: getRandomHeadingID(),
+            ...createBlockIdAttr(),
           },
         })
       },
@@ -106,6 +111,7 @@ export class HeadingExtension implements IEditorExtension {
           attrs: {
             level,
             anchorId: getRandomHeadingID(),
+            ...createBlockIdAttr(),
           },
         })
       },

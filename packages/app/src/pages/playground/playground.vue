@@ -12,6 +12,8 @@ const themeModeText = useThemeModeText()
 const editorRef = ref<HTMLElement>()
 const editorCore = shallowRef<EditorCore>()
 
+useTitle(t('pages.playground.title'))
+
 provide(EditorProvideKey, editorCore)
 onMounted(() => {
   const container = editorRef.value!

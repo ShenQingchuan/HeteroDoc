@@ -68,11 +68,11 @@ export class HyperlinkExtension implements IEditorExtension<HyperlinkOptions> {
           parseDOM: [
             {
               tag: 'a[href]',
-              getAttrs(dom) {
-                if (typeof dom === 'string')
+              getAttrs(el) {
+                if (typeof el === 'string')
                   return null
-                const url = dom.getAttribute('href')
-                const displayText = dom.textContent
+                const url = el.getAttribute('href')
+                const displayText = el.textContent
                 return { url, displayText }
               },
             },

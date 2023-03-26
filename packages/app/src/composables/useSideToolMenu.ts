@@ -1,5 +1,3 @@
-import type { Ref } from 'vue'
-
 type SideMenuAction = 'insert-before' | 'insert-after'
 interface SideMenuOption {
   key: SideMenuAction
@@ -27,17 +25,17 @@ export function useSideToolMenu() {
   const sideToolBtnTop = ref(0)
   const sideToolBtnLeft = ref(0)
   const hoverNodePos = ref(0)
-  const hoveredTopBlockElement = ref<HTMLElement | null>()
+  const hoveredTopBlockElement = ref<HTMLElement>()
   const hoverTopBlockElementRect = ref<DOMRect>()
   const isShowHoverElementBouding = ref(false)
-  const sideToolBtn = ref<HTMLElement | null>(null)
-  const sideDragBtn = ref<HTMLElement | null>(null)
-  const sideToolMenu = ref<HTMLElement | null>(null)
-  const dragingMirror = ref<HTMLElement | null>(null)
+  const sideToolBtn = ref<HTMLElement>()
+  const sideDragBtn = ref<HTMLElement>()
+  const sideToolMenu = ref<HTMLElement>()
+  const dragingMirror = ref<HTMLElement>()
   const isDragging = ref(false)
-  const { isOutside: isNotHoveringSideToolBtn } = useMouseInElement(sideToolBtn as Ref<HTMLElement | null>)
-  const { isOutside: isNotHoveringSideDragBtn } = useMouseInElement(sideDragBtn as Ref<HTMLElement | null>)
-  const { isOutside: isNotHoveringSideToolMenu } = useMouseInElement(sideToolMenu as Ref<HTMLElement | null>)
+  const { isOutside: isNotHoveringSideToolBtn } = useMouseInElement(sideToolBtn)
+  const { isOutside: isNotHoveringSideDragBtn } = useMouseInElement(sideDragBtn)
+  const { isOutside: isNotHoveringSideToolMenu } = useMouseInElement(sideToolMenu)
   const isSideToolBtnShow = ref(false)
   const isSideToolMenuShow = useDebounce(computed(() => {
     return !isNotHoveringSideToolBtn.value

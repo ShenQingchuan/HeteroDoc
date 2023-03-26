@@ -8,7 +8,7 @@ export const useFontFancyPicker = () => {
   const editorStore = useEditorStore()
   const envStore = useEnvStore()
   const rerenderKey = ref(uniqueId())
-  const fontFancyBtnRef = ref<HTMLElement | null>(null)
+  const fontFancyBtnRef = ref<HTMLElement>()
   const fontFancyBtnBounding = useElementBounding(fontFancyBtnRef)
   const getStyleFromFancyAttrs = (fontFancyAttrs: FontFancyAttrs | null | undefined) => {
     if (!fontFancyAttrs)

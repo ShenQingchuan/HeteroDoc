@@ -1,6 +1,7 @@
 import type { SchemaSpec } from 'prosemirror-model'
 import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
-import { extendsTextBlockAttrs, getTextBlockAttrsFromElement, stylesOfTextBlock } from '../utils/textBlockStyles'
+import { blockIdDataAttrAtDOM } from '../utils/blockSchema'
+import { extendsTextBlockAttrs, getTextBlockAttrsFromElement, stylesOfTextBlock } from '../utils/textBlockSchema'
 
 export function mergeSchemaSpecs(specs: Partial<SchemaSpec>[]): SchemaSpec {
   const merged: SchemaSpec = {
@@ -19,7 +20,11 @@ export function mergeSchemaSpecs(specs: Partial<SchemaSpec>[]): SchemaSpec {
           },
         }],
         toDOM(node) {
-          return ['p', { style: stylesOfTextBlock(node), [HETERO_BLOCK_NODE_DATA_TAG]: 'true' }, 0]
+          return ['p', {
+            style: stylesOfTextBlock(node),
+            [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+            ...blockIdDataAttrAtDOM(node),
+          }, 0]
         },
       },
       text: { group: 'inline' },

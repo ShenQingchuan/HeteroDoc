@@ -1,5 +1,6 @@
 import { merge, omit } from 'lodash'
 import type { AttributeSpec, Node } from 'prosemirror-model'
+import { extendsBlockAttrs, getBlockAttrsFromElement } from './blockSchema'
 
 export function extendsTextBlockAttrs(
   others: Record<string, AttributeSpec> = {}, excludes?: string[],
@@ -7,12 +8,21 @@ export function extendsTextBlockAttrs(
   const textBlockAttrsBase: Record<string, AttributeSpec> = {
     textAlign: { default: 'left' },
     textIndent: { default: 0 },
+    ...extendsBlockAttrs(others, excludes),
   }
   let textBlockAttrs = merge(textBlockAttrsBase, others)
   if (excludes) {
     textBlockAttrs = omit(textBlockAttrs, ...excludes)
   }
   return textBlockAttrs
+}
+
+export function getTextBlockAttrsFromElement(el: HTMLElement) {
+  return {
+    textAlign: el.style.textAlign ?? 'left',
+    textIndent: el.style.textIndent ?? 0,
+    ...getBlockAttrsFromElement(el),
+  }
 }
 
 export function stylesOfTextBlock(
@@ -34,11 +44,4 @@ export function stylesOfTextBlock(
     style += otherStyle ?? ''
   }
   return style
-}
-
-export function getTextBlockAttrsFromElement(el: HTMLElement) {
-  return {
-    textAlign: el.style.textAlign ?? 'left',
-    textIndent: el.style.textIndent ?? 0,
-  }
 }

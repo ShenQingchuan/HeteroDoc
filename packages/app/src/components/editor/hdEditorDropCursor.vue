@@ -13,7 +13,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   core.on('dropBlock', () => {
     isShowDropCursor.value = false
   })
-  core.on('dragMoving', ({ hoverElement, hoverNodePos }) => {
+  core.on('dragMoving', ({ hoverElement }) => {
     if (hoverElement) {
       const { left, top, width } = hoverElement.getBoundingClientRect()
       dropCursorWidth.value = width

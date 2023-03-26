@@ -44,12 +44,12 @@ export class FontFancyExtension implements IEditorExtension {
           parseDOM: [
             {
               tag: 'span',
-              getAttrs(dom) {
-                if (typeof dom === 'string')
+              getAttrs(el) {
+                if (typeof el === 'string')
                   return null
 
-                const colorIndex = parseInt(dom.getAttribute('data-color-index') ?? '0')
-                const bgColorIndex = parseInt(dom.getAttribute('data-bg-color-index') ?? '0')
+                const colorIndex = parseInt(el.getAttribute('data-color-index') ?? '0')
+                const bgColorIndex = parseInt(el.getAttribute('data-bg-color-index') ?? '0')
                 return { colorIndex, bgColorIndex }
               },
             },
