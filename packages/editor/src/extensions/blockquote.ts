@@ -4,6 +4,7 @@ import type { PatternRule } from '../core/rule'
 import { wrappingInputRule } from '../core/rule'
 import type { AddNodesSchema, IEditorExtension, NoArgsCommand } from '../types'
 import { ExtensionType } from '../types'
+import { blockIdDataAttrAtDOM, extendsBlockAttrs, getBlockAttrsFromElement } from '../utils/blockSchema'
 
 const blockquoteInputRuleRegExp = /^[\>》]\s/
 
@@ -29,13 +30,28 @@ export class BlockquoteExtension implements IEditorExtension {
       nodes: {
         [EXTENSION_NAMES.BLOCK_QUOTE]: {
           content: 'non_quote_block+',
+          attrs: {
+            ...extendsBlockAttrs(),
+          },
           group: 'block',
           defining: true,
           parseDOM: [
-            { tag: 'blockquote' },
+            {
+              tag: 'blockquote',
+              getAttrs: (el) => {
+                return el instanceof HTMLElement
+                  ? {
+                      ...getBlockAttrsFromElement(el),
+                    }
+                  : {}
+              },
+            },
           ],
-          toDOM() {
-            return ['blockquote', { [HETERO_BLOCK_NODE_DATA_TAG]: 'true' }, 0]
+          toDOM(node) {
+            return ['blockquote', {
+              [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+              ...blockIdDataAttrAtDOM(node),
+            }, 0]
           },
         },
       },

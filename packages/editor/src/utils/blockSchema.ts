@@ -6,7 +6,7 @@ export function extendsBlockAttrs(
   others: Record<string, AttributeSpec> = {}, excludes?: string[],
 ) {
   const blockAttrsBase: Record<string, AttributeSpec> = {
-    blockId: { default: getUUID() },
+    blockId: { default: null },
   }
   let blockAttrs = merge(blockAttrsBase, others)
   if (excludes) {
