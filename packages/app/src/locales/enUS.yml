@@ -15,6 +15,7 @@ editor:
     fastpath-option-heading: Heading {level}
     fastpath-option-quote: Quoting
     fastpath-option-code-block: Code block
+    fastpath-option-horizontal: Horizontal line
     fastpath-options-title-basic-textblocks: Basic text block
     sidemenu-insert-before: Insert line before
     sidemenu-insert-after: append line after

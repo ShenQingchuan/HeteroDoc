@@ -8,9 +8,7 @@ const { t } = useI18n()
 const {
   activeOption,
   onFastpathActionKey,
-  onClickHeadingFastpath,
-  onClickQuoteFastpath,
-  onClickCodeblockFastpath,
+  onFastpathTrigger,
 } = useFastpathHandler()
 
 const isBlockQuoteAvailable = ref(true)
@@ -72,7 +70,7 @@ watch(
             :key="`heading-${i}`"
             :class="`hetero-editor__input-fastpath-option heading-${i} ${getActiveClassByOption(`h${i}`)}`"
             editor-input-fastpath-option
-            @click="onClickHeadingFastpath(i)"
+            @click="onFastpathTrigger()"
           >
             <i
               class="label-icon" m="r0.5" v-bind="{
@@ -87,7 +85,7 @@ watch(
             class="hetero-editor__input-fastpath-option quote"
             :class="`${getActiveClassByOption('quote')}`"
             editor-input-fastpath-option
-            @click="onClickQuoteFastpath"
+            @click="onFastpathTrigger()"
           >
             <i class="label-icon" m="r0.5" i-tabler:blockquote editor-input-fastpath-icon />
             <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-quote') }}</span>
@@ -96,10 +94,19 @@ watch(
             class="hetero-editor__input-fastpath-option codeBlock"
             :class="`${getActiveClassByOption('codeblock')}`"
             editor-input-fastpath-option
-            @click="onClickCodeblockFastpath"
+            @click="onFastpathTrigger()"
           >
             <i class="label-icon" m="r0.5" i-tabler:code editor-input-fastpath-icon />
             <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-code-block') }}</span>
+          </div>
+          <div
+            class="hetero-editor__input-fastpath-option codeBlock"
+            :class="`${getActiveClassByOption('horizontal')}`"
+            editor-input-fastpath-option
+            @click="onFastpathTrigger()"
+          >
+            <i class="label-icon" m="r0.5" i-octicon:horizontal-rule-24 editor-input-fastpath-icon />
+            <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-horizontal') }}</span>
           </div>
         </div>
       </transition>

@@ -14,6 +14,7 @@
   --heterodoc-blockquote-color: #8a8a8a;
   --heterodoc-blockquote-border-left-color: #c0c0c0;
   --heterodoc-blockquote-bg-color: rgb(239, 237, 237);
+  --heterodoc-horizontal-line-color: rgba(22, 22, 22, 0.1);
 }
 
 :root.dark {
@@ -28,6 +29,7 @@
   --heterodoc-blockquote-color: #d5d5d5;
   --heterodoc-blockquote-border-left-color: #d5d5d5;
   --heterodoc-blockquote-bg-color: rgb(95, 94, 94);
+  --heterodoc-horizontal-line-color: #444444;
 }
 
 .ProseMirror {
@@ -126,6 +128,15 @@
   .ProseMirrorCodeBlockLightTheme;
   .dark & {
     .ProseMirrorCodeBlockDarkTheme;
+  }
+
+  // horizontal line
+  .heterodoc-horizontal-line {
+    pointer-events: none;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--heterodoc-horizontal-line-color);
+    height: 1px;
   }
 }
 

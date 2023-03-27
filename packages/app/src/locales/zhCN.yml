@@ -15,6 +15,7 @@ editor:
     fastpath-option-heading: 标题 H{level}
     fastpath-option-quote: 引述文字
     fastpath-option-code-block: 代码块
+    fastpath-option-horizontal: 水平分割线
     fastpath-options-title-basic-textblocks: 基础文本块
     sidemenu-insert-before: 向前插入一行
     sidemenu-insert-after: 向后插入一行

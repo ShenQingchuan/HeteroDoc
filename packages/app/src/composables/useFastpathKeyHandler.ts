@@ -1,4 +1,4 @@
-type FastpathKey = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'quote' | 'codeblock'
+type FastpathKey = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'quote' | 'codeblock' | 'horizontal'
 type FastPathKeyMap = Record<FastpathKey, (...args: any) => void>
 
 export function useFastpathHandler() {
@@ -24,6 +24,9 @@ export function useFastpathHandler() {
   const onClickCodeblockFastpath = runInputFastPath(() => {
     editorCore?.value.commands.setCodeblock({ params: 'plaintext' })
   })
+  const onClickHorizontalFastpath = runInputFastPath(() => {
+    editorCore?.value.commands.setHorizontal()
+  })
 
   const fastPathHandlerMap = {
     ...Array.from({ length: 5 }, (_, i) => i + 1).reduce((acc, level) => {
@@ -32,7 +35,15 @@ export function useFastpathHandler() {
     }, {} as Record<string, (...args: any) => void>),
     quote: onClickQuoteFastpath,
     codeblock: onClickCodeblockFastpath,
+    horizontal: onClickHorizontalFastpath,
   } as FastPathKeyMap
+
+  const onFastpathTrigger = () => {
+    if (activeOption.value) {
+      fastPathHandlerMap[activeOption.value]()
+    }
+    editorStore.setShowInputFastpath(false)
+  }
 
   const onFastpathActionKey = (event: KeyboardEvent) => {
     if (!editorStore.isShowInputFastpath) {
@@ -43,7 +54,7 @@ export function useFastpathHandler() {
       event.preventDefault()
       event.stopPropagation()
 
-      const options: FastpathKey[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'quote', 'codeblock']
+      const options: FastpathKey[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'quote', 'codeblock', 'horizontal']
       const activeIndex = activeOption.value ? options.indexOf(activeOption.value) : -1
       if (activeIndex === -1) {
         activeOption.value = options[0]
@@ -58,20 +69,14 @@ export function useFastpathHandler() {
     else if (event.key === 'Enter') {
       event.preventDefault()
       event.stopPropagation()
-
-      if (activeOption.value) {
-        fastPathHandlerMap[activeOption.value]()
-      }
-      editorStore.setShowInputFastpath(false)
+      onFastpathTrigger()
     }
   }
 
   return {
     activeOption,
     onFastpathActionKey,
-    onClickHeadingFastpath,
-    onClickQuoteFastpath,
-    onClickCodeblockFastpath,
+    onFastpathTrigger,
   }
 }
 

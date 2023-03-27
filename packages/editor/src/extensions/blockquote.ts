@@ -59,7 +59,7 @@ export class BlockquoteExtension implements IEditorExtension {
   }
 
   inputRules: () => PatternRule[] = () => {
-    const nodeType = this.core.schema.nodes.blockquote!
+    const nodeType = this.core.schema.nodes[EXTENSION_NAMES.BLOCK_QUOTE]!
     return [
       wrappingInputRule({
         find: blockquoteInputRuleRegExp,

@@ -25,6 +25,7 @@ const mountEditor = () => {
     })
     // clear all content
     .focusEditor()
+    // Delete mock test data
     .typeWithModKey('a')
     .type('{backspace}')
     .type('{backspace}')
@@ -203,5 +204,10 @@ describe('Editor playground test', () => {
       .get('.ProseMirror > p').should('have.css', 'padding-left', '32px')
       .typeWithModKey('[').wait(enoughWaitTime)
       .get('.ProseMirror > p').should('have.css', 'padding-left', '16px')
+  })
+  it('can create horizontal line in shortcut', () => {
+    mountEditor()
+      .type('--- ')
+      .get('.ProseMirror > .heterodoc-horizontal-line').should('exist')
   })
 })

@@ -2,8 +2,9 @@ import type { EditorCore, IEditorExtension } from '@hetero/editor'
 import {
   BlockquoteExtension,
   BoldExtension,
-  CodeBlockExtension, CodeExtension, DeleteLineExtension,
-  FontFancyExtension, HeadingExtension,
+  CodeBlockExtension,
+  CodeExtension, DeleteLineExtension, FontFancyExtension,
+  HeadingExtension, HorizontalLine,
   HyperlinkExtension, ItalicExtension, UnderlineExtension,
 } from '@hetero/editor'
 
@@ -38,5 +39,6 @@ export function composeExtensions(core: EditorCore): IEditorExtension[] {
     new BlockquoteExtension(core),
     new CodeBlockExtension(core, setupHightlightJS()),
     new FontFancyExtension(core),
+    new HorizontalLine(core),
   ]
 }

@@ -48,6 +48,8 @@ export enum EXTENSION_NAMES {
   DELETE_LINE = 'deleteLine',
   ITALIC = 'italic',
   UNDERLINE = 'underline',
+  HORIZONTAL_LINE = 'horizontalLine',
 }
 
 export const HETERODOC_PLACEHOLER_CLASS_NAME = 'heterodoc-placeholder'
+export const HETERODOC_HORIZONTAL_LINE_CLASS_NAME = 'heterodoc-horizontal-line'
