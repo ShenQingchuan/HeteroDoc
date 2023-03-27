@@ -9,6 +9,7 @@ import { editorEventBus } from '../../eventBus'
 const editorCore = useEditorCoreInject()
 const editorStore = useEditorStore()
 const { selection, rects, text } = useTextSelection()
+const floatMenuRef = ref<HTMLElement>()
 
 const onHyperlinkBtnClick = () => {
   const left = rects.value[0]!.left
@@ -59,7 +60,8 @@ editorEventBus.on('editorMounted', ({ core }) => {
       return
     }
     const isClickInsideEditor = editorDOM.contains(event.target as Node)
-    if (!isClickInsideEditor) {
+    const isClickInsideFloatMenu = floatMenuRef.value?.contains(event.target as Node)
+    if (!isClickInsideEditor && !isClickInsideFloatMenu) {
       editorStore.setShowEditorMenu(false)
     }
   })
@@ -73,6 +75,7 @@ editorEventBus.on('editorMounted', ({ core }) => {
     >
       <div
         v-show="editorStore.isShowEditorMenu"
+        ref="floatMenuRef"
         class="hetero-editor__float-menu"
         :style="{
           position: 'absolute',
