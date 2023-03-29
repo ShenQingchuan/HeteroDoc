@@ -22,7 +22,7 @@ const getActiveClassByOption = (option: string) => {
   return activeOption.value === option ? 'active' : ''
 }
 
-editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
+editorEventBus.on('editorMounted', ({ core }) => {
   core.on('activateInputFastPath', ({ left, top, options }) => {
     editorStore.setFloatMenuPosition({ left, top }, EditorFloatMenuAction.ByInputFastpath)
     editorStore.setShowInputFastpath(true)
@@ -70,7 +70,7 @@ watch(
             :key="`heading-${i}`"
             :class="`hetero-editor__input-fastpath-option heading-${i} ${getActiveClassByOption(`h${i}`)}`"
             editor-input-fastpath-option
-            @click="onFastpathTrigger()"
+            @click="onFastpathTrigger({ option: `h${i}` as const })"
           >
             <i
               class="label-icon" m="r0.5" v-bind="{
@@ -85,7 +85,7 @@ watch(
             class="hetero-editor__input-fastpath-option quote"
             :class="`${getActiveClassByOption('quote')}`"
             editor-input-fastpath-option
-            @click="onFastpathTrigger()"
+            @click="onFastpathTrigger({ option: 'quote' })"
           >
             <i class="label-icon" m="r0.5" i-tabler:blockquote editor-input-fastpath-icon />
             <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-quote') }}</span>
@@ -94,16 +94,16 @@ watch(
             class="hetero-editor__input-fastpath-option codeBlock"
             :class="`${getActiveClassByOption('codeblock')}`"
             editor-input-fastpath-option
-            @click="onFastpathTrigger()"
+            @click="onFastpathTrigger({ option: 'codeblock' })"
           >
             <i class="label-icon" m="r0.5" i-tabler:code editor-input-fastpath-icon />
             <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-code-block') }}</span>
           </div>
           <div
-            class="hetero-editor__input-fastpath-option codeBlock"
+            class="hetero-editor__input-fastpath-option horizontal"
             :class="`${getActiveClassByOption('horizontal')}`"
             editor-input-fastpath-option
-            @click="onFastpathTrigger()"
+            @click="onFastpathTrigger({ option: 'horizontal' })"
           >
             <i class="label-icon" m="r0.5" i-octicon:horizontal-rule-24 editor-input-fastpath-icon />
             <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-horizontal') }}</span>

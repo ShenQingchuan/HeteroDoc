@@ -17,6 +17,7 @@ export class DragAndDrop implements IEditorExtension {
 
   constructor(public core: EditorCore) {
     core.on('dragBlock', ({ hoverNodePos }) => {
+      core.status.isDragging = true
       // -1 is because the pos value we got is actually inside the node,
       // this is in order to get the node outter left point
       const dragNodePos = hoverNodePos - 1
@@ -51,12 +52,14 @@ export class DragAndDrop implements IEditorExtension {
       const draggingPosAfterInsert = tr.mapping.map(this.draggingPos)
       tr.delete(draggingPosAfterInsert, draggingPosAfterInsert + this.draggingNode.nodeSize)
 
-      // Clear the dragging status
-      this.clearDraggingStatus()
       // Set the dragging meta to prevent `selectionChange` event
       // because this case is special and handled by this extension
       tr.setMeta('dragging', true)
       core.view.dispatch(tr)
+      core.view.focus()
+
+      // Clear the dragging status
+      this.clearDraggingStatus()
     })
   }
 
@@ -64,6 +67,7 @@ export class DragAndDrop implements IEditorExtension {
     this.draggingPos = Number.NaN
     this.draggingNode = null
     this.draggingSlice = null
+    this.core.status.isDragging = true
   }
 
   getProseMirrorPlugin: () => Plugin[] = () => {
@@ -77,9 +81,11 @@ export class DragAndDrop implements IEditorExtension {
               // It could be done by `event.target` as HTMLElement
               const hoverElement = event.target
 
-              // Only emit dragMoving event when the `hoverElement` is a hetero block
+              // Only emit dragMoving event on:
+              // 1. on dragging
+              // 2. when the `hoverElement` is a hetero block
               const isHoveringHeteroBlock = isHeteroBlock(hoverElement)
-              if (isHoveringHeteroBlock) {
+              if (isHoveringHeteroBlock && this.core.status.isDragging) {
                 this.core.emit('dragMoving', { hoverElement })
               }
             },

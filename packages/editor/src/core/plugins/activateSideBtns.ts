@@ -3,8 +3,8 @@ import { HETERO_BLOCK_NODE_DATA_TAG } from '../../constants'
 import { isHeteroBlock } from '../../utils/isSomewhat'
 import type { EditorCore } from '../index'
 
-const getClosetTopLevelBlockLeft = (node: HTMLElement): [number, HTMLElement] | void => {
-  const closetTopBlockElement = node.closest(`.ProseMirror > [${HETERO_BLOCK_NODE_DATA_TAG}="true"]`) as HTMLElement | null
+function getRectLeftForCloset(el: HTMLElement, selector: string): [number, HTMLElement] | void {
+  const closetTopBlockElement = el.closest(selector) as HTMLElement | null
   if (!closetTopBlockElement) {
     return
   }
@@ -12,33 +12,47 @@ const getClosetTopLevelBlockLeft = (node: HTMLElement): [number, HTMLElement] | 
   return [left, closetTopBlockElement]
 }
 
+const getClosetTopLevelBlockLeft = (el: HTMLElement) => {
+  return getRectLeftForCloset(el, `.ProseMirror > [${HETERO_BLOCK_NODE_DATA_TAG}="true"]`)
+}
+const getClosetBlockLeft = (el: HTMLElement) => {
+  return getRectLeftForCloset(el, `[${HETERO_BLOCK_NODE_DATA_TAG}="true"]`)
+}
+
 export const activateSideBtns = (core: EditorCore) => {
-  const showSideToolBtn = (left: number, pos: number, topBlockElement: HTMLElement) =>
-    core.emit('activateSideBtns', { left, hoverCtx: { pos, topBlockElement } })
+  const showSideToolBtn = (left: number, pos: number, hoveredBlockElement: HTMLElement, topBlockElement: HTMLElement) =>
+    core.emit('activateSideBtns', { left, hoverCtx: { pos, hoveredBlockElement, topBlockElement } })
 
   core.on('selectionChange', ({ tr, prevState }) => {
     const prevCursor = prevState.selection.from
-    const domAtPrevCursor = core.view.domAtPos(prevCursor).node
-    const currentCursor = tr.selection.from
-    const domAtCurrentCursor = core.view.domAtPos(currentCursor).node
+    const domAtPrevCursorPos = core.view.domAtPos(prevCursor).node
+    const currentCursorPos = tr.selection.from
+    const domAtCurrentCursorPos = core.view.domAtPos(currentCursorPos).node
     if (
-      !(domAtPrevCursor instanceof HTMLElement)
-      || !(domAtCurrentCursor instanceof HTMLElement)
+      !(domAtPrevCursorPos instanceof HTMLElement)
+      || !(domAtCurrentCursorPos instanceof HTMLElement)
     ) {
       return
     }
 
     // Skip when moving selection cursor in the same line
-    const currentRect = domAtCurrentCursor.getBoundingClientRect()
-    const prevRect = domAtPrevCursor.getBoundingClientRect()
+    const currentRect = domAtCurrentCursorPos.getBoundingClientRect()
+    const prevRect = domAtPrevCursorPos.getBoundingClientRect()
     if (prevRect.y === currentRect.y) {
       return
     }
 
-    const ret = getClosetTopLevelBlockLeft(domAtCurrentCursor)
-    if (ret) {
-      const [currentXPos, topBlockElement] = ret
-      showSideToolBtn(currentXPos, currentCursor, topBlockElement)
+    const closetBlock = getClosetBlockLeft(domAtCurrentCursorPos)
+    const closetTopBlock = getClosetTopLevelBlockLeft(domAtCurrentCursorPos)
+    if (closetBlock && closetTopBlock) {
+      const [, hoveredBlockElement] = closetBlock
+      const [currentRectX, topBlockElement] = closetTopBlock
+      showSideToolBtn(
+        currentRectX,
+        currentCursorPos,
+        hoveredBlockElement,
+        topBlockElement,
+      )
     }
   })
 
@@ -61,15 +75,17 @@ export const activateSideBtns = (core: EditorCore) => {
                 return false
               }
             }
-            const ret = getClosetTopLevelBlockLeft(toElement)
-            if (!ret) {
+            const closetBlock = getClosetBlockLeft(toElement)
+            const closetTopBlock = getClosetTopLevelBlockLeft(toElement)
+            if (!closetBlock || !closetTopBlock) {
               return false
             }
-            const [topBlockX, topBlockElement] = ret
-            const topBlockRect = topBlockElement.getBoundingClientRect()
+            const [, blockElement] = closetBlock
+            const [topBlockX, topBlockElement] = closetTopBlock
+            const blockRect = blockElement.getBoundingClientRect()
             const posAtTopBlockCoords = view.posAtCoords({
-              left: topBlockRect.left,
-              top: topBlockRect.top,
+              left: blockRect.left,
+              top: blockRect.top,
             })
             if (!posAtTopBlockCoords) {
               return false
@@ -78,7 +94,7 @@ export const activateSideBtns = (core: EditorCore) => {
 
             // why we need topblockX? because we want the side tool btn constantly stick to the same vertical position
             // and use the toElement's y position as the vertical position
-            showSideToolBtn(topBlockX, pos, topBlockElement)
+            showSideToolBtn(topBlockX, pos, toElement, topBlockElement)
           }
           return false
         },

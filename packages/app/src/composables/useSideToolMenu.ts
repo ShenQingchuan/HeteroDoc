@@ -25,8 +25,10 @@ export function useSideToolMenu() {
   const sideToolBtnTop = ref(0)
   const sideToolBtnLeft = ref(0)
   const hoverNodePos = ref(0)
-  const hoveredTopBlockElement = ref<HTMLElement>()
-  const hoverTopBlockElementRect = ref<DOMRect>()
+  const hoveringBlockElement = ref<HTMLElement>()
+  const hoveringTopBlockElement = ref<HTMLElement>()
+  const hoveringBlockElementRect = ref<DOMRect>()
+  const hoveringTopBlockElementRect = ref<DOMRect>()
   const isShowHoverElementBouding = ref(false)
   const sideToolBtn = ref<HTMLElement>()
   const sideDragBtn = ref<HTMLElement>()
@@ -91,15 +93,18 @@ export function useSideToolMenu() {
     document.body.appendChild(dragingMirror.value as HTMLElement)
   })
   const onSideDragBtnMouseDown = () => {
-    if (!hoveredTopBlockElement.value) {
+    if (!hoveringBlockElement.value) {
       // This also means hoverNodePos can't be 0,
       // because we don't want to drag the whole editor
       return
     }
     // Use VueUse's useMouse to get the position of the mouse,
     // set the x,y to the cloned block's position
-    dragingMirror.value = createDraggingMirror(hoveredTopBlockElement.value.cloneNode(true) as HTMLElement)
-    editor?.value.emit('dragBlock', { hoverNodePos: hoverNodePos.value })
+    dragingMirror.value = createDraggingMirror(hoveringBlockElement.value.cloneNode(true) as HTMLElement)
+    editor?.value.emit('dragBlock', {
+      hoverNodePos: hoverNodePos.value,
+      hoverBlockRect: hoveringBlockElement.value.getBoundingClientRect(),
+    })
     isDragging.value = true
   }
   const onMouseUpForDrop = () => {
@@ -147,8 +152,10 @@ export function useSideToolMenu() {
     sideToolBtnLeft,
     isSideToolMenuShow,
     hoverNodePos,
-    hoverTopBlockElementRect,
-    hoveredTopBlockElement,
+    hoveringBlockElement,
+    hoveringBlockElementRect,
+    hoveringTopBlockElementRect,
+    hoveringTopBlockElement,
     menuOptions,
     isShowHoverElementBouding,
     sideToolBtn,

@@ -1,5 +1,7 @@
-type FastpathKey = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'quote' | 'codeblock' | 'horizontal'
+type FastpathKey = `h${number}` | 'quote' | 'codeblock' | 'horizontal'
 type FastPathKeyMap = Record<FastpathKey, (...args: any) => void>
+
+const FastpathKeyOptions: FastpathKey[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'quote', 'codeblock', 'horizontal']
 
 export function useFastpathHandler() {
   const editorCore = useEditorCoreInject()
@@ -38,9 +40,13 @@ export function useFastpathHandler() {
     horizontal: onClickHorizontalFastpath,
   } as FastPathKeyMap
 
-  const onFastpathTrigger = () => {
+  const onFastpathTrigger = (clickParams?: { option: FastpathKey }) => {
+    // If there is `clickParams` passed in, it means that's triggered by click
+    if (clickParams) {
+      activeOption.value = clickParams.option
+    }
     if (activeOption.value) {
-      fastPathHandlerMap[activeOption.value]()
+      fastPathHandlerMap[activeOption.value]?.()
     }
     editorStore.setShowInputFastpath(false)
   }
@@ -54,16 +60,15 @@ export function useFastpathHandler() {
       event.preventDefault()
       event.stopPropagation()
 
-      const options: FastpathKey[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'quote', 'codeblock', 'horizontal']
-      const activeIndex = activeOption.value ? options.indexOf(activeOption.value) : -1
+      const activeIndex = activeOption.value ? FastpathKeyOptions.indexOf(activeOption.value) : -1
       if (activeIndex === -1) {
-        activeOption.value = options[0]
+        activeOption.value = FastpathKeyOptions[0]
       }
       else if (event.key === 'ArrowUp') {
-        activeOption.value = options[activeIndex - 1] ?? options[options.length - 1]
+        activeOption.value = FastpathKeyOptions[activeIndex - 1] ?? FastpathKeyOptions[FastpathKeyOptions.length - 1]
       }
       else if (event.key === 'ArrowDown') {
-        activeOption.value = options[activeIndex + 1] ?? options[0]
+        activeOption.value = FastpathKeyOptions[activeIndex + 1] ?? FastpathKeyOptions[0]
       }
     }
     else if (event.key === 'Enter') {

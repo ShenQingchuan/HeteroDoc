@@ -38,11 +38,11 @@ export interface EditorCoreEvent {
   'selectionChange': { tr: Transaction; prevState: EditorState }
   'activateInputFastPath': { left: number; top: number; options: InputFastpathOptions }
   'deactivateInputFastPath': { isContentChanged: boolean }
-  'activateSideBtns': { left: number; hoverCtx: { pos: number; topBlockElement: HTMLElement } }
+  'activateSideBtns': { left: number; hoverCtx: { pos: number; hoveredBlockElement: HTMLElement; topBlockElement: HTMLElement } }
   'fastpathActionKey': { event: KeyboardEvent }
   'updateCodeBlock': { codeBlockDOM: HTMLElement; langName: string; alias?: string }
   /** Start drag block node, and we need handle the 'mouseover' event to make hovered blocks show a highlight border, in order to indicate the dropable position */
-  'dragBlock': { hoverNodePos: number }
+  'dragBlock': { hoverNodePos: number; hoverBlockRect: DOMRect }
   'dragMoving': { hoverElement: HTMLElement }
   /** End of block node dragging. on this event handling, we need to move the dragged node to its target position  */
   'dropBlock': { dropPos: number }
@@ -60,6 +60,10 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   activeManager: ActiveManager
   isNoEffectDispatch = false
   i18nTr: (key: string) => string
+
+  status = {
+    isDragging: false,
+  }
 
   constructor(options: EditorOptions, coreConfig: {
     i18nTr: (key: string) => string

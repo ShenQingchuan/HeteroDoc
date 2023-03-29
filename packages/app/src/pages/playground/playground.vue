@@ -3,8 +3,8 @@ import type { EditorCore } from '@hetero/editor'
 import { EditorProvideKey } from '../../constants/editor'
 import { editorEventBus } from '../../eventBus'
 import { composeExtensions } from './composeExtensions'
-import { jsonData } from './mockData'
 
+const props = defineProps<{ mockData: any }>()
 const { t } = useI18n()
 const naiveUITheme = useNaiveThemeSetup()
 const envStore = useEnvStore()
@@ -18,7 +18,7 @@ provide(EditorProvideKey, editorCore)
 onMounted(() => {
   const container = editorRef.value!
   editorCore.value = useHeteroEditor({
-    doc: import.meta.env.DEV ? jsonData : undefined,
+    doc: import.meta.env.DEV ? props.mockData : undefined,
     container,
     isReadOnly: false,
     autofocus: true,

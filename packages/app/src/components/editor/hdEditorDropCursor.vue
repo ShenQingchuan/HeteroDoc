@@ -6,19 +6,24 @@ const dropCursorWidth = ref(0)
 const dropCursorClientX = ref(0)
 const dropCursorClientY = ref(0)
 
+const setRectForDropCursor = (rect: DOMRect) => {
+  const { left, top, width } = rect
+  dropCursorWidth.value = width
+  dropCursorClientX.value = left
+  dropCursorClientY.value = top
+}
+
 editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
-  core.on('dragBlock', () => {
+  core.on('dragBlock', ({ hoverBlockRect }) => {
     isShowDropCursor.value = true
+    setRectForDropCursor(hoverBlockRect)
   })
   core.on('dropBlock', () => {
     isShowDropCursor.value = false
   })
   core.on('dragMoving', ({ hoverElement }) => {
     if (hoverElement) {
-      const { left, top, width } = hoverElement.getBoundingClientRect()
-      dropCursorWidth.value = width
-      dropCursorClientX.value = left
-      dropCursorClientY.value = top
+      setRectForDropCursor(hoverElement.getBoundingClientRect())
     }
   })
 })

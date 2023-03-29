@@ -12,23 +12,30 @@ const {
   sideToolBtnTop,
   sideToolBtnLeft,
   hoverNodePos,
-  hoverTopBlockElementRect,
-  hoveredTopBlockElement,
+  hoveringBlockElement,
+  hoveringBlockElementRect,
+  hoveringTopBlockElement,
+  hoveringTopBlockElementRect,
   menuOptions,
   handleMenuClick,
   controlSideToolStatusForEditorDOMArea,
 } = useSideToolMenu()
 
 editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
-  core.on('activateSideBtns', ({ left, hoverCtx: { pos, topBlockElement } }) => {
-    const rect = topBlockElement.getBoundingClientRect()
-    const top = rect.top + window.scrollY
+  core.on('activateSideBtns', ({ left, hoverCtx: { pos, hoveredBlockElement, topBlockElement } }) => {
+    const topBlockRect = topBlockElement.getBoundingClientRect()
+    const hoverBlockRect = hoveredBlockElement.getBoundingClientRect()
+    const top = hoverBlockRect.top + window.scrollY
     isSideToolBtnShow.value = true
     hoverNodePos.value = pos
-    hoveredTopBlockElement.value = topBlockElement
-    hoverTopBlockElementRect.value = rect
+
+    hoveringBlockElement.value = hoveredBlockElement
+    hoveringBlockElementRect.value = hoverBlockRect
+    hoveringTopBlockElement.value = topBlockElement
+    hoveringTopBlockElementRect.value = topBlockRect
+
     sideToolBtnLeft.value = left
-    sideToolBtnTop.value = top + 0.5 * rect.height - 0.5 * SIDE_BTN_HEIGHT
+    sideToolBtnTop.value = top + 0.5 * hoverBlockRect.height - 0.5 * SIDE_BTN_HEIGHT
   })
   controlSideToolStatusForEditorDOMArea(editorDOM)
 })
@@ -109,7 +116,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   <!-- show a highlight layer over the side tool target element -->
   <teleport to="body">
     <div
-      v-if="hoverTopBlockElementRect"
+      v-if="hoveringBlockElementRect"
       class="hetero-editor__side-tool-target-bounding"
       pointer-events-none fixed
       border-rounded
@@ -117,10 +124,10 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
       bg="sky-200/50"
       :style="{
         display: isShowHoverElementBouding ? 'block' : 'none',
-        width: `${hoverTopBlockElementRect.width + 8}px`,
-        height: `${hoverTopBlockElementRect.height + 4}px`,
-        left: `${hoverTopBlockElementRect.x - 4}px`,
-        top: `${hoverTopBlockElementRect.y - 2}px`,
+        width: `${hoveringBlockElementRect.width + 8}px`,
+        height: `${hoveringBlockElementRect.height + 4}px`,
+        left: `${hoveringBlockElementRect.x - 4}px`,
+        top: `${hoveringBlockElementRect.y - 2}px`,
       }"
     >
     </div>

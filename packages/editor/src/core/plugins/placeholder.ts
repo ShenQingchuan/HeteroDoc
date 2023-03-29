@@ -1,11 +1,11 @@
-import type { EditorView } from 'prosemirror-view'
 import { Decoration, DecorationSet } from 'prosemirror-view'
-import type { EditorState, Transaction } from 'prosemirror-state'
+import type { EditorState } from 'prosemirror-state'
 import { Plugin, PluginKey, TextSelection } from 'prosemirror-state'
 import { findParentNodeClosestToPos, flatten } from 'prosemirror-utils'
 import type { Node } from 'prosemirror-model'
 import type { EditorCore } from '../index'
 import { HETERODOC_PLACEHOLER_CLASS_NAME } from '../../constants'
+import { applyTrToView } from '../../utils/applyTrToView'
 
 function createPlaceholderDecorationSet(doc: Node, pos: number, placeholderElement: HTMLElement) {
   return DecorationSet.create(doc, [
@@ -40,13 +40,6 @@ function getTailPlaceholderInsertPos(doc: Node) {
   return insertPlaceholderPos
 }
 
-function applyTrToView(view: EditorView, applyTr: (tr: Transaction) => void) {
-  const { state } = view
-  const tr = state.tr
-  applyTr(tr)
-  view.dispatch(tr)
-}
-
 export function placeholderPlugin(core: EditorCore) {
   const pluginKey = new PluginKey('placeholder')
   const updatePlaceholder = (state: EditorState) => createPlaceholderDecorationSet(
@@ -62,9 +55,7 @@ export function placeholderPlugin(core: EditorCore) {
         return updatePlaceholder(state)
       },
       apply(tr, decorationSet, oldState, newState) {
-        if (
-          tr.docChanged || tr.selectionSet
-        ) {
+        if (tr.docChanged || tr.selectionSet) {
           return updatePlaceholder(newState)
         }
         return decorationSet
