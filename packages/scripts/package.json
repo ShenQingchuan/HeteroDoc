@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "@hetero/scripts",
+  "version": "1.0.0",
+  "description": "Scripts for HeteroDoc developing",
+  "author": "ShenQingchuan",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/blessed": "^0.1.21",
+    "@types/react": "^18.0.31",
+    "@types/react-blessed": "^0.7.3",
+    "blessed": "^0.1.81",
+    "react": "^18.2.0",
+    "react-blessed": "^0.7.2"
+  }
+}
