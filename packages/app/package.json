@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "vite",
-    "build:app": "vue-tsc --noEmit && vite build",
+    "build:app": "pnpm typecheck && vite build",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.app.json",
     "preview": "vite preview",
     "cypress": "cypress open",
     "cypress:component": "cypress run --component",

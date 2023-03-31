@@ -11,8 +11,7 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
-    "skipLibCheck": true,
-    "composite": true
+    "skipLibCheck": true
   },
   "include": ["cypress.config.ts"]
 }

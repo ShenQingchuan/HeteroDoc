@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "composite": true,
     "module": "esnext",
-    "moduleResolution": "node"
+    "moduleResolution": "bundler",
+    "skipLibCheck": true
   },
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "vitest.config.ts", "unocss.config.ts"]
 }
