@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { editorEventBus } from '../../eventBus'
 
+const editorStore = useEditorStore()
 const isShowDropCursor = ref(false)
 const dropCursorWidth = ref(0)
 const dropCursorClientX = ref(0)
 const dropCursorClientY = ref(0)
 
-const setRectForDropCursor = (rect: DOMRect) => {
-  const { left, top, width } = rect
+const setRectForDropCursor = (rect: DOMRect, isAppend?: boolean) => {
+  const { left, top, width, height } = rect
   dropCursorWidth.value = width
   dropCursorClientX.value = left
-  dropCursorClientY.value = top
+  dropCursorClientY.value = isAppend ? top + height : top
 }
 
 editorEventBus.on('editorMounted', ({ core }) => {
@@ -20,10 +21,13 @@ editorEventBus.on('editorMounted', ({ core }) => {
   })
   core.on('dropBlock', () => {
     isShowDropCursor.value = false
+    editorStore.setDraggingOverElement(null)
   })
-  core.on('dragMoving', ({ hoverElement }) => {
+  core.on('dragMoving', ({ hoverElement, isAppend = false }) => {
+    editorStore.setDropToAppend(isAppend)
     if (hoverElement) {
-      setRectForDropCursor(hoverElement.getBoundingClientRect())
+      editorStore.setDraggingOverElement(hoverElement)
+      setRectForDropCursor(hoverElement.getBoundingClientRect(), isAppend)
     }
   })
 })

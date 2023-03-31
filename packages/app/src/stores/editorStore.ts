@@ -24,6 +24,8 @@ interface EditorStoreState {
   isShowEditorMenu: boolean
   isShowLinkEdit: boolean
   isShowFontFancyPicker: boolean
+  isDropToAppend: boolean
+  draggingOverElement: HTMLElement | null
 }
 
 const createInitEditorStoreState = (): EditorStoreState => {
@@ -50,6 +52,8 @@ const createInitEditorStoreState = (): EditorStoreState => {
     isShowEditorMenu: false,
     isShowLinkEdit: false,
     isShowFontFancyPicker: false,
+    isDropToAppend: false,
+    draggingOverElement: null,
   }
 }
 
@@ -121,6 +125,14 @@ export const useEditorStore = defineStore('editor', {
     resetLinkEdit() {
       this.linkEditURL = ''
       this.linkEditText = ''
+      return this
+    },
+    setDraggingOverElement(el: HTMLElement | null) {
+      this.draggingOverElement = el
+      return this
+    },
+    setDropToAppend(value: boolean) {
+      this.isDropToAppend = value
       return this
     },
   },

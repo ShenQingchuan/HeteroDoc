@@ -1,6 +1,6 @@
 import { NodeSelection, Plugin, PluginKey } from 'prosemirror-state'
 import { findParentNodeClosestToPos } from 'prosemirror-utils'
-import { EXTENSION_NAMES } from '../../constants'
+import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../../constants'
 import { ExtensionType } from '../../types'
 import { isHeteroBlock } from '../../utils/isSomewhat'
 import type { EditorCore } from '../../core'
@@ -30,11 +30,13 @@ export class DragAndDrop implements IEditorExtension {
       core.logger.debug({
         draggingPos: this.draggingPos,
         draggingNodeType: this.draggingNode?.type.name,
+        draggingNodeText: this.draggingNode?.textContent,
       })
       const { doc } = core.view.state
       this.draggingSlice = NodeSelection.create(doc, dragNodePos).content()
     })
-    core.on('dropBlock', ({ dropPos }) => {
+
+    core.on('dropBlock', ({ dropPos, isAppend = false }) => {
       if (!this.draggingNode || !this.draggingSlice) {
         return
       }
@@ -49,12 +51,18 @@ export class DragAndDrop implements IEditorExtension {
       core.logger.debug({
         dropOnBlockPos: dropAreaClosetBlock.pos,
         dropOnBlockNodeType: dropAreaClosetBlock.node.type.name,
+        dropOnBlockNodeText: dropAreaClosetBlock.node.textContent,
       })
       core.logger.debug('dragging slice', this.draggingSlice)
-      const { pos: dropAreaClosetBlockPos } = dropAreaClosetBlock
+      const { pos: dropAreaClosetBlockPos, node } = dropAreaClosetBlock
       const { tr } = core.view.state
       // 1. Insert the dragging node before the drop area's closet block
-      tr.insert(dropAreaClosetBlockPos, this.draggingNode)
+      tr.insert(
+        isAppend
+          ? dropAreaClosetBlockPos + node.nodeSize
+          : dropAreaClosetBlockPos,
+        this.draggingNode
+      )
       // 2. Removing the dragging node original position
       // before removing the dragging node, we need to re-compute the `draggingPos` by `tr.map`
       // because the `draggingPos` is based on the original document
@@ -89,17 +97,39 @@ export class DragAndDrop implements IEditorExtension {
         props: {
           handleDOMEvents: {
             mouseover: (view, event) => {
+              if (!this.core.status.isDragging) {
+                return false
+              }
               // For drag moving, we need to select the hovered DOM element from mouseover event.
               // It could be done by `event.target` as HTMLElement
               const hoverElement = event.target
+              const { x, y } = event
+              const lastHeteroBlock = Array.from(
+                view.dom.querySelectorAll<HTMLElement>(
+                  `[${HETERO_BLOCK_NODE_DATA_TAG}]`
+                )
+              ).at(-1)
+              if (
+                lastHeteroBlock &&
+                y > lastHeteroBlock.getBoundingClientRect().bottom
+              ) {
+                this.core.emit('dragMoving', {
+                  hoverElement: lastHeteroBlock,
+                  isAppend: true,
+                  x,
+                  y,
+                })
+                return true
+              }
 
               // Only emit dragMoving event on:
               // 1. on dragging
               // 2. when the `hoverElement` is a hetero block
               const isHoveringHeteroBlock = isHeteroBlock(hoverElement)
-              if (isHoveringHeteroBlock && this.core.status.isDragging) {
-                this.core.emit('dragMoving', { hoverElement })
+              if (isHoveringHeteroBlock) {
+                this.core.emit('dragMoving', { hoverElement, x, y })
               }
+              return true
             },
           },
         },

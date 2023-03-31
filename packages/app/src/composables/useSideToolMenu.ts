@@ -21,6 +21,7 @@ export function useSideToolMenu() {
   ]
 
   const editor = useEditorCoreInject()
+  const editorStore = useEditorStore()
   const { width: winWidth, height: winHeight } = useWindowSize()
   const sideToolBtnTop = ref(0)
   const sideToolBtnLeft = ref(0)
@@ -92,6 +93,7 @@ export function useSideToolMenu() {
     clonedBlockWrapper.style.zIndex = '9999'
     clonedBlockWrapper.style.pointerEvents = 'none'
     clonedBlockWrapper.style.opacity = '0.8'
+    clonedBlockWrapper.style.transform = `translateY(-50%)`
     // Add ProseMirror class to make it align with editor,
     // And append to body
     clonedBlockWrapper.classList.add('ProseMirror')
@@ -126,17 +128,20 @@ export function useSideToolMenu() {
       return
     }
     dragingMirror.value?.remove()
-    // Get current position of the mouse
-    // and find the hovering block in editor
-    const { pos } =
-      editor?.value.view.posAtCoords({
-        left: mouseX.value,
-        top: mouseY.value,
-      }) || {}
-    if (!pos) {
+    // Get current position of the last hovered block
+    // and find its position in the editor
+    const lastHoveredBlock = editorStore.draggingOverElement
+    if (!lastHoveredBlock) {
       return
     }
-    editor?.value.emit('dropBlock', { dropPos: pos })
+    const pos = editor?.value.view.posAtDOM(lastHoveredBlock, 0)
+    if (pos === undefined) {
+      return
+    }
+    editor?.value.emit('dropBlock', {
+      dropPos: pos,
+      isAppend: editorStore.isDropToAppend,
+    })
   }
 
   watch(

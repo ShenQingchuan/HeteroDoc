@@ -96,15 +96,10 @@ export const activateSideBtns = (core: EditorCore) => {
             }
             const [, blockElement] = closetBlock
             const [topBlockX, topBlockElement] = closetTopBlock
-            const blockRect = blockElement.getBoundingClientRect()
-            const posAtTopBlockCoords = view.posAtCoords({
-              left: blockRect.left,
-              top: blockRect.top,
-            })
-            if (!posAtTopBlockCoords) {
+            const pos = view.posAtDOM(blockElement, 0)
+            if (pos === undefined) {
               return false
             }
-            const { pos } = posAtTopBlockCoords
 
             // why we need topblockX? because we want the side tool btn constantly stick to the same vertical position
             // and use the toElement's y position as the vertical position

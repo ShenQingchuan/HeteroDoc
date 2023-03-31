@@ -30,9 +30,14 @@ export interface EditorCoreEvent {
   /** Start drag block node, and we need handle the 'mouseover' event to make hovered blocks show a highlight border, in order to indicate the dropable position */
   dragBlock: { hoverNodePos: number; hoverBlockRect: DOMRect }
   /** Mouse will move over block elements on dragging  */
-  dragMoving: { hoverElement: HTMLElement }
+  dragMoving: {
+    hoverElement: HTMLElement
+    x: number
+    y: number
+    isAppend?: boolean
+  }
   /** End of block node dragging. on this event handling, we need to move the dragged node to its target position  */
-  dropBlock: { dropPos: number }
+  dropBlock: { dropPos: number; isAppend: boolean }
 
   /** Toggle on the search UI view */
   toggleSearchView: { state: 'on' | 'off' }

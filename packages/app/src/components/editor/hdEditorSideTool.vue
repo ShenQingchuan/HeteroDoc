@@ -110,9 +110,9 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
           flex="~ items-center"
           cursor-pointer
           mx1
-          my1.5
           px3
-          pt1.5
+          my="1.5"
+          pt="1.5"
           pb2
           border-rounded
           text="dark:white"
@@ -166,7 +166,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   width: 200px;
   transition: all 0.1s ease;
   z-index: 99;
-  transform: translateX(-150%);
+  transform: translateX(-140%);
 
   .hetero-editor__side-toolbar-menu-item:first-child {
     margin-bottom: 0;
