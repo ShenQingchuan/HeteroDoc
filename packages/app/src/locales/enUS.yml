@@ -7,6 +7,12 @@ common-header:
     theme-mode-text: Mode
 editor:
   placeholder: Type something or trigger '/' here ...
+  search-and-replace:
+    search-placeholder: Search content
+    replace-placeholder: Replace content
+    replace-button: Replace
+    replace-all-button: Replace all
+    search-button: Search
   menu:
     code-block-lang-text-placeholder: Plain text
     code-block-lang-search-placeholder: Search for language names ...

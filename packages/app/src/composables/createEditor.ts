@@ -2,7 +2,7 @@ import { EditorCore } from '@hetero/editor'
 import type { Ref } from 'vue'
 import { EditorProvideKey } from '../constants/editor'
 
-export function useHeteroEditor(
+export function createHeteroEditor(
   ...args: ConstructorParameters<typeof EditorCore>
 ) {
   // TODO: more configuration on creating an editor core.

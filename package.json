@@ -4,7 +4,7 @@
   "description": "Collaborative cloud documentation for heterocube teams",
   "scripts": {
     "prepare": "husky install",
-    "dev": "NODE_ENV=development tsx packages/scripts/dev.tsx",
+    "dev": "pnpm --filter @hetero/doc-web-app run dev",
     "dev:turbo": "NODE_ENV=development turbo run dev",
     "build": "turbo run build",
     "build:app": "turbo run build && pnpm --filter @hetero/doc-web-app build:app",
@@ -13,18 +13,18 @@
     "cypress:component-video": "turbo run build && pnpm --filter @hetero/doc-web-app cypress:component-video"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.24.2",
-    "@commitlint/cli": "^17.0.3",
-    "@commitlint/config-conventional": "^17.0.3",
-    "@types/node": "^18.0.0",
+    "@antfu/eslint-config": "^0.38.2",
+    "@commitlint/cli": "^17.5.1",
+    "@commitlint/config-conventional": "^17.4.4",
+    "@types/node": "^18.15.11",
     "cross-env": "^7.0.3",
-    "eslint": "^8.16.0",
-    "husky": "^8.0.1",
-    "lint-staged": "^13.0.3",
+    "eslint": "^8.37.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.0",
     "tsx": "^3.12.6",
-    "turbo": "^1.6.3",
-    "typescript": "^4.7.4",
-    "vite": "^4.1.4"
+    "turbo": "^1.8.8",
+    "typescript": "^5.0.3",
+    "vite": "^4.2.1"
   },
   "lint-staged": {
     "*.vue": "eslint --fix",

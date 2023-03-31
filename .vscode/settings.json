@@ -1,8 +1,11 @@
 {
   "i18n-ally.localesPaths": [
-    "src/locales"
+    "packages/app/src/locales"
   ],
+  "i18n-ally.enabledFrameworks": ["vue"],
   "volar.autoCompleteRefs": true,
   "unocss.root": "packages/app",
-  "files.autoSave": "off"
+  "files.autoSave": "off",
+  "i18n-ally.keystyle": "nested",
+  "typescript.tsdk": "node_modules/typescript/lib",
 }

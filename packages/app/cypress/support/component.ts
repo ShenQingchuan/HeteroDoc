@@ -1,15 +1,19 @@
-import '@hetero/editor/dist/styles/index.css'
+import '@hetero/editor/styles/index'
 import 'uno.css'
 import { mount } from 'cypress/vue'
 
 const enoughWaitTime = 360 // ms
-const isMacOS = (): boolean => {
+function isMacOS(): boolean {
   return typeof navigator !== 'undefined'
     ? /Mac/.test(navigator.platform)
     : false
 }
 
-Cypress.Commands.add('mount', mount)
+Cypress.Commands.add('mount', (...args) => {
+  return mount(...args).then(({ wrapper }) => {
+    return cy.wrap(wrapper) as any
+  })
+})
 Cypress.Commands.add('focusEditor', { prevSubject: true }, (subject) => {
   return cy.wrap(subject).get('.ProseMirror').focus()
 })

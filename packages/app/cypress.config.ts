@@ -6,11 +6,6 @@ export default defineConfig({
     devServer: {
       framework: 'vue',
       bundler: 'vite',
-      viteConfig: {
-        server: {
-          fs: { strict: false },
-        },
-      },
     },
   },
 })

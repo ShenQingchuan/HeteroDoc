@@ -12,8 +12,9 @@ const codeblockTestCode = `function test() {
   console.log('hello world');
 }`
 
-const mountEditor = () => {
-  return cy.viewport(1368, 1000)
+function mountEditor() {
+  const mounted = cy
+    .viewport(1368, 1000)
     .mount(Playground, {
       extensions: {
         plugins: [createPinia(), createI18nPlugin()],
@@ -23,17 +24,15 @@ const mountEditor = () => {
         },
       },
     })
-    // clear all content
-    .focusEditor()
+  // clear all content
+  return mounted.focusEditor()
     // Delete mock test data
     .typeWithModKey('a')
     .type('{backspace}')
     .type('{backspace}')
 }
-const testToggleToolbarResult = (
-  toolbarKeyClassName: string,
-  resultMarkSelector?: string,
-) => {
+function testToggleToolbarResult(toolbarKeyClassName: string,
+  resultMarkSelector?: string) {
   const afterToolbarBtnClick = mountEditor()
     .type(`Editor test, mark ${toolbarKeyClassName}`)
     .typeWithModKey('a')
@@ -45,7 +44,9 @@ const testToggleToolbarResult = (
   }
   return afterToolbarBtnClick
 }
-const getMarkSelector = (markTagName: string) => `.ProseMirror > p > ${markTagName}`
+function getMarkSelector(markTagName: string) {
+  return `.ProseMirror > p > ${markTagName}`
+}
 
 describe('Editor playground test', () => {
   it('can make text bold', () => {
@@ -198,11 +199,11 @@ describe('Editor playground test', () => {
   it('can increase/decrease text ident of text block', () => {
     mountEditor()
       .type('test text ident')
-      .typeWithModKey(']').wait(enoughWaitTime)
+      .typeWithModKey(']').wait(2 * enoughWaitTime)
       .get('.ProseMirror > p').should('have.css', 'padding-left', '16px')
-      .typeWithModKey(']').wait(enoughWaitTime)
+      .typeWithModKey(']').wait(2 * enoughWaitTime)
       .get('.ProseMirror > p').should('have.css', 'padding-left', '32px')
-      .typeWithModKey('[').wait(enoughWaitTime)
+      .typeWithModKey('[').wait(2 * enoughWaitTime)
       .get('.ProseMirror > p').should('have.css', 'padding-left', '16px')
   })
   it('can create horizontal line in shortcut', () => {

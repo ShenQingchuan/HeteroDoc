@@ -6,7 +6,7 @@ import { mainRouter } from './routers'
 
 import App from './App.vue'
 
-import '@hetero/editor/dist/styles/index.css'
+import '@hetero/editor/styles/index'
 import 'uno.css'
 
 // Override global styles

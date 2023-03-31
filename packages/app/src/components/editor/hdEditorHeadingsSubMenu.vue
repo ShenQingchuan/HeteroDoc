@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import type { EditorCore } from '@hetero/editor'
 import type { ShallowRef } from 'vue'
-import { EditorProvideKey, FloatMenuHeadingSubMenuStyleDark, FloatMenuHeadingSubMenuStyleLight } from '../../constants/editor'
+import {
+  EditorProvideKey,
+  FloatMenuHeadingSubMenuStyleDark,
+  FloatMenuHeadingSubMenuStyleLight,
+} from '../../constants/editor'
 
 const naiveUITheme = useNaiveThemeSetup()
 const env = useEnvStore()

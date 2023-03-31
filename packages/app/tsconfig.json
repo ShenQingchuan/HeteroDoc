@@ -1,32 +1,12 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "useDefineForClassFields": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "jsx": "preserve",
-    "sourceMap": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "lib": [
-      "esnext",
-      "dom"
-    ],
-    "skipLibCheck": true,
-  },
-  "include": [
-    "vitest.config.ts",
-    "unocss.config.ts",
-    "cypress.d.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "cypress/test/playground.cy.ts",
-  ],
+  "files": [],
   "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.cypress.json"
+    },
     {
       "path": "./tsconfig.node.json"
     }

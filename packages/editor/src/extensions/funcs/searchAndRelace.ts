@@ -1,4 +1,5 @@
 import type { DOMOutputSpec } from 'prosemirror-model'
+import { Plugin } from 'prosemirror-state'
 import { EXTENSION_NAMES, HETERODOC_SEARCH_AND_REPLACE_CLASS_NAME } from '../../constants'
 import type { EditorCore } from '../../core'
 import { getMarkType } from '../../core/helpers/getMarkType'
@@ -50,5 +51,22 @@ export class SearchAndReplaceExtension implements IEditorExtension {
       tr.setMeta('searchAndReplace', true)
       core.view.dispatch(tr)
     })
+  }
+
+  getProseMirrorPlugin: () => Plugin[] = () => {
+    return [
+      new Plugin({
+        props: {
+          handleKeyDown: (view, event) => {
+            // If the user press 'Mod+F' or 'Ctrl+F' key, we will trigger the search dialog
+            if (event.key === 'f' && (event.ctrlKey || event.metaKey)) {
+              event.preventDefault()
+              this.core.emit('toggleSearchView', { state: 'on' })
+              return true
+            }
+          },
+        },
+      }),
+    ]
   }
 }

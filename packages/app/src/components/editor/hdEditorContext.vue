@@ -5,6 +5,7 @@ import HdEditorInputFastpath from './hdEditorInputFastpath.vue'
 import HdEditorCodeLangSelect from './hdEditorCodeLangSelect.vue'
 import HdEditorSideTool from './hdEditorSideTool.vue'
 import HdEditorDropCursor from './hdEditorDropCursor.vue'
+import HdEditorSearchAndReplace from './hdEditorSearchAndReplace.vue'
 </script>
 
 <template>
@@ -16,5 +17,6 @@ import HdEditorDropCursor from './hdEditorDropCursor.vue'
     <HdEditorCodeLangSelect />
     <HdEditorSideTool />
     <HdEditorDropCursor />
+    <HdEditorSearchAndReplace />
   </div>
 </template>

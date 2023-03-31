@@ -17,7 +17,7 @@ useTitle(t('pages.playground.title'))
 provide(EditorProvideKey, editorCore)
 onMounted(() => {
   const container = editorRef.value!
-  editorCore.value = useHeteroEditor({
+  editorCore.value = createHeteroEditor({
     doc: props.mockData,
     container,
     isReadOnly: false,
@@ -32,7 +32,7 @@ onMounted(() => {
     .querySelector('.ProseMirror')
     ?.setAttribute('spellcheck', 'false')
   editorEventBus.emit('editorMounted', {
-    core: editorCore.value,
+    core: editorCore.value!,
     editorDOM: editorRef.value!,
   })
   startReflectActiveState(editorCore.value)

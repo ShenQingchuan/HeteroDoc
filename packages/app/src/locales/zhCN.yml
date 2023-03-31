@@ -7,6 +7,12 @@ common-header:
     theme-mode-text: 模式
 editor:
   placeholder: 输入文字或 '/' 选择...
+  search-and-replace:
+    search-placeholder: 查找内容
+    replace-placeholder: 替换内容
+    replace-button: 替换
+    replace-all-button: 全部替换
+    search-button: 查找
   menu:
     code-block-lang-text-placeholder: 纯文本
     code-block-lang-search-placeholder: 搜索语言名称 ...
