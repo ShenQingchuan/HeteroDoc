@@ -5,7 +5,7 @@ import Unocss from 'unocss/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
-import { VitePluginFonts } from 'vite-plugin-fonts'
+import Fonts from 'unplugin-fonts/vite'
 import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
@@ -43,10 +43,13 @@ export default defineConfig({
       dts: 'src/types/components.d.ts',
       resolvers: [NaiveUiResolver()],
     }),
-    VitePluginFonts({
+    Fonts({
       google: {
         families: ['JetBrains Mono'],
       },
     }),
   ],
+  optimizeDeps: {
+    include: ['@vueuse/components'],
+  },
 })
