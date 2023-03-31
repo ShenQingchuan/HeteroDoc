@@ -1,5 +1,10 @@
 lockfileVersion: '6.0'
 
+patchedDependencies:
+  highlight.js@11.7.0:
+    hash: 73olavplfevh3yeuqdobb3ak7i
+    path: patches/highlight.js@11.7.0.patch
+
 importers:
 
   .:
@@ -63,7 +68,7 @@ importers:
         version: 9.13.0(vue@3.2.47)
       highlight.js:
         specifier: ^11.7.0
-        version: 11.7.0
+        version: 11.7.0(patch_hash=73olavplfevh3yeuqdobb3ak7i)
       naive-ui:
         specifier: ^2.34.3
         version: 2.34.3(vue@3.2.47)
@@ -139,7 +144,7 @@ importers:
         version: link:../shared
       highlight.js:
         specifier: ^11.7.0
-        version: 11.7.0
+        version: 11.7.0(patch_hash=73olavplfevh3yeuqdobb3ak7i)
       prosemirror-commands:
         specifier: ^1.5.1
         version: 1.5.1
@@ -4079,10 +4084,11 @@ packages:
     hasBin: true
     dev: true
 
-  /highlight.js@11.7.0:
+  /highlight.js@11.7.0(patch_hash=73olavplfevh3yeuqdobb3ak7i):
     resolution: {integrity: sha512-1rRqesRFhMO/PRF+G86evnyJkCgaZFOI+Z6kdj15TA18funfoqJXvgPCLSf0SWq3SRfg1j3HlDs8o4s3EGq1oQ==}
     engines: {node: '>=12.0.0'}
     dev: false
+    patched: true
 
   /hosted-git-info@2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
@@ -5140,7 +5146,7 @@ packages:
       date-fns: 2.29.3
       date-fns-tz: 1.3.8(date-fns@2.29.3)
       evtd: 0.2.4
-      highlight.js: 11.7.0
+      highlight.js: 11.7.0(patch_hash=73olavplfevh3yeuqdobb3ak7i)
       lodash: 4.17.21
       lodash-es: 4.17.21
       seemly: 0.3.6
@@ -5624,7 +5630,7 @@ packages:
       prosemirror-state: ^1.4.1
       prosemirror-view: ^1.26.5
     dependencies:
-      highlight.js: 11.7.0
+      highlight.js: 11.7.0(patch_hash=73olavplfevh3yeuqdobb3ak7i)
       prosemirror-model: 1.19.0
       prosemirror-state: 1.4.2
       prosemirror-view: 1.30.2
