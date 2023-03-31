@@ -1,4 +1,4 @@
-import { merge, omit } from 'lodash'
+import { omit } from '@hetero/shared'
 import type { AttributeSpec, Node } from 'prosemirror-model'
 import { extendsBlockAttrs, getBlockAttrsFromElement } from './blockSchema'
 
@@ -10,7 +10,10 @@ export function extendsTextBlockAttrs(
     textIndent: { default: 0 },
     ...extendsBlockAttrs(others, excludes),
   }
-  let textBlockAttrs = merge(textBlockAttrsBase, others)
+  let textBlockAttrs = {
+    ...textBlockAttrsBase,
+    ...others,
+  }
   if (excludes) {
     textBlockAttrs = omit(textBlockAttrs, ...excludes)
   }

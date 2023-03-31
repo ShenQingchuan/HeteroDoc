@@ -9,7 +9,6 @@ import type {
 import { keymap } from 'prosemirror-keymap'
 import { TypeEvent } from '@hetero/shared'
 import { history, redo, undo } from 'prosemirror-history'
-import { merge } from 'lodash'
 import { getLogger } from '../utils/logger'
 import { ExtensionType } from '../types'
 import type { EditorLogger } from '../utils/logger'
@@ -116,7 +115,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
           tr.setNodeMarkup(
             pos,
             undefined,
-            merge(node.attrs, { theme }),
+            { ...node.attrs, theme },
           )
         })
         posCursor += node.nodeSize
@@ -188,7 +187,9 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     let editorMountContainer: HTMLElement
     if (typeof container === 'string') {
       const queryBySelector = document.querySelector<HTMLElement>(container)
-      if (queryBySelector) { editorMountContainer = queryBySelector }
+      if (queryBySelector) {
+        editorMountContainer = queryBySelector
+      }
       else {
         const errMsg = 'editor initialize failed: container not found'
         this.logger.error(errMsg)

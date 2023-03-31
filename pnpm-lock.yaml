@@ -52,9 +52,6 @@ importers:
       '@intlify/unplugin-vue-i18n':
         specifier: ^0.10.0
         version: 0.10.0(vue-i18n@9.2.2)
-      '@types/lodash':
-        specifier: ^4.14.192
-        version: 4.14.192
       '@vueuse/components':
         specifier: ^9.13.0
         version: 9.13.0(vue@3.2.47)
@@ -64,9 +61,6 @@ importers:
       highlight.js:
         specifier: ^11.7.0
         version: 11.7.0
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       naive-ui:
         specifier: ^2.34.3
         version: 2.34.3(vue@3.2.47)
@@ -143,9 +137,6 @@ importers:
       highlight.js:
         specifier: ^11.7.0
         version: 11.7.0
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       prosemirror-commands:
         specifier: ^1.5.1
         version: 1.5.1
@@ -189,9 +180,6 @@ importers:
         specifier: ^13.5.51
         version: 13.5.51
     devDependencies:
-      '@types/lodash':
-        specifier: ^4.14.192
-        version: 4.14.192
       concurrently:
         specifier: ^8.0.1
         version: 8.0.1
@@ -1477,6 +1465,7 @@ packages:
 
   /@types/lodash@4.14.192:
     resolution: {integrity: sha512-km+Vyn3BYm5ytMO13k9KTp27O75rbQ0NFw+U//g+PX7VZyjCioXaRFisqSIJRECljcTv73G3i6BpglNGHgUQ5A==}
+    dev: false
 
   /@types/mdast@3.0.11:
     resolution: {integrity: sha512-Y/uImid8aAwrEA24/1tcRZwpxX3pIFTSilcNDKSPn+Y2iDywSEachzRuvgAYYLR3wpGXAsMbv5lvKLDZLeYPAw==}

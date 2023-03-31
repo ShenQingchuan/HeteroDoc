@@ -1,13 +1,12 @@
 import { fontBgColorSet, fontColorSet } from '@hetero/editor'
 import type { EditorCore, FontFancyAttrs } from '@hetero/editor'
-import { uniqueId } from 'lodash'
 import type { CSSProperties } from 'vue'
 import { editorEventBus } from '../eventBus'
 
-export const useFontFancyPicker = () => {
+export function useFontFancyPicker() {
   const editorStore = useEditorStore()
   const envStore = useEnvStore()
-  const rerenderKey = ref(uniqueId())
+  const rerenderKey = ref(0)
   const fontFancyBtnRef = ref<HTMLElement>()
   const fontFancyBtnBounding = useElementBounding(fontFancyBtnRef)
   const getStyleFromFancyAttrs = (fontFancyAttrs: FontFancyAttrs | null | undefined) => {
@@ -46,7 +45,7 @@ export const useFontFancyPicker = () => {
     prevIsShowEditorMenu,
   ) => {
     if (isShowEditorMenu && !prevIsShowEditorMenu) {
-      rerenderKey.value = uniqueId()
+      rerenderKey.value += 1
     }
   })
   editorEventBus.on('editorMounted', ({ core }) => {

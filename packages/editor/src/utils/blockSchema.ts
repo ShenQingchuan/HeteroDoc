@@ -1,4 +1,4 @@
-import { merge, omit } from 'lodash'
+import { omit } from '@hetero/shared'
 import type { AttributeSpec, Node } from 'prosemirror-model'
 import { getUUID } from './getUUID'
 
@@ -8,7 +8,10 @@ export function extendsBlockAttrs(
   const blockAttrsBase: Record<string, AttributeSpec> = {
     blockId: { default: null },
   }
-  let blockAttrs = merge(blockAttrsBase, others)
+  let blockAttrs = {
+    ...blockAttrsBase,
+    ...others,
+  }
   if (excludes) {
     blockAttrs = omit(blockAttrs, ...excludes)
   }

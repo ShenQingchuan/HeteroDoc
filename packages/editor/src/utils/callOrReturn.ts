@@ -1,4 +1,3 @@
-import { isFunction } from 'lodash'
 import type { MaybeReturnType } from '../types'
 
 /**
@@ -9,7 +8,7 @@ import type { MaybeReturnType } from '../types'
  * @param props Optional props to pass to function.
  */
 export function callOrReturn<T>(value: T, context: any = undefined, ...props: any[]): MaybeReturnType<T> {
-  if (isFunction(value)) {
+  if (typeof value === 'function') {
     if (context)
       return value.bind(context)(...props)
 

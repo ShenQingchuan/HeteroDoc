@@ -1,1 +1,2 @@
-export { TypeEvent } from './typeEvent'
+export * from './typeEvent'
+export * from './omit'
