@@ -12,16 +12,7 @@
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
     "skipLibCheck": true,
-    "composite": true,
     "customConditions": ["dev"]
   },
-  "include": [
-    "vitest.config.ts",
-    "unocss.config.ts",
-    "cypress.d.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "cypress/test/playground.cy.ts"
-  ]
+  "include": ["src", "cypress.d.ts", "cypress/test/playground.cy.ts"]
 }

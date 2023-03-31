@@ -8,12 +8,12 @@ export function createI18nPlugin() {
     legacy: false,
     locale: localeCache.value,
     messages: Object.fromEntries(
-      Object.entries(import.meta.globEager('./locales/*.y(a)?ml')).map(
-        ([key, value]) => {
-          const yaml = key.endsWith('.yaml')
-          return [key.slice(10, yaml ? -5 : -4), (value as any).default]
-        }
-      )
+      Object.entries(
+        import.meta.glob('./locales/*.y(a)?ml', { eager: true })
+      ).map(([key, value]) => {
+        const yaml = key.endsWith('.yaml')
+        return [key.slice(10, yaml ? -5 : -4), (value as any).default]
+      })
     ),
   })
 }

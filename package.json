@@ -37,7 +37,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "highlight.js@11.7.0": "patches/highlight.js@11.7.0.patch"
+      "highlight.js@11.7.0": "patches/highlight.js@11.7.0.patch",
+      "vue-i18n@9.2.2": "patches/vue-i18n@9.2.2.patch"
     }
   },
   "lint-staged": {
