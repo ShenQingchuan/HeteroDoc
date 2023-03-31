@@ -1,4 +1,3 @@
-import type { LanguageFn } from 'highlight.js'
 import hljs from 'highlight.js'
 import apache from 'highlight.js/lib/languages/apache'
 import arduino from 'highlight.js/lib/languages/arduino'
@@ -48,6 +47,7 @@ import vim from 'highlight.js/lib/languages/vim'
 import wasm from 'highlight.js/lib/languages/wasm'
 import yaml from 'highlight.js/lib/languages/yaml'
 import plaintext from 'highlight.js/lib/languages/plaintext'
+import type { LanguageFn } from 'highlight.js'
 
 export const langsMap: Record<string, LanguageFn> = {
   apache,
@@ -76,8 +76,8 @@ export const langsMap: Record<string, LanguageFn> = {
   json,
   kotlin,
   lua,
-  'javascript': js,
-  'typescript': ts,
+  javascript: js,
+  typescript: ts,
   markdown,
   nginx,
   objectivec,
@@ -96,7 +96,7 @@ export const langsMap: Record<string, LanguageFn> = {
   thrift,
   vbscript,
   vim,
-  'WASM': wasm,
+  WASM: wasm,
   yaml,
 }
 

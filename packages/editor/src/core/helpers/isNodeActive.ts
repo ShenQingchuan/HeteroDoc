@@ -1,18 +1,16 @@
+import { objectIncludes } from '../../utils/objectIncludes'
+import { getNodeType } from './getNodeType'
 import type { NodeType } from 'prosemirror-model'
 import type { EditorState } from 'prosemirror-state'
 import type { NodeRange } from '../../types'
-import { objectIncludes } from '../../utils/objectIncludes'
-import { getNodeType } from './getNodeType'
 
 export function isNodeActive(
   state: EditorState,
   typeOrName: NodeType | string | null,
-  attributes: Record<string, any> = {},
+  attributes: Record<string, any> = {}
 ): boolean {
   const { from, to, empty } = state.selection
-  const type = typeOrName
-    ? getNodeType(typeOrName, state.schema)
-    : null
+  const type = typeOrName ? getNodeType(typeOrName, state.schema) : null
 
   const nodeRanges: NodeRange[] = []
 
@@ -40,14 +38,18 @@ export function isNodeActive(
 
       return type.name === nodeRange.node.type.name
     })
-    .filter(nodeRange => objectIncludes(nodeRange.node.attrs, attributes, { strict: false }))
+    .filter((nodeRange) =>
+      objectIncludes(nodeRange.node.attrs, attributes, { strict: false })
+    )
 
   if (empty) {
-    return !!matchedNodeRanges.length
+    return matchedNodeRanges.length > 0
   }
 
-  const range = matchedNodeRanges
-    .reduce((sum, nodeRange) => sum + nodeRange.to - nodeRange.from, 0)
+  const range = matchedNodeRanges.reduce(
+    (sum, nodeRange) => sum + nodeRange.to - nodeRange.from,
+    0
+  )
 
   return range >= selectionRange
 }

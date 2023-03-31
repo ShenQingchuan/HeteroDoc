@@ -15,10 +15,7 @@ const onHyperlinkBtnClick = () => {
   const left = rects.value[0]!.left
   const top = rects.value[0]!.top
   editorStore
-    .setFloatMenuPosition(
-      { left, top },
-      EditorFloatMenuAction.BySelection,
-    )
+    .setFloatMenuPosition({ left, top }, EditorFloatMenuAction.BySelection)
     .setLinkEditText(text.value)
     .setShowLinkEdit(true)
     .setShowEditorMenu(false)
@@ -26,9 +23,7 @@ const onHyperlinkBtnClick = () => {
 const openEditorMenu = useDebounceFn((pos: { left: number; top: number }) => {
   editorStore.setFloatMenuPosition(pos, EditorFloatMenuAction.BySelection)
   nextTick(() => {
-    editorStore
-      .setShowLinkEdit(false)
-      .setShowEditorMenu(true)
+    editorStore.setShowLinkEdit(false).setShowEditorMenu(true)
   })
 }, FloatMenuShowTimingGap)
 
@@ -41,8 +36,7 @@ editorEventBus.on('editorMounted', ({ core }) => {
     const nothingSelected = selection.value?.isCollapsed
     if (nothingSelected) {
       editorStore.isShowEditorMenu && editorStore.setShowEditorMenu(false)
-    }
-    else if (editorCore?.value.activeManager.isMenuAvailable()) {
+    } else if (editorCore?.value.activeManager.isMenuAvailable()) {
       openEditorMenu({
         left: rects.value[0]!.left,
         top: rects.value[0]!.top,
@@ -61,7 +55,9 @@ useEventListener(document, 'click', (event) => {
     return
   }
   const isClickInsideEditor = editorDOM.contains(event.target as Node)
-  const isClickInsideFloatMenu = floatMenuRef.value?.contains(event.target as Node)
+  const isClickInsideFloatMenu = floatMenuRef.value?.contains(
+    event.target as Node
+  )
   if (!isClickInsideEditor && !isClickInsideFloatMenu) {
     editorStore.setShowEditorMenu(false)
   }
@@ -70,9 +66,7 @@ useEventListener(document, 'click', (event) => {
 
 <template>
   <teleport to="body">
-    <transition
-      name="float-slide-fade"
-    >
+    <transition name="float-slide-fade">
       <div
         v-show="editorStore.isShowEditorMenu"
         ref="floatMenuRef"
@@ -83,8 +77,13 @@ useEventListener(document, 'click', (event) => {
           top: `${editorStore.popoverTop}px`,
           zIndex: FloatMenuZIndex,
         }"
-        flex-items-center justify-center py1 px2
-        border-base bg-base border-round
+        flex-items-center
+        justify-center
+        py1
+        px2
+        border-base
+        bg-base
+        border-round
         editor-float-card
       >
         <HdEditorHeadingsSubMenu />
@@ -94,7 +93,10 @@ useEventListener(document, 'click', (event) => {
         <HdEditorMenuTextAlign />
         <n-divider vertical />
         <n-button
-          class="hetero-editor__float-menu-item hyperlink" quaternary px1 mx1
+          class="hetero-editor__float-menu-item hyperlink"
+          quaternary
+          px1
+          mx1
           :disabled="!editorStore.menuAvailableState.hyperlink"
           @click="onHyperlinkBtnClick"
         >

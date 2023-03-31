@@ -1,17 +1,16 @@
-import type { DOMOutputSpec } from 'prosemirror-model'
 import { markInputRule, markPasteRule } from '../../core/rule'
+import { ExtensionType } from '../../types'
+import { EXTENSION_NAMES } from '../../constants'
+import type { DOMOutputSpec } from 'prosemirror-model'
 import type { PatternRule } from '../../core/rule'
 import type { EditorCore } from '../../core'
 import type { AddMarksSchema, IEditorMark, NoArgsCommand } from '../../types'
 
-import { ExtensionType } from '../../types'
-import { EXTENSION_NAMES } from '../../constants'
-
 const boldStyleRegExp = /^(bold(er)?|[5-9]\d{2,})$/
-const doubleStarInputRegex = /(?:^|\s)((?:\*\*)(?<text>(?:[^*]+))(?:\*\*))$/
-const doubleStarPasteRegex = /(?:^|\s)((?:\*\*)(?<text>(?:[^*]+))(?:\*\*))/g
-const doubleUnderscoreInputRegex = /(?:^|\s)((?:__)(?<text>(?:[^_]+))(?:__))$/
-const doubleUnderscorePasteRegex = /(?:^|\s)((?:__)(?<text>(?:[^_]+))(?:__))/g
+const doubleStarInputRegex = /(?:^|\s)(\*{2}(?<text>[^*]+)\*{2})$/
+const doubleStarPasteRegex = /(?:^|\s)(\*{2}(?<text>[^*]+)\*{2})/g
+const doubleUnderscoreInputRegex = /(?:^|\s)(_{2}(?<text>[^_]+)_{2})$/
+const doubleUnderscorePasteRegex = /(?:^|\s)(_{2}(?<text>[^_]+)_{2})/g
 const boldDOM: DOMOutputSpec = ['strong', 0]
 
 declare global {
@@ -35,8 +34,16 @@ export class BoldExtension implements IEditorMark {
         [EXTENSION_NAMES.BOLD]: {
           parseDOM: [
             { tag: 'strong' },
-            { tag: 'b', getAttrs: node => (node as HTMLElement).style.fontWeight !== 'normal' && null },
-            { style: 'font-weight', getAttrs: value => boldStyleRegExp.test(value as string) && null },
+            {
+              tag: 'b',
+              getAttrs: (node) =>
+                (node as HTMLElement).style.fontWeight !== 'normal' && null,
+            },
+            {
+              style: 'font-weight',
+              getAttrs: (value) =>
+                boldStyleRegExp.test(value as string) && null,
+            },
           ],
           toDOM: () => boldDOM,
         },
@@ -62,15 +69,21 @@ export class BoldExtension implements IEditorMark {
 
   commands: () => Record<string, NoArgsCommand> = () => {
     return {
-      setBold: () => ({ commands }) => {
-        return commands.setMark({ typeOrName: this.name })
-      },
-      unsetBold: () => ({ commands }) => {
-        return commands.unsetMark({ typeOrName: this.name })
-      },
-      toggleBold: () => ({ commands }) => {
-        return commands.toggleMark({ typeOrName: this.name })
-      },
+      setBold:
+        () =>
+        ({ commands }) => {
+          return commands.setMark({ typeOrName: this.name })
+        },
+      unsetBold:
+        () =>
+        ({ commands }) => {
+          return commands.unsetMark({ typeOrName: this.name })
+        },
+      toggleBold:
+        () =>
+        ({ commands }) => {
+          return commands.toggleMark({ typeOrName: this.name })
+        },
     }
   }
 

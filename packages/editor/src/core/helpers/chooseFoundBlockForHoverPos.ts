@@ -1,7 +1,7 @@
+import { findParentNodeClosestToPos } from 'prosemirror-utils'
 import type { Node } from 'prosemirror-model'
 import type { Transaction } from 'prosemirror-state'
 import type { ContentNodeWithPos } from 'prosemirror-utils'
-import { findParentNodeClosestToPos } from 'prosemirror-utils'
 
 // Let's create a new concept called "BlockTree-able" node
 // which means it can contain other blocks.
@@ -13,13 +13,22 @@ export const isBlockTreeAble = (node: Node) => {
   return node.type.spec.content?.includes('block+') ?? false
 }
 
-export const chooseFoundBlockForHoverPos = (tr: Transaction, hoverPos: number, returnJudge: (
-  foundBlockTreeAble: ContentNodeWithPos | undefined,
-  foundTextBlock: ContentNodeWithPos | undefined,
-) => ContentNodeWithPos | undefined) => {
+export const chooseFoundBlockForHoverPos = (
+  tr: Transaction,
+  hoverPos: number,
+  returnJudge: (
+    foundBlockTreeAble: ContentNodeWithPos | undefined,
+    foundTextBlock: ContentNodeWithPos | undefined
+  ) => ContentNodeWithPos | undefined
+) => {
   const resolvedPos = tr.doc.resolve(hoverPos)
-  const foundBlockTreeAble = findParentNodeClosestToPos(resolvedPos, node => isBlockTreeAble(node))
-  const foundTextBlock = findParentNodeClosestToPos(resolvedPos, node => node.type.isTextblock)
+  const foundBlockTreeAble = findParentNodeClosestToPos(resolvedPos, (node) =>
+    isBlockTreeAble(node)
+  )
+  const foundTextBlock = findParentNodeClosestToPos(
+    resolvedPos,
+    (node) => node.type.isTextblock
+  )
 
   return returnJudge(foundBlockTreeAble, foundTextBlock)
 }

@@ -1,9 +1,10 @@
 import { omit } from '@hetero/shared'
-import type { AttributeSpec, Node } from 'prosemirror-model'
 import { extendsBlockAttrs, getBlockAttrsFromElement } from './blockSchema'
+import type { AttributeSpec, Node } from 'prosemirror-model'
 
 export function extendsTextBlockAttrs(
-  others: Record<string, AttributeSpec> = {}, excludes?: string[],
+  others: Record<string, AttributeSpec> = {},
+  excludes?: string[]
 ) {
   const textBlockAttrsBase: Record<string, AttributeSpec> = {
     textAlign: { default: 'left' },
@@ -30,7 +31,7 @@ export function getTextBlockAttrsFromElement(el: HTMLElement) {
 
 export function stylesOfTextBlock(
   node: Node,
-  otherStyle?: string | ((node: Node) => string),
+  otherStyle?: string | ((node: Node) => string)
 ) {
   let style = ''
   if (node.attrs.textAlign) {
@@ -42,8 +43,7 @@ export function stylesOfTextBlock(
 
   if (typeof otherStyle === 'function') {
     style = style + otherStyle(node)
-  }
-  else {
+  } else {
     style += otherStyle ?? ''
   }
   return style

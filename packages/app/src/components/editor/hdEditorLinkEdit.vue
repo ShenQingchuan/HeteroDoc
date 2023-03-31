@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import type { HyperlinkAttrs } from '@hetero/editor'
 import { EditorFloatMenuAction, FloatMenuZIndex } from '../../constants/editor'
 import { URLRegExp } from '../../constants/regExp'
+import type { HyperlinkAttrs } from '@hetero/editor'
 
 const { t } = useI18n()
 const editorCore = useEditorCoreInject()
@@ -30,11 +30,15 @@ watch(
       return
     }
     editorStore.setPrevLinkAttrs()
-    if (editorStore.floatMenuByAction === EditorFloatMenuAction.BySelection && editorCore?.value) {
-      const { url = '' } = editorCore.value.helpers.getMarkAttrs<HyperlinkAttrs>('hyperlink') ?? {}
+    if (
+      editorStore.floatMenuByAction === EditorFloatMenuAction.BySelection &&
+      editorCore?.value
+    ) {
+      const { url = '' } =
+        editorCore.value.helpers.getMarkAttrs<HyperlinkAttrs>('hyperlink') ?? {}
       editorStore.setLinkEditURL(url)
     }
-  },
+  }
 )
 </script>
 
@@ -51,23 +55,59 @@ watch(
           top: `${editorStore.popoverTop}px`,
           zIndex: FloatMenuZIndex,
         }"
-        flex-col items-start p-y-2 p-x-2 border-base bg-base border-round
+        flex-col
+        items-start
+        p-y-2
+        p-x-2
+        border-base
+        bg-base
+        border-round
       >
-        <div class="hetero-editor__link-edit edit-link" flex-items-center p-x-1 min-w-320px mb2>
-          <span whitespace-nowrap txt-color-base mr3>{{ t('editor.popover.edit-link-url-label') }}</span>
+        <div
+          class="hetero-editor__link-edit edit-link"
+          flex-items-center
+          p-x-1
+          min-w-320px
+          mb2
+        >
+          <span whitespace-nowrap txt-color-base mr3>{{
+            t('editor.popover.edit-link-url-label')
+          }}</span>
           <n-input
             v-model:value="editorStore.linkEditURL"
-            autofocus type="text"
+            autofocus
+            type="text"
             :status="isEditLinkValid ? 'success' : undefined"
-            :placeholder="t('editor.popover.edit-link-url-placeholder')" mr2
+            :placeholder="t('editor.popover.edit-link-url-placeholder')"
+            mr2
           />
-          <i i-ri:close-circle-line text-6 cursor-pointer txt-color-base hover:text-emerald-600 @click="editorStore.setShowLinkEdit(false)" />
+          <i
+            i-ri:close-circle-line
+            text-6
+            cursor-pointer
+            txt-color-base
+            hover:text-emerald-600
+            @click="editorStore.setShowLinkEdit(false)"
+          />
         </div>
-        <div class="hetero-editor__link-edit edit-text" flex-items-center p-x-1 min-w-320px>
-          <span whitespace-nowrap txt-color-base mr3>{{ t('editor.popover.edit-link-text-label') }}</span>
-          <n-input v-model:value="editorStore.linkEditText" type="text" :placeholder="t('editor.popover.edit-link-text-placeholder')" mr3 />
+        <div
+          class="hetero-editor__link-edit edit-text"
+          flex-items-center
+          p-x-1
+          min-w-320px
+        >
+          <span whitespace-nowrap txt-color-base mr3>{{
+            t('editor.popover.edit-link-text-label')
+          }}</span>
+          <n-input
+            v-model:value="editorStore.linkEditText"
+            type="text"
+            :placeholder="t('editor.popover.edit-link-text-placeholder')"
+            mr3
+          />
           <n-button
-            mr3 class="hetero-editor__link-edit confirm"
+            mr3
+            class="hetero-editor__link-edit confirm"
             :disabled="!isEditLinkValid"
             @click="confirmHyperlinkMark"
           >
@@ -75,11 +115,19 @@ watch(
           </n-button>
           <n-button
             v-show="isEditLinkValid"
-            quaternary class="hetero-editor__link-edit open-link"
+            quaternary
+            class="hetero-editor__link-edit open-link"
             @click="openLink"
           >
             <template #icon>
-              <i i-carbon:link text-6 cursor-pointer txt-color-base hover:text-emerald-600 @click="editorStore.setShowLinkEdit(false)" />
+              <i
+                i-carbon:link
+                text-6
+                cursor-pointer
+                txt-color-base
+                hover:text-emerald-600
+                @click="editorStore.setShowLinkEdit(false)"
+              />
             </template>
           </n-button>
         </div>

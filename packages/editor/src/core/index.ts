@@ -1,18 +1,11 @@
 import { EditorState } from 'prosemirror-state'
 import { Node, Schema } from 'prosemirror-model'
 import { EditorView } from 'prosemirror-view'
-import type {
-  EditorStateConfig,
-  Plugin as ProseMirrorPlugin,
-  Transaction,
-} from 'prosemirror-state'
 import { keymap } from 'prosemirror-keymap'
 import { TypeEvent } from '@hetero/shared'
 import { history, redo, undo } from 'prosemirror-history'
 import { getLogger } from '../utils/logger'
 import { ExtensionType } from '../types'
-import type { EditorLogger } from '../utils/logger'
-import type { EditorThemeMode, IEditorExtension, IEditorMark } from '../types'
 import { createBuiltinFuncExts } from '../extensions/funcs/builtinFuncExts'
 import { mergeSchemaSpecs } from './schema'
 import { inputRules, pasteRules } from './rule'
@@ -20,6 +13,13 @@ import { CommandManager } from './commandManager'
 import { HelpersManager } from './helpers/helpersManager'
 import { ActiveManager } from './activeManager'
 import { getAllBuiltinPlugins } from './plugins'
+import type { EditorThemeMode, IEditorExtension, IEditorMark } from '../types'
+import type { EditorLogger } from '../utils/logger'
+import type {
+  EditorStateConfig,
+  Plugin as ProseMirrorPlugin,
+  Transaction,
+} from 'prosemirror-state'
 import type { PatternRule } from './rule'
 import type { EditorCoreEvent } from './events'
 
@@ -48,20 +48,20 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     isDragging: false,
   }
 
-  constructor(options: EditorOptions, coreConfig: {
-    i18nTr: (key: string) => string
-    extensions: (core: EditorCore) => IEditorExtension[]
-    themeMode: EditorThemeMode
-  }) {
+  constructor(
+    options: EditorOptions,
+    coreConfig: {
+      i18nTr: (key: string) => string
+      extensions: (core: EditorCore) => IEditorExtension[]
+      themeMode: EditorThemeMode
+    }
+  ) {
     super()
     const { extensions, i18nTr, themeMode } = coreConfig
     this.options = options
     this.i18nTr = i18nTr
     this.themeMode = themeMode
-    this.extensions = [
-      ...createBuiltinFuncExts(this),
-      ...extensions(this),
-    ]
+    this.extensions = [...createBuiltinFuncExts(this), ...extensions(this)]
 
     // Initialize schema and commands set needs extensions to be ready
     this.schema = this.initSchema()
@@ -76,26 +76,29 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   }
 
   private dispatchTransaction = (tr: Transaction) => {
-    const emitIfNeedEffect = this.isNoEffectDispatch ? () => {} : this.emit.bind(this)
+    const emitIfNeedEffect = this.isNoEffectDispatch
+      ? () => undefined
+      : this.emit.bind(this)
     try {
       const { view } = this
       emitIfNeedEffect('beforeDispatchTransaction', { tr })
-      this.extensions.forEach(ext => ext.beforeTransaction?.())
+      this.extensions.forEach((ext) => ext.beforeTransaction?.())
       const prevState = view.state
       const newState = view.state.apply(tr)
       const selectionHasChanged = !view.state.selection.eq(newState.selection)
 
       view.updateState(newState)
-      this.extensions.forEach(ext => ext.afterApplyTransaction?.())
+      this.extensions.forEach((ext) => ext.afterApplyTransaction?.())
       emitIfNeedEffect('dispatchedTransaction', null)
 
       if (selectionHasChanged) {
         const onSelectionChangeParams = { tr, prevState }
         this.emit('selectionChange', onSelectionChangeParams)
-        this.extensions.forEach(ext => ext.onSelectionChange?.(onSelectionChangeParams))
+        this.extensions.forEach((ext) =>
+          ext.onSelectionChange?.(onSelectionChangeParams)
+        )
       }
-    }
-    catch (err) {
+    } catch (err) {
       this.logger.error(err)
     }
   }
@@ -112,11 +115,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
           }
           // if node has mark 'fontFancy', need to recreate a new mark, but maintain its own attrs,
           // just for force re-render the marked node
-          tr.setNodeMarkup(
-            pos,
-            undefined,
-            { ...node.attrs, theme },
-          )
+          tr.setNodeMarkup(pos, undefined, { ...node.attrs, theme })
         })
         posCursor += node.nodeSize
       })
@@ -127,33 +126,36 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
 
   private resolveAllPlugins = () => {
     // Resolve editor extensions' specs
-    const allInputRules = this.extensions.reduce((prev, curr) => [...prev, ...(curr.inputRules?.() ?? [])], [] as PatternRule[])
-    const allPasteRules = this.extensions.reduce((prev, curr) => [...prev, ...(curr.pasteRules?.() ?? [])], [] as PatternRule[])
+    const allInputRules = this.extensions.reduce(
+      (prev, curr) => [...prev, ...(curr.inputRules?.() ?? [])],
+      [] as PatternRule[]
+    )
+    const allPasteRules = this.extensions.reduce(
+      (prev, curr) => [...prev, ...(curr.pasteRules?.() ?? [])],
+      [] as PatternRule[]
+    )
     const allKeymapPlugins = this.extensions.reduce((prev, curr) => {
       const bindings = Object.fromEntries(
-        Object
-          .entries(curr.keymaps?.() || {})
-          .map(([shortcut, keybindingHandler]) => {
+        Object.entries(curr.keymaps?.() || {}).map(
+          ([shortcut, keybindingHandler]) => {
             return [
               shortcut,
               (
                 state: EditorState,
                 dispatch?: (tr: Transaction) => void,
-                view?: EditorView,
+                view?: EditorView
               ) => keybindingHandler(this, state, dispatch, view),
             ]
-          }),
+          }
+        )
       )
 
       const keyMapPlugin = keymap(bindings)
-      return [
-        ...prev,
-        keyMapPlugin,
-      ]
+      return [...prev, keyMapPlugin]
     }, [] as ProseMirrorPlugin[])
     const proseMirrorPluginsByExtensions = this.extensions.reduce(
       (prev, curr) => [...prev, ...(curr.getProseMirrorPlugin?.() ?? [])],
-      [] as ProseMirrorPlugin[],
+      [] as ProseMirrorPlugin[]
     )
     const offlinePlugins = [
       history(),
@@ -171,10 +173,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       ...proseMirrorPluginsByExtensions,
     ]
     if (this.options.isOffline) {
-      allResolved = [
-        ...allResolved,
-        ...offlinePlugins,
-      ]
+      allResolved = [...allResolved, ...offlinePlugins]
     }
 
     return allResolved
@@ -189,14 +188,12 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       const queryBySelector = document.querySelector<HTMLElement>(container)
       if (queryBySelector) {
         editorMountContainer = queryBySelector
-      }
-      else {
+      } else {
         const errMsg = 'editor initialize failed: container not found'
         this.logger.error(errMsg)
         throw new Error(errMsg)
       }
-    }
-    else {
+    } else {
       editorMountContainer = container
     }
 
@@ -228,7 +225,9 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   }
 
   private initSchema = () => {
-    const allSchemaSpecs = this.extensions.map(ext => ext.schemaSpec?.() ?? {})
+    const allSchemaSpecs = this.extensions.map(
+      (ext) => ext.schemaSpec?.() ?? {}
+    )
     return new Schema(mergeSchemaSpecs(allSchemaSpecs))
   }
 
@@ -239,7 +238,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   }
 
   public getMarkExtensions = (): IEditorMark[] => {
-    return this.extensions.filter(ext => ext.type === ExtensionType.mark)
+    return this.extensions.filter((ext) => ext.type === ExtensionType.mark)
   }
 
   public getSplittedableMarks = (): IEditorMark[] => {

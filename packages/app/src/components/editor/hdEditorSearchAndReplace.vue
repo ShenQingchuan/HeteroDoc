@@ -43,8 +43,7 @@ editorEventBus.on('editorMounted', ({ editorDOM, core }) => {
     if (state === 'on') {
       await nextTick()
       searchInputRef.value?.focus()
-    }
-    else {
+    } else {
       core.view.focus()
     }
   })
@@ -57,7 +56,10 @@ editorEventBus.on('editorMounted', ({ editorDOM, core }) => {
       <div
         v-show="showSearchAndReplace"
         class="hetero-editor__search-and-replace"
-        position-absolute flex-col w-fit max-w-600px
+        position-absolute
+        flex-col
+        w-fit
+        max-w-600px
         translate-x="-100%"
         :style="{
           left: `${searchViewClientX}px`,
@@ -95,8 +97,12 @@ editorEventBus.on('editorMounted', ({ editorDOM, core }) => {
             type="text"
             :placeholder="t('editor.search-and-replace.replace-placeholder')"
           />
-          <n-button>{{ t('editor.search-and-replace.replace-button') }}</n-button>
-          <n-button>{{ t('editor.search-and-replace.replace-all-button') }}</n-button>
+          <n-button>{{
+            t('editor.search-and-replace.replace-button')
+          }}</n-button>
+          <n-button>{{
+            t('editor.search-and-replace.replace-all-button')
+          }}</n-button>
         </div>
       </div>
     </transition>

@@ -1,12 +1,16 @@
 import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
+import { wrappingInputRule } from '../core/rule'
+import { ExtensionType } from '../types'
+import {
+  blockIdDataAttrAtDOM,
+  extendsBlockAttrs,
+  getBlockAttrsFromElement,
+} from '../utils/blockSchema'
 import type { EditorCore } from '../core'
 import type { PatternRule } from '../core/rule'
-import { wrappingInputRule } from '../core/rule'
 import type { AddNodesSchema, IEditorExtension, NoArgsCommand } from '../types'
-import { ExtensionType } from '../types'
-import { blockIdDataAttrAtDOM, extendsBlockAttrs, getBlockAttrsFromElement } from '../utils/blockSchema'
 
-const blockquoteInputRuleRegExp = /^[\>》]\s/
+const blockquoteInputRuleRegExp = /^[>》]\s/
 
 interface BlockquoteCommandsDefs {
   setBlockquote: NoArgsCommand
@@ -48,10 +52,14 @@ export class BlockquoteExtension implements IEditorExtension {
             },
           ],
           toDOM(node) {
-            return ['blockquote', {
-              [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
-              ...blockIdDataAttrAtDOM(node),
-            }, 0]
+            return [
+              'blockquote',
+              {
+                [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+                ...blockIdDataAttrAtDOM(node),
+              },
+              0,
+            ]
           },
         },
       },
@@ -70,9 +78,11 @@ export class BlockquoteExtension implements IEditorExtension {
 
   commands: () => BlockquoteCommandsDefs = () => {
     return {
-      setBlockquote: () => ({ commands }) => {
-        return commands.wrapIn({ typeOrName: this.name })
-      },
+      setBlockquote:
+        () =>
+        ({ commands }) => {
+          return commands.wrapIn({ typeOrName: this.name })
+        },
     }
   }
 }

@@ -11,11 +11,11 @@ export const canDeleteFirstLine = () => {
         const isSelectionEmpty = view.state.selection.empty
 
         if (
-          isBackspaceKeydown
-          && isFirstLineEmpty
-          && isMoreThanOneLine
-          && isSelectionAtDocStart
-          && isSelectionEmpty
+          isBackspaceKeydown &&
+          isFirstLineEmpty &&
+          isMoreThanOneLine &&
+          isSelectionAtDocStart &&
+          isSelectionEmpty
         ) {
           event.preventDefault()
           const tr = view.state.tr.delete(0, view.state.doc.child(0).nodeSize)

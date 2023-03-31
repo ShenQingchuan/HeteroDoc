@@ -10,14 +10,9 @@
     "sourceMap": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "skipLibCheck": true,
     "composite": true
   },
-  "include": [
-    "cypress.config.ts"
-  ]
+  "include": ["cypress.config.ts"]
 }

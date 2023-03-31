@@ -1,5 +1,5 @@
-import type { EditorCore } from '@hetero/editor'
 import { TypeEvent } from '@hetero/shared'
+import type { EditorCore } from '@hetero/editor'
 
 export const editorEventBus = new TypeEvent<{
   editorMounted: {

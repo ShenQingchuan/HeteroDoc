@@ -1,22 +1,32 @@
 type FastpathKey = `h${number}` | 'quote' | 'codeblock' | 'horizontal'
 type FastPathKeyMap = Record<FastpathKey, (...args: any) => void>
 
-const FastpathKeyOptions: FastpathKey[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'quote', 'codeblock', 'horizontal']
+const FastpathKeyOptions: FastpathKey[] = [
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'quote',
+  'codeblock',
+  'horizontal',
+]
 
 export function useFastpathHandler() {
   const editorCore = useEditorCoreInject()
   const editorStore = useEditorStore()
   const activeOption = ref<FastpathKey | '' | undefined>()
 
-  const runInputFastPath = (runActions: (...args: any) => void) => (...args: Parameters<typeof runActions>) => {
-    runActions(...args)
-    editorStore.setShowInputFastpath(false)
-    editorCore?.value.view.focus()
-    editorCore?.value.emit(
-      'deactivateInputFastPath',
-      { isContentChanged: true },
-    )
-  }
+  const runInputFastPath =
+    (runActions: (...args: any) => void) =>
+    (...args: Parameters<typeof runActions>) => {
+      runActions(...args)
+      editorStore.setShowInputFastpath(false)
+      editorCore?.value.view.focus()
+      editorCore?.value.emit('deactivateInputFastPath', {
+        isContentChanged: true,
+      })
+    }
   const onClickHeadingFastpath = runInputFastPath((level: number) => {
     editorCore?.value.commands.toggleHeading({ level })
   })
@@ -60,18 +70,20 @@ export function useFastpathHandler() {
       event.preventDefault()
       event.stopPropagation()
 
-      const activeIndex = activeOption.value ? FastpathKeyOptions.indexOf(activeOption.value) : -1
+      const activeIndex = activeOption.value
+        ? FastpathKeyOptions.indexOf(activeOption.value)
+        : -1
       if (activeIndex === -1) {
         activeOption.value = FastpathKeyOptions[0]
+      } else if (event.key === 'ArrowUp') {
+        activeOption.value =
+          FastpathKeyOptions[activeIndex - 1] ??
+          FastpathKeyOptions[FastpathKeyOptions.length - 1]
+      } else if (event.key === 'ArrowDown') {
+        activeOption.value =
+          FastpathKeyOptions[activeIndex + 1] ?? FastpathKeyOptions[0]
       }
-      else if (event.key === 'ArrowUp') {
-        activeOption.value = FastpathKeyOptions[activeIndex - 1] ?? FastpathKeyOptions[FastpathKeyOptions.length - 1]
-      }
-      else if (event.key === 'ArrowDown') {
-        activeOption.value = FastpathKeyOptions[activeIndex + 1] ?? FastpathKeyOptions[0]
-      }
-    }
-    else if (event.key === 'Enter') {
+    } else if (event.key === 'Enter') {
       event.preventDefault()
       event.stopPropagation()
       onFastpathTrigger()
@@ -84,4 +96,3 @@ export function useFastpathHandler() {
     onFastpathTrigger,
   }
 }
-

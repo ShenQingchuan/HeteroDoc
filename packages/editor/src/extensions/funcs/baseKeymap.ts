@@ -1,7 +1,7 @@
 import { EXTENSION_NAMES } from '../../constants'
+import { ExtensionType } from '../../types'
 import type { EditorCore } from '../../core'
 import type { IEditorExtension } from '../../types'
-import { ExtensionType } from '../../types'
 
 export class BaseKeymap implements IEditorExtension {
   type = ExtensionType.func
@@ -11,38 +11,41 @@ export class BaseKeymap implements IEditorExtension {
   constructor(public core: EditorCore) {}
 
   keymaps = () => {
-    const handleBackspace = () => this.core.commands.first({
-      commands: ({ commands }) => [
-        () => commands.undoInputRule(),
-        () => commands.removeEmptyCodeBlock(),
-        () => commands.supportRemoveFirstLine(),
-        () => commands.deleteSelection(),
-        () => commands.joinBackward(),
-        () => commands.selectNodeBackward(),
-      ],
-    })
-    const handleDelete = () => this.core.commands.first({
-      commands: ({ commands }) => [
-        () => commands.deleteSelection(),
-        () => commands.joinForward(),
-        () => commands.selectNodeForward(),
-      ],
-    })
-    const handleEnter = () => this.core.commands.first({
-      commands: ({ commands }) => [
-        () => commands.newlineInCode(),
-        () => commands.createParagraphNear(),
-        () => commands.liftEmptyBlock(),
-        () => commands.splitBlock(),
-      ],
-    })
+    const handleBackspace = () =>
+      this.core.commands.first({
+        commands: ({ commands }) => [
+          () => commands.undoInputRule(),
+          () => commands.removeEmptyCodeBlock(),
+          () => commands.supportRemoveFirstLine(),
+          () => commands.deleteSelection(),
+          () => commands.joinBackward(),
+          () => commands.selectNodeBackward(),
+        ],
+      })
+    const handleDelete = () =>
+      this.core.commands.first({
+        commands: ({ commands }) => [
+          () => commands.deleteSelection(),
+          () => commands.joinForward(),
+          () => commands.selectNodeForward(),
+        ],
+      })
+    const handleEnter = () =>
+      this.core.commands.first({
+        commands: ({ commands }) => [
+          () => commands.newlineInCode(),
+          () => commands.createParagraphNear(),
+          () => commands.liftEmptyBlock(),
+          () => commands.splitBlock(),
+        ],
+      })
     const baseKeymap = {
-      'Enter': handleEnter,
+      Enter: handleEnter,
       'Mod-Enter': () => this.core.commands.exitCode(),
-      'Backspace': handleBackspace,
+      Backspace: handleBackspace,
       'Mod-Backspace': handleBackspace,
       'Shift-Backspace': handleBackspace,
-      'Delete': handleDelete,
+      Delete: handleDelete,
       'Mod-Delete': handleDelete,
       'Mod-a': () => this.core.commands.selectAll(),
     }

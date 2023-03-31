@@ -1,17 +1,27 @@
-import type { HLJSApi } from 'highlight.js'
 import { highlightPlugin } from 'prosemirror-highlightjs'
-import type { Plugin } from 'prosemirror-state'
 import { TextSelection } from 'prosemirror-state'
 import { findParentNode } from 'prosemirror-utils'
 import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
+import { textblockTypeInputRule } from '../core/rule'
+import { ExtensionType } from '../types'
+import {
+  blockIdDataAttrAtDOM,
+  extendsBlockAttrs,
+  getBlockAttrsFromElement,
+} from '../utils/blockSchema'
 import type { EditorCore } from '../core'
 import type { PatternRule } from '../core/rule'
-import { textblockTypeInputRule } from '../core/rule'
-import type { AddNodesSchema, Command, IEditorExtension, KeyboardShortcutCommand, NoArgsCommand } from '../types'
-import { ExtensionType } from '../types'
-import { blockIdDataAttrAtDOM, extendsBlockAttrs, getBlockAttrsFromElement } from '../utils/blockSchema'
+import type {
+  AddNodesSchema,
+  Command,
+  IEditorExtension,
+  KeyboardShortcutCommand,
+  NoArgsCommand,
+} from '../types'
+import type { Plugin } from 'prosemirror-state'
+import type { HLJSApi } from 'highlight.js'
 
-const codeblockRegExp = /^(···|```)(?<params>[a-z]+)?[\s\n]$/
+const codeblockRegExp = /^(·{3}|`{3})(?<params>[a-z]+)?\s$/
 
 export interface CodeBlockSetterAttrs {
   params: string
@@ -38,8 +48,7 @@ export class CodeBlockExtension implements IEditorExtension {
 
   constructor(public core: EditorCore, public hljs: HLJSApi) {
     this.core.on('updateCodeBlock', ({ codeBlockDOM, langName, alias }) => {
-      this.core.cmdManager
-        .chain
+      this.core.cmdManager.chain
         .command({
           fn: ({ view, tr }) => {
             const codeBlockPos = tr.doc.resolve(view.posAtDOM(codeBlockDOM, 0))
@@ -75,7 +84,8 @@ export class CodeBlockExtension implements IEditorExtension {
               preserveWhitespace: 'full',
               getAttrs(el) {
                 return {
-                  params: (el as Element)?.getAttribute('data-params') || 'plaintext',
+                  params:
+                    (el as Element)?.getAttribute('data-params') || 'plaintext',
                   ...getBlockAttrsFromElement(el as HTMLElement),
                 }
               },
@@ -86,18 +96,19 @@ export class CodeBlockExtension implements IEditorExtension {
               'pre',
               {
                 'data-params': node.attrs.params,
-                'class': 'hljs',
+                class: 'hljs',
                 [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
                 ...blockIdDataAttrAtDOM(node),
               },
-              ['div',
+              [
+                'div',
                 {
-                  'class': 'code-block-lang',
-                  'data-lang-name': node.attrs.alias || (
-                    node.attrs.params === 'plaintext'
+                  class: 'code-block-lang',
+                  'data-lang-name':
+                    node.attrs.alias ||
+                    (node.attrs.params === 'plaintext'
                       ? i18nTr('editor.menu.code-block-lang-text-placeholder')
-                      : node.attrs.params
-                  ),
+                      : node.attrs.params),
                 },
               ],
               ['code', 0],
@@ -111,22 +122,16 @@ export class CodeBlockExtension implements IEditorExtension {
   inputRules: () => PatternRule[] = () => {
     const nodeType = this.core.schema.nodes[EXTENSION_NAMES.CODE_BLOCK]!
     return [
-      textblockTypeInputRule(
-        codeblockRegExp,
-        nodeType,
-        (match) => {
-          return {
-            params: match.groups?.params || 'plaintext',
-          }
-        },
-      ),
+      textblockTypeInputRule(codeblockRegExp, nodeType, (match) => {
+        return {
+          params: match.groups?.params || 'plaintext',
+        }
+      }),
     ]
   }
 
   getProseMirrorPlugin: () => Plugin[] = () => {
-    return [
-      highlightPlugin(this.hljs, [EXTENSION_NAMES.CODE_BLOCK]),
-    ]
+    return [highlightPlugin(this.hljs, [EXTENSION_NAMES.CODE_BLOCK])]
   }
 
   keymaps: () => Record<string, KeyboardShortcutCommand> = () => {
@@ -137,7 +142,11 @@ export class CodeBlockExtension implements IEditorExtension {
           return false
         }
         if (dispatch) {
-          dispatch(state.tr.insertText(new Array(2).fill(' ').join('')).scrollIntoView())
+          dispatch(
+            state.tr
+              .insertText(Array.from({ length: 2 }).fill(' ').join(''))
+              .scrollIntoView()
+          )
         }
 
         return true
@@ -147,41 +156,48 @@ export class CodeBlockExtension implements IEditorExtension {
 
   commands: () => CodeBlockCommandsDefs = () => {
     return {
-      setCodeblock: ({ params }) => ({ commands }) => {
-        return commands.setNode({
-          typeOrName: EXTENSION_NAMES.CODE_BLOCK,
-          attrs: { params },
-        })
-      },
-      toggleCodeblock: ({ params }) => ({ commands }) => {
-        return commands.toggleNode({
-          turnOn: EXTENSION_NAMES.CODE_BLOCK,
-          turnOff: EXTENSION_NAMES.PARAGRAPH,
-          attrs: { params },
-        })
-      },
-      removeEmptyCodeBlock: () => ({ commands }) => {
-        return commands.command({
-          fn: ({ tr }) => {
-            const { selection } = tr
-            const foundCodeBlock = findParentNode(node => node.type.name === EXTENSION_NAMES.CODE_BLOCK)(selection)
-            if (!foundCodeBlock)
+      setCodeblock:
+        ({ params }) =>
+        ({ commands }) => {
+          return commands.setNode({
+            typeOrName: EXTENSION_NAMES.CODE_BLOCK,
+            attrs: { params },
+          })
+        },
+      toggleCodeblock:
+        ({ params }) =>
+        ({ commands }) => {
+          return commands.toggleNode({
+            turnOn: EXTENSION_NAMES.CODE_BLOCK,
+            turnOff: EXTENSION_NAMES.PARAGRAPH,
+            attrs: { params },
+          })
+        },
+      removeEmptyCodeBlock:
+        () =>
+        ({ commands }) => {
+          return commands.command({
+            fn: ({ tr }) => {
+              const { selection } = tr
+              const foundCodeBlock = findParentNode(
+                (node) => node.type.name === EXTENSION_NAMES.CODE_BLOCK
+              )(selection)
+              if (!foundCodeBlock) return false
+
+              const { textContent } = foundCodeBlock.node
+              if (!textContent) {
+                // Empty code block
+                tr.delete(
+                  foundCodeBlock.pos,
+                  foundCodeBlock.pos + foundCodeBlock.node.nodeSize
+                )
+                return true
+              }
+
               return false
-
-            const { textContent } = foundCodeBlock.node
-            if (!textContent) {
-              // Empty code block
-              tr.delete(
-                foundCodeBlock.pos,
-                foundCodeBlock.pos + foundCodeBlock.node.nodeSize,
-              )
-              return true
-            }
-
-            return false
-          },
-        })
-      },
+            },
+          })
+        },
     }
   }
 }

@@ -5,9 +5,7 @@ export function useNaiveThemeSetup() {
   const naiveUITheme = ref(envStore.isDark ? darkTheme : lightTheme)
 
   envStore.$subscribe((_, state) => {
-    naiveUITheme.value = state.isDark
-      ? darkTheme
-      : lightTheme
+    naiveUITheme.value = state.isDark ? darkTheme : lightTheme
   })
 
   return naiveUITheme

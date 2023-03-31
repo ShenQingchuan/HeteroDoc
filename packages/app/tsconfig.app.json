@@ -10,15 +10,10 @@
     "sourceMap": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "skipLibCheck": true,
     "composite": true,
-    "customConditions": [
-      "dev"
-    ]
+    "customConditions": ["dev"]
   },
   "include": [
     "vitest.config.ts",

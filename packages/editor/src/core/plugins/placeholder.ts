@@ -1,16 +1,18 @@
 import { Decoration, DecorationSet } from 'prosemirror-view'
-import type { EditorState } from 'prosemirror-state'
 import { Plugin, PluginKey, TextSelection } from 'prosemirror-state'
 import { findParentNodeClosestToPos, flatten } from 'prosemirror-utils'
-import type { Node } from 'prosemirror-model'
-import type { EditorCore } from '../index'
 import { HETERODOC_PLACEHOLER_CLASS_NAME } from '../../constants'
 import { applyTrToView } from '../../utils/applyTrToView'
+import type { Node } from 'prosemirror-model'
+import type { EditorCore } from '../index'
+import type { EditorState } from 'prosemirror-state'
 
-function createPlaceholderDecorationSet(doc: Node, pos: number, placeholderElement: HTMLElement) {
-  return DecorationSet.create(doc, [
-    Decoration.widget(pos, placeholderElement),
-  ])
+function createPlaceholderDecorationSet(
+  doc: Node,
+  pos: number,
+  placeholderElement: HTMLElement
+) {
+  return DecorationSet.create(doc, [Decoration.widget(pos, placeholderElement)])
 }
 
 function createPlaceholderElement(text: string) {
@@ -23,30 +25,31 @@ function createPlaceholderElement(text: string) {
 function getTailPlaceholderInsertPos(doc: Node) {
   const docChildren = flatten(doc, false)
   const docLastChildWithPos = docChildren.at(-1)
-  if (!docChildren.length || !docLastChildWithPos) {
+  if (docChildren.length === 0 || !docLastChildWithPos) {
     return 1
   }
   const { node: docLastChild, pos } = docLastChildWithPos
-  if (docChildren.length === 1 && !docLastChild.textContent.length) {
+  if (docChildren.length === 1 && docLastChild.textContent.length === 0) {
     return 1
   }
-  if (!docLastChild.textContent.length) {
+  if (docLastChild.textContent.length === 0) {
     return pos + 1 // +1 means inserting inside the block node
   }
   const insertPlaceholderPos = Math.min(
     doc.nodeSize - 1,
-    pos + docLastChild.nodeSize,
+    pos + docLastChild.nodeSize
   )
   return insertPlaceholderPos
 }
 
 export function placeholderPlugin(core: EditorCore) {
   const pluginKey = new PluginKey('placeholder')
-  const updatePlaceholder = (state: EditorState) => createPlaceholderDecorationSet(
-    state.doc,
-    getTailPlaceholderInsertPos(state.doc),
-    createPlaceholderElement(core.i18nTr('editor.placeholder')),
-  )
+  const updatePlaceholder = (state: EditorState) =>
+    createPlaceholderDecorationSet(
+      state.doc,
+      getTailPlaceholderInsertPos(state.doc),
+      createPlaceholderElement(core.i18nTr('editor.placeholder'))
+    )
 
   return new Plugin({
     key: pluginKey,
@@ -65,12 +68,17 @@ export function placeholderPlugin(core: EditorCore) {
       handleDOMEvents: {
         mousedown(view, event) {
           const { doc } = view.state
-          if (!doc.textContent.length) {
+          if (doc.textContent.length === 0) {
             return
           }
 
-          const placeholderElement = view.dom.querySelector(`.${HETERODOC_PLACEHOLER_CLASS_NAME}`)
-          if (!placeholderElement || !(placeholderElement instanceof HTMLElement)) {
+          const placeholderElement = view.dom.querySelector(
+            `.${HETERODOC_PLACEHOLER_CLASS_NAME}`
+          )
+          if (
+            !placeholderElement ||
+            !(placeholderElement instanceof HTMLElement)
+          ) {
             return
           }
           const { left, top } = placeholderElement.getBoundingClientRect()
@@ -84,32 +92,38 @@ export function placeholderPlugin(core: EditorCore) {
           }
           const parentBlock = findParentNodeClosestToPos(
             doc.resolve(posAtMouseDownPoint.pos),
-            node => node.isBlock,
+            (node) => node.isBlock
           )
           if (parentBlock && parentBlock.node.textContent.length === 0) {
             event.preventDefault()
             event.stopPropagation()
             applyTrToView(view, (tr) => {
-              tr.setSelection(
-                TextSelection.create(tr.doc, parentBlock.pos + 1),
-              )
+              tr.setSelection(TextSelection.create(tr.doc, parentBlock.pos + 1))
             })
             view.focus()
             return true
           }
 
           // 2. Otherwise, insert a new block to the last position
-          if (x >= left && x <= left + placeholderElement.offsetWidth && y >= top && y <= top + placeholderElement.offsetHeight) {
+          if (
+            x >= left &&
+            x <= left + placeholderElement.offsetWidth &&
+            y >= top &&
+            y <= top + placeholderElement.offsetHeight
+          ) {
             event.preventDefault()
             event.stopPropagation()
             const insertPlaceholderPos = getTailPlaceholderInsertPos(doc)
             applyTrToView(view, (tr) => {
-              tr.insert(insertPlaceholderPos, core.schema.nodes.paragraph!.create())
+              tr.insert(
+                insertPlaceholderPos,
+                core.schema.nodes.paragraph!.create()
+              )
             })
             // Move selection cursor into the new block
             applyTrToView(view, (tr) => {
               tr.setSelection(
-                TextSelection.create(tr.doc, insertPlaceholderPos + 1),
+                TextSelection.create(tr.doc, insertPlaceholderPos + 1)
               )
             })
             view.focus()

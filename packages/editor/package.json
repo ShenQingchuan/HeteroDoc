@@ -3,7 +3,14 @@
   "version": "0.0.1",
   "description": "A WYSIWYG editor for heterocube doc",
   "type": "module",
+  "keywords": [
+    "WYSIWYG",
+    "editor"
+  ],
+  "license": "MIT",
+  "author": "ShenQingchuan",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "dev": "./src/index.ts",
@@ -16,7 +23,6 @@
     },
     "./*": "./*"
   },
-  "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "cross-env NODE_ENV=development && rm -rf ./dist && concurrently 'npm:dev-tsup' 'npm:dev-dts'",
     "dev-tsup": "tsup --watch",
@@ -49,11 +55,5 @@
     "esbuild-plugin-less": "^1.2.0",
     "tsup": "^6.7.0",
     "typescript": "^5.0.3"
-  },
-  "keywords": [
-    "WYSIWYG",
-    "editor"
-  ],
-  "author": "ShenQingchuan",
-  "license": "MIT"
+  }
 }

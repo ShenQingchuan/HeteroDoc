@@ -1,11 +1,11 @@
-import type { Plugin } from 'prosemirror-state'
-import type { EditorCore } from '../index'
 import { activateInputFastPath } from './activateInputFastpath'
 import { activateSideBtns } from './activateSideBtns'
 import { canDeleteFirstLine } from './canDeleteFirstLine'
 import { clickEditorDOMCloseSelection } from './clickEditorDomCloseSelection'
 import { placeholderPlugin } from './placeholder'
 import { pluginResetStoredMarksOnDeleted } from './resetStoredMarksOnDeleted'
+import type { EditorCore } from '../index'
+import type { Plugin } from 'prosemirror-state'
 
 type builtinPluginConstructor = (core: EditorCore) => Plugin
 
@@ -19,7 +19,5 @@ export const builtinPluginConstructors: builtinPluginConstructor[] = [
 ]
 
 export const getAllBuiltinPlugins = (core: EditorCore) => {
-  return builtinPluginConstructors.map(
-    constructor => constructor(core),
-  )
+  return builtinPluginConstructors.map((constructor) => constructor(core))
 }

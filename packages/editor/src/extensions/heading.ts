@@ -1,12 +1,16 @@
-import type { EditorCore } from '../core'
-import type { AddNodesSchema, Command, IEditorExtension } from '../types'
 import { getUUID } from '../utils/getUUID'
-import type { PatternRule } from '../core/rule'
 import { textblockTypeInputRule } from '../core/rule'
 import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import { ExtensionType } from '../types'
-import { extendsTextBlockAttrs, getTextBlockAttrsFromElement, stylesOfTextBlock } from '../utils/textBlockSchema'
+import {
+  extendsTextBlockAttrs,
+  getTextBlockAttrsFromElement,
+  stylesOfTextBlock,
+} from '../utils/textBlockSchema'
 import { blockIdDataAttrAtDOM, createBlockIdAttr } from '../utils/blockSchema'
+import type { PatternRule } from '../core/rule'
+import type { AddNodesSchema, Command, IEditorExtension } from '../types'
+import type { EditorCore } from '../core'
 
 const headingInputRuleRegExp = /^(#{1,5})\s/
 const getRandomHeadingID = () => getUUID(6)
@@ -43,12 +47,12 @@ export class HeadingExtension implements IEditorExtension {
           content: 'inline*',
           group: 'block non_quote_block',
           defining: true,
-          parseDOM: Array(6).map((_, i) => ({
+          parseDOM: Array.from({ length: 6 }).map((_, i) => ({
             tag: `h${i + 1}`,
             getAttrs(el) {
               return el instanceof HTMLHeadElement
                 ? {
-                    level: parseInt(el.tagName.slice(-1), 10),
+                    level: Number.parseInt(el.tagName.slice(-1), 10),
                     anchorId: el.dataset.anchorId || getRandomHeadingID(),
                     ...getTextBlockAttrsFromElement(el),
                   }
@@ -57,13 +61,17 @@ export class HeadingExtension implements IEditorExtension {
           })),
           toDOM(node) {
             const { level = 1, anchorId = getRandomHeadingID() } = node.attrs
-            return [`h${level}`, {
-              'style': stylesOfTextBlock(node),
-              'id': anchorId,
-              'data-anchorId': anchorId,
-              [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
-              ...blockIdDataAttrAtDOM(node),
-            }, 0]
+            return [
+              `h${level}`,
+              {
+                style: stylesOfTextBlock(node),
+                id: anchorId,
+                'data-anchorId': anchorId,
+                [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+                ...blockIdDataAttrAtDOM(node),
+              },
+              0,
+            ]
           },
         },
       },
@@ -73,48 +81,48 @@ export class HeadingExtension implements IEditorExtension {
   inputRules: () => PatternRule[] = () => {
     const nodeType = this.core.schema.nodes.heading!
     return [
-      textblockTypeInputRule(
-        headingInputRuleRegExp,
-        nodeType,
-        (match) => {
-          return {
-            level: match[1]!.length,
-            anchorId: getRandomHeadingID(),
-            ...createBlockIdAttr(),
-          }
-        },
-      ),
+      textblockTypeInputRule(headingInputRuleRegExp, nodeType, (match) => {
+        return {
+          level: match[1]!.length,
+          anchorId: getRandomHeadingID(),
+          ...createBlockIdAttr(),
+        }
+      }),
     ]
   }
 
   commands: () => HeadingCommandsDefs = () => {
     return {
-      setHeading: ({ level }) => ({ commands }) => {
-        return commands.setNode({
-          typeOrName: this.name,
-          attrs: {
-            level,
-            anchorId: getRandomHeadingID(),
-            ...createBlockIdAttr(),
-          },
-        })
-      },
-      toggleHeading: ({ level }) => ({ commands }) => {
-        if (level === 0) {
+      setHeading:
+        ({ level }) =>
+        ({ commands }) => {
           return commands.setNode({
-            typeOrName: EXTENSION_NAMES.PARAGRAPH,
+            typeOrName: this.name,
+            attrs: {
+              level,
+              anchorId: getRandomHeadingID(),
+              ...createBlockIdAttr(),
+            },
           })
-        }
-        return commands.toggleNode({
-          turnOn: this.name,
-          turnOff: EXTENSION_NAMES.PARAGRAPH,
-          attrs: {
-            level,
-            anchorId: getRandomHeadingID(),
-            ...createBlockIdAttr(),
-          },
-        })
-      },
+        },
+      toggleHeading:
+        ({ level }) =>
+        ({ commands }) => {
+          if (level === 0) {
+            return commands.setNode({
+              typeOrName: EXTENSION_NAMES.PARAGRAPH,
+            })
+          }
+          return commands.toggleNode({
+            turnOn: this.name,
+            turnOff: EXTENSION_NAMES.PARAGRAPH,
+            attrs: {
+              level,
+              anchorId: getRandomHeadingID(),
+              ...createBlockIdAttr(),
+            },
+          })
+        },
     }
   }
 }

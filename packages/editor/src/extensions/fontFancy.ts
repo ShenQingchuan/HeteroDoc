@@ -1,10 +1,15 @@
-import type { Mark } from 'prosemirror-model'
 import { Slice } from 'prosemirror-model'
 import { Plugin, PluginKey } from 'prosemirror-state'
 import { EXTENSION_NAMES } from '../constants'
-import type { EditorCore } from '../core'
-import type { AddMarksSchema, Command, IEditorExtension, NoArgsCommand } from '../types'
 import { ExtensionType } from '../types'
+import type { EditorCore } from '../core'
+import type {
+  AddMarksSchema,
+  Command,
+  IEditorExtension,
+  NoArgsCommand,
+} from '../types'
+import type { Mark } from 'prosemirror-model'
 
 interface FontColorCommandDefs {
   setFontColor: Command<{ colorIndex: number }>
@@ -45,11 +50,12 @@ export class FontFancyExtension implements IEditorExtension {
             {
               tag: 'span',
               getAttrs(el) {
-                if (typeof el === 'string')
-                  return null
+                if (typeof el === 'string') return null
 
-                const colorIndex = parseInt(el.getAttribute('data-color-index') ?? '0')
-                const bgColorIndex = parseInt(el.getAttribute('data-bg-color-index') ?? '0')
+                const colorIndex = Number.parseInt(el.dataset.colorIndex ?? '0')
+                const bgColorIndex = Number.parseInt(
+                  el.dataset.bgColorIndex ?? '0'
+                )
                 return { colorIndex, bgColorIndex }
               },
             },
@@ -58,14 +64,22 @@ export class FontFancyExtension implements IEditorExtension {
           toDOM: (mark: Mark) => {
             const styles: string[] = []
             if (mark.attrs.colorIndex)
-              styles.push(`color: var(--heterodoc-fontfancy-text-color-${mark.attrs.colorIndex});`)
+              styles.push(
+                `color: var(--heterodoc-fontfancy-text-color-${mark.attrs.colorIndex});`
+              )
             if (mark.attrs.bgColorIndex)
-              styles.push(`background-color: var(--heterodoc-fontfancy-bg-color-${mark.attrs.bgColorIndex});`)
-            return ['span', {
-              'data-color-index': mark.attrs.colorIndex,
-              'data-bg-color-index': mark.attrs.bgColorIndex,
-              'style': styles.join(' '),
-            }, 0]
+              styles.push(
+                `background-color: var(--heterodoc-fontfancy-bg-color-${mark.attrs.bgColorIndex});`
+              )
+            return [
+              'span',
+              {
+                'data-color-index': mark.attrs.colorIndex,
+                'data-bg-color-index': mark.attrs.bgColorIndex,
+                style: styles.join(' '),
+              },
+              0,
+            ]
           },
         },
       },
@@ -74,18 +88,38 @@ export class FontFancyExtension implements IEditorExtension {
 
   commands: () => FontColorCommandDefs = () => {
     return {
-      setFontColor: ({ colorIndex }) => ({ commands }) => {
-        return commands.setMark({ typeOrName: this.name, attrs: { colorIndex, bgColorIndex: 0 } })
-      },
-      unsetFontColor: () => ({ commands }) => {
-        return commands.updateAttributes({ typeOrName: this.name, attrs: { colorIndex: 0 } })
-      },
-      setFontBgColor: ({ bgColorIndex }) => ({ commands }) => {
-        return commands.setMark({ typeOrName: this.name, attrs: { bgColorIndex, colorIndex: 0 } })
-      },
-      unsetFontBgColor: () => ({ commands }) => {
-        return commands.updateAttributes({ typeOrName: this.name, attrs: { bgColorIndex: 0 } })
-      },
+      setFontColor:
+        ({ colorIndex }) =>
+        ({ commands }) => {
+          return commands.setMark({
+            typeOrName: this.name,
+            attrs: { colorIndex, bgColorIndex: 0 },
+          })
+        },
+      unsetFontColor:
+        () =>
+        ({ commands }) => {
+          return commands.updateAttributes({
+            typeOrName: this.name,
+            attrs: { colorIndex: 0 },
+          })
+        },
+      setFontBgColor:
+        ({ bgColorIndex }) =>
+        ({ commands }) => {
+          return commands.setMark({
+            typeOrName: this.name,
+            attrs: { bgColorIndex, colorIndex: 0 },
+          })
+        },
+      unsetFontBgColor:
+        () =>
+        ({ commands }) => {
+          return commands.updateAttributes({
+            typeOrName: this.name,
+            attrs: { bgColorIndex: 0 },
+          })
+        },
     }
   }
 

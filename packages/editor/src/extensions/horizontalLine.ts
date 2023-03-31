@@ -1,11 +1,14 @@
 import { TextSelection } from 'prosemirror-state'
 import { findParentNode } from 'prosemirror-utils'
-import { EXTENSION_NAMES, HETERODOC_HORIZONTAL_LINE_CLASS_NAME } from '../constants'
-import type { EditorCore } from '../core'
+import {
+  EXTENSION_NAMES,
+  HETERODOC_HORIZONTAL_LINE_CLASS_NAME,
+} from '../constants'
 import { getNodeType } from '../core/helpers/getNodeType'
 import { PatternRule } from '../core/rule'
-import type { AddNodesSchema, IEditorExtension, NoArgsCommand } from '../types'
 import { ExtensionType } from '../types'
+import type { AddNodesSchema, IEditorExtension, NoArgsCommand } from '../types'
+import type { EditorCore } from '../core'
 
 const horizontalLineRegExp = /^---\s/
 
@@ -33,10 +36,7 @@ export class HorizontalLine implements IEditorExtension {
           defining: true,
           parseDOM: [{ tag: 'hr' }],
           toDOM() {
-            return [
-              'div',
-              { class: `${HETERODOC_HORIZONTAL_LINE_CLASS_NAME}` },
-            ]
+            return ['div', { class: `${HETERODOC_HORIZONTAL_LINE_CLASS_NAME}` }]
           },
         },
       },
@@ -51,16 +51,9 @@ export class HorizontalLine implements IEditorExtension {
         handler: ({ state, match, range: { from: start, to: end } }) => {
           const { tr } = state
           if (match[0]) {
-            tr.replaceWith(
-              start,
-              end,
-              nodeType.create({},
-              ),
-            )
+            tr.replaceWith(start, end, nodeType.create({}))
             const newStart = tr.mapping.map(start)
-            tr.setSelection(
-              TextSelection.create(tr.doc, newStart),
-            )
+            tr.setSelection(TextSelection.create(tr.doc, newStart))
           }
         },
       }),
@@ -69,21 +62,20 @@ export class HorizontalLine implements IEditorExtension {
 
   commands: () => HorizontalCommandsDefs = () => {
     return {
-      setHorizontal: () => ({ tr }) => {
-        const horizontalType = getNodeType(this.name, this.core.schema)
-        const closetTextBlock = findParentNode(
-          node => node.isTextblock,
-        )(tr.selection)
-        if (!closetTextBlock) {
-          return false
-        }
-        const { pos, node } = closetTextBlock
-        tr.insert(
-          pos + node.nodeSize,
-          horizontalType.create(),
-        )
-        return true
-      },
+      setHorizontal:
+        () =>
+        ({ tr }) => {
+          const horizontalType = getNodeType(this.name, this.core.schema)
+          const closetTextBlock = findParentNode((node) => node.isTextblock)(
+            tr.selection
+          )
+          if (!closetTextBlock) {
+            return false
+          }
+          const { pos, node } = closetTextBlock
+          tr.insert(pos + node.nodeSize, horizontalType.create())
+          return true
+        },
     }
   }
 }

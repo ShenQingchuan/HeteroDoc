@@ -1,7 +1,11 @@
-import type { SchemaSpec } from 'prosemirror-model'
 import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import { blockIdDataAttrAtDOM } from '../utils/blockSchema'
-import { extendsTextBlockAttrs, getTextBlockAttrsFromElement, stylesOfTextBlock } from '../utils/textBlockSchema'
+import {
+  extendsTextBlockAttrs,
+  getTextBlockAttrsFromElement,
+  stylesOfTextBlock,
+} from '../utils/textBlockSchema'
+import type { SchemaSpec } from 'prosemirror-model'
 
 export function mergeSchemaSpecs(specs: Partial<SchemaSpec>[]): SchemaSpec {
   const merged: SchemaSpec = {
@@ -11,20 +15,26 @@ export function mergeSchemaSpecs(specs: Partial<SchemaSpec>[]): SchemaSpec {
         group: 'block non_quote_block',
         content: 'inline*',
         attrs: extendsTextBlockAttrs(),
-        parseDOM: [{
-          tag: 'p',
-          getAttrs(element) {
-            return element instanceof HTMLElement
-              ? getTextBlockAttrsFromElement(element)
-              : null
+        parseDOM: [
+          {
+            tag: 'p',
+            getAttrs(element) {
+              return element instanceof HTMLElement
+                ? getTextBlockAttrsFromElement(element)
+                : null
+            },
           },
-        }],
+        ],
         toDOM(node) {
-          return ['p', {
-            style: stylesOfTextBlock(node),
-            [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
-            ...blockIdDataAttrAtDOM(node),
-          }, 0]
+          return [
+            'p',
+            {
+              style: stylesOfTextBlock(node),
+              [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+              ...blockIdDataAttrAtDOM(node),
+            },
+            0,
+          ]
         },
       },
       text: { group: 'inline' },
@@ -33,10 +43,8 @@ export function mergeSchemaSpecs(specs: Partial<SchemaSpec>[]): SchemaSpec {
   }
   specs.forEach((spec) => {
     const { nodes, marks } = spec
-    if (nodes)
-      Object.assign(merged.nodes, nodes)
-    else if (marks)
-      Object.assign(merged.marks ?? {}, marks)
+    if (nodes) Object.assign(merged.nodes, nodes)
+    else if (marks) Object.assign(merged.marks ?? {}, marks)
   })
   return merged
 }

@@ -1,7 +1,11 @@
-import type { Transaction } from 'prosemirror-state'
 import { builtinsCommands } from '../commands/exporter'
-import type { CommandProps, PrimitiveCommandsMap, RunCommandsChain } from '../types'
 import { createChainableState } from './helpers/createChainableState'
+import type { Transaction } from 'prosemirror-state'
+import type {
+  CommandProps,
+  PrimitiveCommandsMap,
+  RunCommandsChain,
+} from '../types'
 import type { EditorCore } from './index'
 
 export class CommandManager {
@@ -14,13 +18,16 @@ export class CommandManager {
       ...(this.core.extensions.reduce((cmds, extension) => {
         return {
           ...cmds,
-          ...extension.commands?.() ?? {},
+          ...(extension.commands?.() ?? {}),
         }
       }, {}) as Omit<Commands, keyof typeof builtinsCommands>),
     }
   }
 
-  private buildCommandProps = (tr: Transaction, shouldDispatch = true): CommandProps => {
+  private buildCommandProps = (
+    tr: Transaction,
+    shouldDispatch = true
+  ): CommandProps => {
     const { core, rawCommands } = this
     const { view } = core
     const { state } = view
@@ -37,7 +44,7 @@ export class CommandManager {
         return Object.fromEntries(
           Object.entries(rawCommands).map(([name, command]) => {
             return [name, (...args: never[]) => command(...args)(props)]
-          }),
+          })
         ) as PrimitiveCommandsMap
       },
     }
@@ -62,17 +69,16 @@ export class CommandManager {
               return chain
             },
           ]
-        }),
+        })
       ),
       run: () => {
-        const isNeedDispatch = !startTr
-          && shouldDispatch
-          && !tr.getMeta('preventDispatch')
+        const isNeedDispatch =
+          !startTr && shouldDispatch && !tr.getMeta('preventDispatch')
         if (isNeedDispatch) {
           view.dispatch(tr)
         }
 
-        return callbacks.every(callback => callback === true)
+        return callbacks.every((callback) => callback === true)
       },
     } as RunCommandsChain
 
@@ -82,19 +88,21 @@ export class CommandManager {
   private createCan = (startTr?: Transaction) => {
     const dispatch = undefined
     const {
-      core: { view: { state } },
+      core: {
+        view: { state },
+      },
       rawCommands,
     } = this
     const tr = startTr ?? state.tr
     const props = this.buildCommandProps(tr, dispatch)
-    const primitiveCommands = Object.fromEntries(Object
-      .entries(rawCommands)
-      .map(([name, command]) => {
+    const primitiveCommands = Object.fromEntries(
+      Object.entries(rawCommands).map(([name, command]) => {
         return [
           name,
           (...args: never[]) => command(...args)({ ...props, dispatch }),
         ]
-      })) as PrimitiveCommandsMap
+      })
+    ) as PrimitiveCommandsMap
 
     return {
       ...primitiveCommands,
@@ -117,19 +125,18 @@ export class CommandManager {
     const props = this.buildCommandProps(tr)
 
     return Object.fromEntries(
-      Object.entries(rawCommands)
-        .map(([name, command]) => {
-          const method = (...args: any[]) => {
-            const callback = command(...args)(props)
-            if (!tr.getMeta('preventDispatch')) {
-              view.dispatch(tr)
-            }
-
-            return callback
+      Object.entries(rawCommands).map(([name, command]) => {
+        const method = (...args: any[]) => {
+          const callback = command(...args)(props)
+          if (!tr.getMeta('preventDispatch')) {
+            view.dispatch(tr)
           }
 
-          return [name, method]
-        }),
+          return callback
+        }
+
+        return [name, method]
+      })
     ) as PrimitiveCommandsMap
   }
 }

@@ -1,15 +1,20 @@
-import type { EditorCore, IEditorExtension } from '@hetero/editor'
 import {
   BlockquoteExtension,
   BoldExtension,
   CodeBlockExtension,
-  CodeExtension, DeleteLineExtension, FontFancyExtension,
-  HeadingExtension, HorizontalLine,
-  HyperlinkExtension, ItalicExtension, UnderlineExtension,
+  CodeExtension,
+  DeleteLineExtension,
+  FontFancyExtension,
+  HeadingExtension,
+  HorizontalLine,
+  HyperlinkExtension,
+  ItalicExtension,
+  UnderlineExtension,
 } from '@hetero/editor'
 
 import { EditorFloatMenuAction } from '../../constants/editor'
 import { setupHightlightJS } from '../../utils/setupHighlightjs'
+import type { EditorCore, IEditorExtension } from '@hetero/editor'
 
 export function composeExtensions(core: EditorCore): IEditorExtension[] {
   const editorStore = useEditorStore()
