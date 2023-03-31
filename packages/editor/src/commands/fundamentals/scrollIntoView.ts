@@ -6,9 +6,10 @@ declare global {
   }
 }
 
-export const scrollIntoView: Commands['scrollIntoView'] = () => ({ tr, dispatch }) => {
-  if (dispatch)
-    tr.scrollIntoView()
+export const scrollIntoView: Commands['scrollIntoView'] =
+  () =>
+  ({ tr, dispatch }) => {
+    if (dispatch) tr.scrollIntoView()
 
-  return true
-}
+    return true
+  }

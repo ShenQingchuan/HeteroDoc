@@ -1,14 +1,18 @@
 import { markInputRule, markPasteRule } from '../../core/rule'
-import type { PatternRule } from '../../core/rule'
-import type { EditorCore } from '../../core'
-import type { AddMarksSchema, IEditorExtension, NoArgsCommand } from '../../types'
 import { ExtensionType } from '../../types'
 import { EXTENSION_NAMES } from '../../constants'
+import type { PatternRule } from '../../core/rule'
+import type { EditorCore } from '../../core'
+import type {
+  AddMarksSchema,
+  IEditorExtension,
+  NoArgsCommand,
+} from '../../types'
 
-const singleStarInputRegex = /(?:^|\s)((?:\*)(?<text>(?:[^*]+))(?:\*))$/
-const singleStarPasteRegex = /(?:^|\s)((?:\*)(?<text>(?:[^*]+))(?:\*))/g
-const singleUnderscoreInputRegex = /(?:^|\s)((?:_)(?<text>(?:[^_]+))(?:_))$/
-const singleUnderscorePasteRegex = /(?:^|\s)((?:_)(?<text>(?:[^_]+))(?:_))/g
+const singleStarInputRegex = /(?:^|\s)(\*(?<text>[^*]+)\*)$/
+const singleStarPasteRegex = /(?:^|\s)(\*(?<text>[^*]+)\*)/g
+const singleUnderscoreInputRegex = /(?:^|\s)(_(?<text>[^_]+)_)$/
+const singleUnderscorePasteRegex = /(?:^|\s)(_(?<text>[^_]+)_)/g
 
 declare global {
   interface Commands {
@@ -58,15 +62,21 @@ export class ItalicExtension implements IEditorExtension {
 
   commands: () => Record<string, NoArgsCommand> = () => {
     return {
-      setItalic: () => ({ commands }) => {
-        return commands.setMark({ typeOrName: this.name })
-      },
-      unsetItalic: () => ({ commands }) => {
-        return commands.unsetMark({ typeOrName: this.name })
-      },
-      toggleItalic: () => ({ commands }) => {
-        return commands.toggleMark({ typeOrName: this.name })
-      },
+      setItalic:
+        () =>
+        ({ commands }) => {
+          return commands.setMark({ typeOrName: this.name })
+        },
+      unsetItalic:
+        () =>
+        ({ commands }) => {
+          return commands.unsetMark({ typeOrName: this.name })
+        },
+      toggleItalic:
+        () =>
+        ({ commands }) => {
+          return commands.toggleMark({ typeOrName: this.name })
+        },
     }
   }
 

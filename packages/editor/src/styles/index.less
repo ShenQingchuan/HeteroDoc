@@ -9,7 +9,8 @@
   --heterodoc-inline-code-color: #4a84d3;
   --heterodoc-inline-code-bg-color: rgba(138, 152, 158, 0.2);
   --heterodoc-code-lang-bg-color: rgba(153, 157, 159, 0.2);
-  --heterodoc-inline-code-font: 'Fira Code', Menlo, Monaco, Consolas, 'DejaVu Sans Mono', 'Courier New', Courier, monospace;
+  --heterodoc-inline-code-font: 'Fira Code', Menlo, Monaco, Consolas,
+    'DejaVu Sans Mono', 'Courier New', Courier, monospace;
   --heterodoc-link-bottom-color: #70ceab;
   --heterodoc-blockquote-color: #8a8a8a;
   --heterodoc-blockquote-border-left-color: #c0c0c0;
@@ -20,7 +21,7 @@
 
 :root.dark {
   --heterodoc-editor-color: rgba(255, 255, 255, 0.85);
-  --heterodoc-bg: #1A1A1A;
+  --heterodoc-bg: #1a1a1a;
   --heterodoc-link-color: rgb(174, 248, 206, 85%);
   --heterodoc-caret-color: rgba(255, 255, 255, 0.85);
   --heterodoc-inline-code-color: #b4d4ff;
@@ -41,7 +42,7 @@
   white-space: break-spaces;
   -webkit-font-variant-ligatures: none;
   font-variant-ligatures: none;
-  font-feature-settings: "liga" 0;
+  font-feature-settings: 'liga' 0;
   font-size: 16px;
   outline: none;
   color: var(--heterodoc-editor-color);
@@ -51,16 +52,16 @@
     white-space: pre-wrap;
   }
 
-  h1[data-hetero-block="true"],
-  h2[data-hetero-block="true"],
-  h3[data-hetero-block="true"],
-  h4[data-hetero-block="true"],
-  h5[data-hetero-block="true"],
-  h6[data-hetero-block="true"] {
+  h1[data-hetero-block='true'],
+  h2[data-hetero-block='true'],
+  h3[data-hetero-block='true'],
+  h4[data-hetero-block='true'],
+  h5[data-hetero-block='true'],
+  h6[data-hetero-block='true'] {
     margin-bottom: 10px;
   }
 
-  p[data-hetero-block="true"] {
+  p[data-hetero-block='true'] {
     margin: 0;
     line-height: 2rem;
   }
@@ -86,7 +87,7 @@
     border-radius: 0 4px 4px 0;
   }
 
-  code[data-node-type="inline"] {
+  code[data-node-type='inline'] {
     white-space: nowrap;
     margin: 0 2px;
     padding: 2px 0.4em;
@@ -97,18 +98,18 @@
     background-color: var(--heterodoc-inline-code-bg-color);
   }
 
-  pre[class="hljs"] {
+  pre[class='hljs'] {
     padding: 12px;
     padding-right: 6rem;
     border-radius: 6px;
     margin: 10px 0;
     position: relative;
   }
-  pre[class="hljs"] code {
+  pre[class='hljs'] code {
     font-family: JetBrains Mono, monospace;
     font-size: 14px;
   }
-  pre[class="hljs"] .code-block-lang {
+  pre[class='hljs'] .code-block-lang {
     width: fit-content;
     position: absolute;
     right: 1rem;
@@ -167,7 +168,7 @@ li.ProseMirror-selectednode {
 }
 
 li.ProseMirror-selectednode:after {
-  content: "";
+  content: '';
   position: absolute;
   left: -32px;
   right: -2px;

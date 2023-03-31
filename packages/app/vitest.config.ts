@@ -1,4 +1,4 @@
-import * as path from 'path'
+import * as path from 'node:path'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -16,7 +16,7 @@ export default defineConfig({
     include: [
       path.resolve(
         __dirname,
-        'src/test/**/*.{test,spec}.{js,ts,mjs,cjs,mts,cts}',
+        'src/test/**/*.{test,spec}.{js,ts,mjs,cjs,mts,cts}'
       ),
     ],
   },

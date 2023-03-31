@@ -2,17 +2,16 @@ import { TextSelection } from 'prosemirror-state'
 import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 
 export function isClass(value: any): boolean {
-  if (value.constructor?.toString().substring(0, 5) !== 'class')
-    return false
+  if (value.constructor?.toString().slice(0, 5) !== 'class') return false
 
   return true
 }
 export function isObject(value: any): boolean {
   return (
-    value
-    && typeof value === 'object'
-    && !Array.isArray(value)
-    && !isClass(value)
+    value &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    !isClass(value)
   )
 }
 // see: https://github.com/mesqueeb/is-what/blob/88d6e4ca92fb2baab6003c54e02eedf4e729e5ab/src/index.ts
@@ -20,10 +19,12 @@ function getType(value: any): string {
   return Object.prototype.toString.call(value).slice(8, -1)
 }
 export function isPlainObject(value: any): value is Record<string, any> {
-  if (getType(value) !== 'Object')
-    return false
+  if (getType(value) !== 'Object') return false
 
-  return value.constructor === Object && Object.getPrototypeOf(value) === Object.prototype
+  return (
+    value.constructor === Object &&
+    Object.getPrototypeOf(value) === Object.prototype
+  )
 }
 export function isString(value: any): value is string {
   return typeof value === 'string'
@@ -38,22 +39,28 @@ export function isNumber(value: any): value is number {
   return typeof value === 'number'
 }
 export function isiOS(): boolean {
-  return [
-    'iPad Simulator',
-    'iPhone Simulator',
-    'iPod Simulator',
-    'iPad',
-    'iPhone',
-    'iPod',
-  ].includes(navigator.platform)
-  // iPad on iOS 13 detection
-  || (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+  return (
+    [
+      'iPad Simulator',
+      'iPhone Simulator',
+      'iPod Simulator',
+      'iPad',
+      'iPhone',
+      'iPod',
+    ].includes(navigator.platform) ||
+    // iPad on iOS 13 detection
+    (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+  )
 }
 export function isTextSelection(value: unknown): value is TextSelection {
   return isObject(value) && value instanceof TextSelection
 }
 
-export const isHeteroBlock = (node: EventTarget | null): node is HTMLElement => {
-  return node instanceof HTMLElement
-    && node.getAttribute(HETERO_BLOCK_NODE_DATA_TAG) === 'true'
+export const isHeteroBlock = (
+  node: EventTarget | null
+): node is HTMLElement => {
+  return (
+    node instanceof HTMLElement &&
+    node.getAttribute(HETERO_BLOCK_NODE_DATA_TAG) === 'true'
+  )
 }

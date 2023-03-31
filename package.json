@@ -1,7 +1,14 @@
 {
-  "private": true,
   "version": "0.0.1",
+  "private": true,
   "description": "Collaborative cloud documentation for heterocube teams",
+  "keywords": [
+    "wiki",
+    "knowledge-management",
+    "documentation"
+  ],
+  "license": "MIT",
+  "author": "ShenQingchuan",
   "scripts": {
     "prepare": "husky install",
     "dev": "pnpm --filter @hetero/doc-web-app run dev",
@@ -10,32 +17,30 @@
     "build:app": "turbo run build && pnpm --filter @hetero/doc-web-app build:app",
     "cypress": "pnpm --filter @hetero/doc-web-app cypress",
     "cypress:component": "turbo run build && pnpm --filter @hetero/doc-web-app cypress:component",
-    "cypress:component-video": "turbo run build && pnpm --filter @hetero/doc-web-app cypress:component-video"
+    "cypress:component-video": "turbo run build && pnpm --filter @hetero/doc-web-app cypress:component-video",
+    "lint": "eslint --ext .js,.ts,.vue,.json ."
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.38.2",
     "@commitlint/cli": "^17.5.1",
     "@commitlint/config-conventional": "^17.4.4",
+    "@sxzz/eslint-config": "^2.4.6",
     "@types/node": "^18.15.11",
     "cross-env": "^7.0.3",
     "eslint": "^8.37.0",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
+    "prettier": "^2.8.7",
     "tsx": "^3.12.6",
     "turbo": "^1.8.8",
     "typescript": "^5.0.3",
     "vite": "^4.2.1"
   },
-  "lint-staged": {
-    "*.vue": "eslint --fix",
-    "*.ts": "eslint --fix",
-    "*.js": "eslint --fix"
+  "pnpm": {
+    "patchedDependencies": {
+      "highlight.js@11.7.0": "patches/highlight.js@11.7.0.patch"
+    }
   },
-  "keywords": [
-    "wiki",
-    "knowledge-management",
-    "documentation"
-  ],
-  "author": "ShenQingchuan",
-  "license": "MIT"
+  "lint-staged": {
+    "*.{vue,ts,js,json}": "eslint --fix"
+  }
 }

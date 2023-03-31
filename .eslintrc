@@ -1,8 +1,6 @@
 {
-  "extends": "@antfu",
+  "extends": "@sxzz",
   "rules": {
-    "react/display-name": "off",
-    "curly":"off",
-    "vue/html-self-closing": "off"
+    "unicorn/no-array-callback-reference": "off"
   }
 }

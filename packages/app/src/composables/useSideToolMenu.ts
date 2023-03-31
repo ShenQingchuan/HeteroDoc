@@ -37,12 +37,15 @@ export function useSideToolMenu() {
   const isDragging = ref(false)
   const { isOutside: isNotHoveringSideToolBtn } = useMouseInElement(sideToolBtn)
   const { isOutside: isNotHoveringSideDragBtn } = useMouseInElement(sideDragBtn)
-  const { isOutside: isNotHoveringSideToolMenu } = useMouseInElement(sideToolMenu)
+  const { isOutside: isNotHoveringSideToolMenu } =
+    useMouseInElement(sideToolMenu)
   const isSideToolBtnShow = ref(false)
-  const isSideToolMenuShow = useDebounce(computed(() => {
-    return !isNotHoveringSideToolBtn.value
-      || !isNotHoveringSideToolMenu.value
-  }), 160)
+  const isSideToolMenuShow = useDebounce(
+    computed(() => {
+      return !isNotHoveringSideToolBtn.value || !isNotHoveringSideToolMenu.value
+    }),
+    160
+  )
   const { x: mouseX, y: mouseY } = useMouse()
 
   const hideSideToolBtn = () => {
@@ -51,10 +54,16 @@ export function useSideToolMenu() {
   const handleMenuClick = (action: SideMenuAction) => {
     switch (action) {
       case 'insert-before':
-        editor?.value?.cmdManager.chain.insertBefore({ pos: hoverNodePos.value }).focus().run()
+        editor?.value?.cmdManager.chain
+          .insertBefore({ pos: hoverNodePos.value })
+          .focus()
+          .run()
         break
       case 'insert-after':
-        editor?.value?.cmdManager.chain.insertAfter({ pos: hoverNodePos.value }).focus().run()
+        editor?.value?.cmdManager.chain
+          .insertAfter({ pos: hoverNodePos.value })
+          .focus()
+          .run()
         break
       default:
         break
@@ -62,11 +71,14 @@ export function useSideToolMenu() {
   }
   const controlSideToolStatusForEditorDOMArea = (editorDOM: HTMLElement) => {
     const { isOutside: isOutsideEditorDOM } = useMouseInElement(editorDOM)
-    watch([isOutsideEditorDOM, isNotHoveringSideToolMenu], ([isOutsideEditor, isNotHoveringMenu]) => {
-      if (isOutsideEditor && isNotHoveringMenu) {
-        hideSideToolBtn()
+    watch(
+      [isOutsideEditorDOM, isNotHoveringSideToolMenu],
+      ([isOutsideEditor, isNotHoveringMenu]) => {
+        if (isOutsideEditor && isNotHoveringMenu) {
+          hideSideToolBtn()
+        }
       }
-    })
+    )
   }
   const onSideBtnMouseOver = () => {
     isSideToolBtnShow.value = true
@@ -83,14 +95,14 @@ export function useSideToolMenu() {
     // Add ProseMirror class to make it align with editor,
     // And append to body
     clonedBlockWrapper.classList.add('ProseMirror')
-    clonedBlockWrapper.appendChild(clonedDOM)
+    clonedBlockWrapper.append(clonedDOM)
     return clonedBlockWrapper
   }
   watchEffect(() => {
     if (!dragingMirror.value) {
       return
     }
-    document.body.appendChild(dragingMirror.value as HTMLElement)
+    document.body.append(dragingMirror.value as HTMLElement)
   })
   const onSideDragBtnMouseDown = () => {
     if (!hoveringBlockElement.value) {
@@ -100,7 +112,9 @@ export function useSideToolMenu() {
     }
     // Use VueUse's useMouse to get the position of the mouse,
     // set the x,y to the cloned block's position
-    dragingMirror.value = createDraggingMirror(hoveringBlockElement.value.cloneNode(true) as HTMLElement)
+    dragingMirror.value = createDraggingMirror(
+      hoveringBlockElement.value.cloneNode(true) as HTMLElement
+    )
     editor?.value.emit('dragBlock', {
       hoverNodePos: hoverNodePos.value,
       hoverBlockRect: hoveringBlockElement.value.getBoundingClientRect(),
@@ -114,21 +128,25 @@ export function useSideToolMenu() {
     dragingMirror.value?.remove()
     // Get current position of the mouse
     // and find the hovering block in editor
-    const { pos } = editor?.value.view.posAtCoords({
-      left: mouseX.value,
-      top: mouseY.value,
-    }) || {}
+    const { pos } =
+      editor?.value.view.posAtCoords({
+        left: mouseX.value,
+        top: mouseY.value,
+      }) || {}
     if (!pos) {
       return
     }
     editor?.value.emit('dropBlock', { dropPos: pos })
   }
 
-  watch([isNotHoveringSideToolBtn, isNotHoveringSideDragBtn], ([isNotHoveringToolBtn, isNotHoveringDragBtn]) => {
-    if (isNotHoveringToolBtn && isNotHoveringDragBtn) {
-      isShowHoverElementBouding.value = false
+  watch(
+    [isNotHoveringSideToolBtn, isNotHoveringSideDragBtn],
+    ([isNotHoveringToolBtn, isNotHoveringDragBtn]) => {
+      if (isNotHoveringToolBtn && isNotHoveringDragBtn) {
+        isShowHoverElementBouding.value = false
+      }
     }
-  })
+  )
   watch([winWidth, winHeight], () => {
     hideSideToolBtn()
   })

@@ -8,4 +8,7 @@ declare global {
   }
 }
 
-export const command: Commands['command'] = ({ fn }) => props => fn(props)
+export const command: Commands['command'] =
+  ({ fn }) =>
+  (props) =>
+    fn(props)

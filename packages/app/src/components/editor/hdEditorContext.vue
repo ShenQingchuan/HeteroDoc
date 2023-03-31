@@ -10,7 +10,7 @@ import HdEditorSearchAndReplace from './hdEditorSearchAndReplace.vue'
 
 <template>
   <div class="hetero-editor__context-container">
-    <slot name="default"></slot>
+    <slot name="default" />
     <HdEditorFloatMenu />
     <HdEditorLinkEdit />
     <HdEditorInputFastpath />

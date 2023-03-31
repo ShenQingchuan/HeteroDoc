@@ -6,11 +6,13 @@ declare global {
   }
 }
 
-export const selectAll: Commands['selectAll'] = () => ({ tr, commands }) => {
-  return commands.setTextSelection({
-    position: {
-      from: 0,
-      to: tr.doc.content.size,
-    },
-  })
-}
+export const selectAll: Commands['selectAll'] =
+  () =>
+  ({ tr, commands }) => {
+    return commands.setTextSelection({
+      position: {
+        from: 0,
+        to: tr.doc.content.size,
+      },
+    })
+  }

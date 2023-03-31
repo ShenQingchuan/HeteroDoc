@@ -8,7 +8,5 @@ export default defineConfig({
   splitting: false,
   sourcemap: true,
   clean: false,
-  esbuildPlugins: [
-    lessLoader(),
-  ],
+  esbuildPlugins: [lessLoader()],
 })

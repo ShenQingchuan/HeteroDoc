@@ -1,6 +1,6 @@
 import { setBlockType } from 'prosemirror-commands'
-import type { NodeType } from 'prosemirror-model'
 import { getNodeType } from '../../core/helpers/getNodeType'
+import type { NodeType } from 'prosemirror-model'
 import type { Command } from '../../types'
 
 declare global {
@@ -12,31 +12,35 @@ declare global {
   }
 }
 
-export const setNode: Commands['setNode'] = ({ typeOrName, attrs = {} }) => ({ state, dispatch, chain }) => {
-  const type = getNodeType(typeOrName, state.schema)
+export const setNode: Commands['setNode'] =
+  ({ typeOrName, attrs = {} }) =>
+  ({ state, dispatch, chain }) => {
+    const type = getNodeType(typeOrName, state.schema)
 
-  if (!type.isTextblock) {
-    console.warn('[Editor warn]: "setNode()" only supports text block nodes.')
-    return false
+    if (!type.isTextblock) {
+      console.warn('[Editor warn]: "setNode()" only supports text block nodes.')
+      return false
+    }
+
+    return (
+      chain()
+        // try to convert node to default node if needed
+        .command({
+          fn: ({ commands }) => {
+            const canSetBlock = setBlockType(type, attrs)(state)
+
+            if (canSetBlock) {
+              return true
+            }
+
+            return commands.clearNodes()
+          },
+        })
+        .command({
+          fn: ({ state: updatedState }) => {
+            return setBlockType(type, attrs)(updatedState, dispatch)
+          },
+        })
+        .run()
+    )
   }
-
-  return chain()
-    // try to convert node to default node if needed
-    .command({
-      fn: ({ commands }) => {
-        const canSetBlock = setBlockType(type, attrs)(state)
-
-        if (canSetBlock) {
-          return true
-        }
-
-        return commands.clearNodes()
-      },
-    })
-    .command({
-      fn: ({ state: updatedState }) => {
-        return setBlockType(type, attrs)(updatedState, dispatch)
-      },
-    })
-    .run()
-}

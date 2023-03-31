@@ -1,7 +1,7 @@
-import type { Node } from 'prosemirror-model'
 import { EXTENSION_NAMES } from '../constants'
 import { isActive } from './helpers/isActive'
 import { isFontFancyActive as _isFontFancyActive } from './helpers/isFontFancyActive'
+import type { Node } from 'prosemirror-model'
 import type { EditorCore } from './index'
 
 export class ActiveManager {
@@ -15,14 +15,16 @@ export class ActiveManager {
    */
   public isActive(name: string, attributes?: {}): boolean
   public isActive(attributes: {}): boolean
-  public isActive(nameOrAttributes: string, attributesOrUndefined?: {}): boolean {
-    const name = typeof nameOrAttributes === 'string'
-      ? nameOrAttributes
-      : null
+  public isActive(
+    nameOrAttributes: string,
+    attributesOrUndefined?: {}
+  ): boolean {
+    const name = typeof nameOrAttributes === 'string' ? nameOrAttributes : null
 
-    const attributes = typeof nameOrAttributes === 'string'
-      ? attributesOrUndefined
-      : nameOrAttributes
+    const attributes =
+      typeof nameOrAttributes === 'string'
+        ? attributesOrUndefined
+        : nameOrAttributes
 
     return isActive(this.core.view.state, name, attributes)
   }
@@ -42,13 +44,13 @@ export class ActiveManager {
       this.core.view.state.selection.to,
       (node) => {
         collectRangeNodes.push(node)
-      },
+      }
     )
     if (
       // shouldn't display menu in some text block
-      collectRangeNodes.find(n => (
-        [EXTENSION_NAMES.CODE_BLOCK] as string[]
-      ).includes(n.type.name))
+      collectRangeNodes.some((n) =>
+        ([EXTENSION_NAMES.CODE_BLOCK] as string[]).includes(n.type.name)
+      )
     ) {
       return false
     }
@@ -66,10 +68,12 @@ export class ActiveManager {
     doc.nodesBetween(from, to, (node) => {
       collectRangeNodes.push(node)
     })
-    return !collectRangeNodes.find(n => ([
-      EXTENSION_NAMES.HEADING,
-      EXTENSION_NAMES.CODE_BLOCK,
-    ] as string[]).includes(n.type.name))
-      && collectRangeNodes.filter(n => n.type.isText).length === 1
+    return (
+      !collectRangeNodes.some((n) =>
+        (
+          [EXTENSION_NAMES.HEADING, EXTENSION_NAMES.CODE_BLOCK] as string[]
+        ).includes(n.type.name)
+      ) && collectRangeNodes.filter((n) => n.type.isText).length === 1
+    )
   }
 }

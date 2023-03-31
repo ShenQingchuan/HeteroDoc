@@ -7,38 +7,39 @@ declare global {
   }
 }
 
-export const clearNodes: Commands['clearNodes'] = () => ({ state, tr, dispatch }) => {
-  const { selection } = tr
-  const { ranges } = selection
+export const clearNodes: Commands['clearNodes'] =
+  () =>
+  ({ state, tr, dispatch }) => {
+    const { selection } = tr
+    const { ranges } = selection
 
-  if (!dispatch)
-    return true
+    if (!dispatch) return true
 
-  ranges.forEach(({ $from, $to }) => {
-    state.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
-      if (node.type.isText)
-        return
+    ranges.forEach(({ $from, $to }) => {
+      state.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
+        if (node.type.isText) return
 
-      const { doc, mapping } = tr
-      const $mappedFrom = doc.resolve(mapping.map(pos))
-      const $mappedTo = doc.resolve(mapping.map(pos + node.nodeSize))
-      const nodeRange = $mappedFrom.blockRange($mappedTo)
+        const { doc, mapping } = tr
+        const $mappedFrom = doc.resolve(mapping.map(pos))
+        const $mappedTo = doc.resolve(mapping.map(pos + node.nodeSize))
+        const nodeRange = $mappedFrom.blockRange($mappedTo)
 
-      if (!nodeRange)
-        return
+        if (!nodeRange) return
 
-      const targetLiftDepth = liftTarget(nodeRange)
+        const targetLiftDepth = liftTarget(nodeRange)
 
-      if (node.type.isTextblock) {
-        const { defaultType } = $mappedFrom.parent.contentMatchAt($mappedFrom.index())
+        if (node.type.isTextblock) {
+          const { defaultType } = $mappedFrom.parent.contentMatchAt(
+            $mappedFrom.index()
+          )
 
-        tr.setNodeMarkup(nodeRange.start, defaultType)
-      }
+          tr.setNodeMarkup(nodeRange.start, defaultType)
+        }
 
-      if (targetLiftDepth || targetLiftDepth === 0)
-        tr.lift(nodeRange, targetLiftDepth)
+        if (targetLiftDepth || targetLiftDepth === 0)
+          tr.lift(nodeRange, targetLiftDepth)
+      })
     })
-  })
 
-  return true
-}
+    return true
+  }

@@ -8,7 +8,9 @@ const setTextAlign = (alignment: 'left' | 'center' | 'right' | 'justify') => {
 <template>
   <n-button
     class="hetero-editor__float-menu-item align-left"
-    quaternary px1 m="x0.25"
+    quaternary
+    px1
+    m="x0.25"
     @click="setTextAlign('left')"
   >
     <template #icon>
@@ -17,7 +19,9 @@ const setTextAlign = (alignment: 'left' | 'center' | 'right' | 'justify') => {
   </n-button>
   <n-button
     class="hetero-editor__float-menu-item align-center"
-    quaternary px1 m="x0.25"
+    quaternary
+    px1
+    m="x0.25"
     @click="setTextAlign('center')"
   >
     <template #icon>
@@ -26,7 +30,9 @@ const setTextAlign = (alignment: 'left' | 'center' | 'right' | 'justify') => {
   </n-button>
   <n-button
     class="hetero-editor__float-menu-item align-right"
-    quaternary px1 m="x0.25"
+    quaternary
+    px1
+    m="x0.25"
     @click="setTextAlign('right')"
   >
     <template #icon>
@@ -35,7 +41,9 @@ const setTextAlign = (alignment: 'left' | 'center' | 'right' | 'justify') => {
   </n-button>
   <n-button
     class="hetero-editor__float-menu-item align-justify"
-    quaternary px1 m="x0.25"
+    quaternary
+    px1
+    m="x0.25"
     @click="setTextAlign('justify')"
   >
     <template #icon>

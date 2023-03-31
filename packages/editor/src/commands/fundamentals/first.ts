@@ -8,15 +8,14 @@ declare global {
   }
 }
 
-export const first: Commands['first'] = ({ commands }) => (props) => {
-  const items = typeof commands === 'function'
-    ? commands(props)
-    : commands
+export const first: Commands['first'] =
+  ({ commands }) =>
+  (props) => {
+    const items = typeof commands === 'function' ? commands(props) : commands
 
-  for (let i = 0; i < items.length; i += 1) {
-    if (items[i]?.(props))
-      return true
+    for (const item of items) {
+      if (item?.(props)) return true
+    }
+
+    return false
   }
-
-  return false
-}

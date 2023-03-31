@@ -8,9 +8,7 @@ export const clickEditorDOMCloseSelection = () => {
         // we need to close the selection range
         if (view.state.selection.from !== view.state.selection.to) {
           const { tr } = view.state
-          tr.setSelection(
-            Selection.near(tr.doc.resolve(pos), 1),
-          )
+          tr.setSelection(Selection.near(tr.doc.resolve(pos), 1))
           view.dispatch(tr)
           return true
         }

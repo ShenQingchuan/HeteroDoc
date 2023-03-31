@@ -12,8 +12,8 @@ export function createI18nPlugin() {
         ([key, value]) => {
           const yaml = key.endsWith('.yaml')
           return [key.slice(10, yaml ? -5 : -4), (value as any).default]
-        },
-      ),
+        }
+      )
     ),
   })
 }

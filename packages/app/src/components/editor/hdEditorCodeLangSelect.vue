@@ -1,25 +1,27 @@
 <script setup lang="ts">
 import { useCodeBlockLangSearchOptions } from '../../composables/useCodeblockLangSelectorSearch'
-import { EditorCodeBlockLangBtnClassName, EditorFloatMenuAction } from '../../constants/editor'
+import {
+  EditorCodeBlockLangBtnClassName,
+  EditorFloatMenuAction,
+} from '../../constants/editor'
 import { editorEventBus } from '../../eventBus'
 
-const langSelectorDropdownClassName = 'hetero-editor__code-block-selector-dropdown'
+const langSelectorDropdownClassName =
+  'hetero-editor__code-block-selector-dropdown'
 
 const { t } = useI18n()
 const editorCore = useEditorCoreInject()
 const editorStore = useEditorStore()
 const langSelectorDropdownRef = ref<HTMLElement>()
 const currentCodeBlockElement = ref<HTMLElement>()
-const {
-  searchWord,
-  filteredOptions,
-  langNameToLangIdAliasMap,
-} = useCodeBlockLangSearchOptions()
+const { searchWord, filteredOptions, langNameToLangIdAliasMap } =
+  useCodeBlockLangSearchOptions()
 
 const handleSelectLangText = (langName: string) => {
-  const alias = langName === 'plaintext'
-    ? t('editor.menu.code-block-lang-text-placeholder')
-    : langName
+  const alias =
+    langName === 'plaintext'
+      ? t('editor.menu.code-block-lang-text-placeholder')
+      : langName
   langName = langNameToLangIdAliasMap[langName] ?? langName
   editorCore?.value.emit('updateCodeBlock', {
     codeBlockDOM: currentCodeBlockElement.value!,
@@ -34,30 +36,29 @@ const hideLangSelectorDropdown = () => {
   searchWord.value = ''
 }
 const showLangSelectorDropdown = (
-  pos: Parameters<typeof editorStore.setFloatMenuPosition>[0],
+  pos: Parameters<typeof editorStore.setFloatMenuPosition>[0]
 ) => {
   editorStore.setFloatMenuPosition(pos, EditorFloatMenuAction.ByUIEvent)
   editorStore.setShowCodeBlockLangSelector(true)
   searchWord.value = ''
 }
-const handleClickDropdownOutside = (e: MouseEvent) => {
+const handleClickDropdownOutside = () => {
   hideLangSelectorDropdown()
 }
 
 editorEventBus.on('editorMounted', ({ editorDOM }) => {
   editorDOM.addEventListener('click', (e) => {
-    if (e.target instanceof HTMLDivElement
-      && e.target.classList.contains(EditorCodeBlockLangBtnClassName)
+    if (
+      e.target instanceof HTMLDivElement &&
+      e.target.classList.contains(EditorCodeBlockLangBtnClassName)
     ) {
       const codeBlockElement = e.target.parentElement!
       currentCodeBlockElement.value = codeBlockElement
       const { x, y } = e.target.getBoundingClientRect()
-      showLangSelectorDropdown(
-        {
-          right: x,
-          top: y + 30,
-        },
-      )
+      showLangSelectorDropdown({
+        right: x,
+        top: y + 30,
+      })
     }
   })
 })

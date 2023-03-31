@@ -1,9 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
 import { jsonData } from '../mocks/mockDoc'
+import type { RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
-  { name: 'landing', path: '/landing', component: () => import('../pages/landing/index.vue') },
+  {
+    name: 'landing',
+    path: '/landing',
+    component: () => import('../pages/landing/index.vue'),
+  },
   {
     name: 'playground',
     path: '/',

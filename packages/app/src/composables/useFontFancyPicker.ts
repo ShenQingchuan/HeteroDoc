@@ -1,7 +1,7 @@
 import { fontBgColorSet, fontColorSet } from '@hetero/editor'
+import { editorEventBus } from '../eventBus'
 import type { EditorCore, FontFancyAttrs } from '@hetero/editor'
 import type { CSSProperties } from 'vue'
-import { editorEventBus } from '../eventBus'
 
 export function useFontFancyPicker() {
   const editorStore = useEditorStore()
@@ -9,22 +9,28 @@ export function useFontFancyPicker() {
   const rerenderKey = ref(0)
   const fontFancyBtnRef = ref<HTMLElement>()
   const fontFancyBtnBounding = useElementBounding(fontFancyBtnRef)
-  const getStyleFromFancyAttrs = (fontFancyAttrs: FontFancyAttrs | null | undefined) => {
-    if (!fontFancyAttrs)
-      return {}
+  const getStyleFromFancyAttrs = (
+    fontFancyAttrs: FontFancyAttrs | null | undefined
+  ) => {
+    if (!fontFancyAttrs) return {}
     const { colorIndex, bgColorIndex } = fontFancyAttrs
     const style: CSSProperties = {}
     const isDarkMode = envStore.isDark
     if (colorIndex)
-      style.color = isDarkMode ? fontColorSet[colorIndex]![1] : fontColorSet[colorIndex]![0]
+      style.color = isDarkMode
+        ? fontColorSet[colorIndex]![1]
+        : fontColorSet[colorIndex]![0]
     if (bgColorIndex)
-      style.backgroundColor = isDarkMode ? fontBgColorSet[bgColorIndex]![1] : fontBgColorSet[bgColorIndex]![0]
+      style.backgroundColor = isDarkMode
+        ? fontBgColorSet[bgColorIndex]![1]
+        : fontBgColorSet[bgColorIndex]![0]
     return style
   }
-  const getMenuIconStyleFromActiveFontFancy = (core: EditorCore | undefined) => {
+  const getMenuIconStyleFromActiveFontFancy = (
+    core: EditorCore | undefined
+  ) => {
     const isFontFancyActive = core?.activeManager.isFontFancyActive()
-    if (!isFontFancyActive)
-      return {}
+    if (!isFontFancyActive) return {}
     const gotStyle = getStyleFromFancyAttrs(isFontFancyActive)
     return gotStyle
   }
@@ -40,20 +46,23 @@ export function useFontFancyPicker() {
     })
   })
 
-  watch(() => editorStore.isShowEditorMenu, (
-    isShowEditorMenu,
-    prevIsShowEditorMenu,
-  ) => {
-    if (isShowEditorMenu && !prevIsShowEditorMenu) {
-      rerenderKey.value += 1
-    }
-  })
-  editorEventBus.on('editorMounted', ({ core }) => {
-    watch(() => envStore.isDark, (nowIsDark, preIsDark) => {
-      if (nowIsDark !== preIsDark) {
-        core.emit('changeTheme', { theme: nowIsDark ? 'dark' : 'light' })
+  watch(
+    () => editorStore.isShowEditorMenu,
+    (isShowEditorMenu, prevIsShowEditorMenu) => {
+      if (isShowEditorMenu && !prevIsShowEditorMenu) {
+        rerenderKey.value += 1
       }
-    })
+    }
+  )
+  editorEventBus.on('editorMounted', ({ core }) => {
+    watch(
+      () => envStore.isDark,
+      (nowIsDark, preIsDark) => {
+        if (nowIsDark !== preIsDark) {
+          core.emit('changeTheme', { theme: nowIsDark ? 'dark' : 'light' })
+        }
+      }
+    )
   })
 
   return {

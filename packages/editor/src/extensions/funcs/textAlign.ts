@@ -1,7 +1,7 @@
 import { EXTENSION_NAMES } from '../../constants'
+import { ExtensionType } from '../../types'
 import type { EditorCore } from '../../core'
 import type { Command, IEditorExtension, NoArgsCommand } from '../../types'
-import { ExtensionType } from '../../types'
 
 interface TextAlignCommandDefs {
   setTextAlign: Command<{ alignment: 'left' | 'center' | 'right' | 'justify' }>
@@ -23,26 +23,33 @@ export class TextAlign implements IEditorExtension {
   constructor(public core: EditorCore) {}
 
   commands: () => TextAlignCommandDefs = () => {
-    const allTextBlockNodeNames
-      = Object.values(this.core.schema.nodes)
-        .filter(nodeType => nodeType.isTextblock)
-        .map(nodeType => nodeType.name)
+    const allTextBlockNodeNames = Object.values(this.core.schema.nodes)
+      .filter((nodeType) => nodeType.isTextblock)
+      .map((nodeType) => nodeType.name)
 
     return {
-      setTextAlign: ({ alignment }) => ({ commands }) => {
-        return allTextBlockNodeNames.every(nodeName => commands.updateAttributes({
-          typeOrName: nodeName,
-          attrs: {
-            textAlign: alignment,
-          },
-        }))
-      },
-      unsetTextAlign: () => ({ commands }) => {
-        return allTextBlockNodeNames.every(nodeName => commands.resetAttributes({
-          typeOrName: nodeName,
-          attrs: 'textAlign',
-        }))
-      },
+      setTextAlign:
+        ({ alignment }) =>
+        ({ commands }) => {
+          return allTextBlockNodeNames.every((nodeName) =>
+            commands.updateAttributes({
+              typeOrName: nodeName,
+              attrs: {
+                textAlign: alignment,
+              },
+            })
+          )
+        },
+      unsetTextAlign:
+        () =>
+        ({ commands }) => {
+          return allTextBlockNodeNames.every((nodeName) =>
+            commands.resetAttributes({
+              typeOrName: nodeName,
+              attrs: 'textAlign',
+            })
+          )
+        },
     }
   }
 }

@@ -1,15 +1,20 @@
 import { Plugin, PluginKey } from 'prosemirror-state'
-import type { EditorCore } from '../core'
-import type { AddMarksSchema, Command, IEditorExtension, NoArgsCommand } from '../types'
-import type { PatternRule } from '../core/rule'
 import { markInputRule, markPasteRule } from '../core/rule'
 import { getMarksBetween } from '../core/helpers/getMarksBetween'
 import { getMarkRange } from '../core/helpers/getMarkRange'
 import { ExtensionType } from '../types'
 import { EXTENSION_NAMES } from '../constants'
+import type { PatternRule } from '../core/rule'
+import type {
+  AddMarksSchema,
+  Command,
+  IEditorExtension,
+  NoArgsCommand,
+} from '../types'
+import type { EditorCore } from '../core'
 
-const hyperlinkInputRegExp = /(?:^|\s)(?:\[)(?<text>(?:[^\[\]]+))(?:\]\()(?<url>(?:[^\(\)]+))(?:\))$/
-const hyperlinkPasteRegExp = /(?:\[)(?<text>(?:[^\[\]]+))(?:\]\()(?<url>(?:[^\(\)]+))(?:\))/g
+const hyperlinkInputRegExp = /(?:^|\s)\[(?<text>[^[\]]+)]\((?<url>[^()]+)\)$/
+const hyperlinkPasteRegExp = /\[(?<text>[^[\]]+)]\((?<url>[^()]+)\)/g
 const getHyperlinkAttrsFromMarkdownFormat = (match: RegExpMatchArray) => {
   const text = match.groups?.text ?? ''
   const url = match.groups?.url ?? ''
@@ -69,8 +74,7 @@ export class HyperlinkExtension implements IEditorExtension<HyperlinkOptions> {
             {
               tag: 'a[href]',
               getAttrs(el) {
-                if (typeof el === 'string')
-                  return null
+                if (typeof el === 'string') return null
                 const url = el.getAttribute('href')
                 const displayText = el.textContent
                 return { url, displayText }
@@ -88,37 +92,56 @@ export class HyperlinkExtension implements IEditorExtension<HyperlinkOptions> {
 
   commands: () => HyperlinkCommandsDefs = () => {
     return {
-      updateHyperlink: ({ current, prev, linkText }) => ({ core, view, tr, dispatch }) => {
-        if (dispatch) {
-          const newHyperlinkMark = core.schema.marks.hyperlink!.create(current)
-          const { from, to, empty } = view.state.selection
-          const newCurrentMarks = newHyperlinkMark.addToSet(getMarksBetween(from, to, view.state.doc).map(m => m.mark))
-          if (empty) {
-            const resolvedPos = view.state.doc.resolve(from)
-            const markRange = getMarkRange(resolvedPos, core.schema.marks.hyperlink!, prev)
-            if (markRange) {
-              const { from, to } = markRange
-              tr.replaceRangeWith(from, to, core.schema.text(linkText, newCurrentMarks))
-            }
-            else {
-              tr.insert(from, core.schema.text(linkText, newCurrentMarks))
+      updateHyperlink:
+        ({ current, prev, linkText }) =>
+        ({ core, view, tr, dispatch }) => {
+          if (dispatch) {
+            const newHyperlinkMark =
+              core.schema.marks.hyperlink!.create(current)
+            const { from, to, empty } = view.state.selection
+            const newCurrentMarks = newHyperlinkMark.addToSet(
+              getMarksBetween(from, to, view.state.doc).map((m) => m.mark)
+            )
+            if (empty) {
+              const resolvedPos = view.state.doc.resolve(from)
+              const markRange = getMarkRange(
+                resolvedPos,
+                core.schema.marks.hyperlink!,
+                prev
+              )
+              if (markRange) {
+                const { from, to } = markRange
+                tr.replaceRangeWith(
+                  from,
+                  to,
+                  core.schema.text(linkText, newCurrentMarks)
+                )
+              } else {
+                tr.insert(from, core.schema.text(linkText, newCurrentMarks))
+              }
+            } else {
+              tr.replaceRangeWith(
+                from,
+                to,
+                core.schema.text(linkText, newCurrentMarks)
+              )
             }
           }
-          else {
-            tr.replaceRangeWith(from, to, core.schema.text(linkText, newCurrentMarks))
-          }
-        }
-        return true
-      },
-      unsetHyperlink: () => ({ commands }) => {
-        return commands.unsetMark({ typeOrName: this.name })
-      },
-      toggleHyperlink: ({ url }) => ({ commands }) => {
-        return commands.toggleMark({
-          typeOrName: this.name,
-          attrs: { url },
-        })
-      },
+          return true
+        },
+      unsetHyperlink:
+        () =>
+        ({ commands }) => {
+          return commands.unsetMark({ typeOrName: this.name })
+        },
+      toggleHyperlink:
+        ({ url }) =>
+        ({ commands }) => {
+          return commands.toggleMark({
+            typeOrName: this.name,
+            attrs: { url },
+          })
+        },
     }
   }
 
@@ -156,13 +179,20 @@ export class HyperlinkExtension implements IEditorExtension<HyperlinkOptions> {
             if (!currentNode) {
               return true
             }
-            const linkAttrs = currentNode.marks.find(m => m.type.name === 'hyperlink')?.attrs
+            const linkAttrs = currentNode.marks.find(
+              (m) => m.type.name === 'hyperlink'
+            )?.attrs
             if (linkAttrs) {
-              const { left, top } = (event.target as HTMLElement).getBoundingClientRect()
+              const { left, top } = (
+                event.target as HTMLElement
+              ).getBoundingClientRect()
               const { url = '' } = linkAttrs
-              onTriggerEditPopover({ left, top }, { url }, currentNode.text ?? '')
-            }
-            else {
+              onTriggerEditPopover(
+                { left, top },
+                { url },
+                currentNode.text ?? ''
+              )
+            } else {
               onCloseEditPopover()
             }
             return false

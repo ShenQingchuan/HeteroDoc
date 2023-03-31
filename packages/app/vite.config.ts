@@ -11,16 +11,14 @@ import { defineConfig } from 'vite'
 // https://vitejs.dev/config/
 export default defineConfig({
   resolve: {
-    conditions: [
-      'dev',
-    ],
+    conditions: ['dev'],
   },
   clearScreen: false,
   server: {
     proxy: {
       '/api': {
         target: 'http://localhost:9000',
-        rewrite: path => path.replace(/^\/api/, ''),
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
   },
@@ -36,10 +34,7 @@ export default defineConfig({
     AutoImport({
       // global imports to register
       imports: ['vue', 'vue-router', 'pinia', '@vueuse/core', 'vue-i18n'],
-      dirs: [
-        'src/composables',
-        'src/stores',
-      ],
+      dirs: ['src/composables', 'src/stores'],
       dts: 'src/types/auto-imports.d.ts',
     }),
     Components({

@@ -5,11 +5,8 @@ import { editorEventBus } from '../../eventBus'
 
 const editorStore = useEditorStore()
 const { t } = useI18n()
-const {
-  activeOption,
-  onFastpathActionKey,
-  onFastpathTrigger,
-} = useFastpathHandler()
+const { activeOption, onFastpathActionKey, onFastpathTrigger } =
+  useFastpathHandler()
 
 const isBlockQuoteAvailable = ref(true)
 
@@ -24,7 +21,10 @@ const getActiveClassByOption = (option: string) => {
 
 editorEventBus.on('editorMounted', ({ core }) => {
   core.on('activateInputFastPath', ({ left, top, options }) => {
-    editorStore.setFloatMenuPosition({ left, top }, EditorFloatMenuAction.ByInputFastpath)
+    editorStore.setFloatMenuPosition(
+      { left, top },
+      EditorFloatMenuAction.ByInputFastpath
+    )
     editorStore.setShowInputFastpath(true)
     isBlockQuoteAvailable.value = options.blockQuoteAvailable
   })
@@ -37,7 +37,11 @@ editorEventBus.on('editorMounted', ({ core }) => {
 })
 watch(
   () => editorStore.isShowInputFastpath,
-  (isShow) => { if (isShow) { activeOption.value = '' } },
+  (isShow) => {
+    if (isShow) {
+      activeOption.value = ''
+    }
+  }
 )
 </script>
 
@@ -47,8 +51,13 @@ watch(
       <transition name="float-slide-fade">
         <div
           v-show="editorStore.isShowInputFastpath"
-          w300px max-h-400px overflow-y-auto
-          flex-col items-center p2 border-rounded
+          w300px
+          max-h-400px
+          overflow-y-auto
+          flex-col
+          items-center
+          p2
+          border-rounded
           editor-float-card
           text="dark:neutral-100"
           class="hetero-editor__input-fastpath"
@@ -60,7 +69,8 @@ watch(
           }"
         >
           <div
-            text="3 neutral-600/80 dark:neutral-50/80" px="1.2"
+            text="3 neutral-600/80 dark:neutral-50/80"
+            px="1.2"
             class="hetero-editor__input-fastpath-options-title-basic-textblocks"
           >
             {{ t('editor.menu.fastpath-options-title-basic-textblocks') }}
@@ -68,17 +78,23 @@ watch(
           <div
             v-for="i in 5"
             :key="`heading-${i}`"
-            :class="`hetero-editor__input-fastpath-option heading-${i} ${getActiveClassByOption(`h${i}`)}`"
+            :class="`hetero-editor__input-fastpath-option heading-${i} ${getActiveClassByOption(
+              `h${i}`
+            )}`"
             editor-input-fastpath-option
             @click="onFastpathTrigger({ option: `h${i}` as const })"
           >
             <i
-              class="label-icon" m="r0.5" v-bind="{
+              class="label-icon"
+              m="r0.5"
+              v-bind="{
                 [`i-ci:heading-h${i}`]: '',
               }"
               editor-input-fastpath-icon
             />
-            <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-heading', { level: i }) }}</span>
+            <span select-none ml="1.2">{{
+              t('editor.menu.fastpath-option-heading', { level: i })
+            }}</span>
           </div>
           <div
             v-if="isBlockQuoteAvailable"
@@ -87,8 +103,15 @@ watch(
             editor-input-fastpath-option
             @click="onFastpathTrigger({ option: 'quote' })"
           >
-            <i class="label-icon" m="r0.5" i-tabler:blockquote editor-input-fastpath-icon />
-            <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-quote') }}</span>
+            <i
+              class="label-icon"
+              m="r0.5"
+              i-tabler:blockquote
+              editor-input-fastpath-icon
+            />
+            <span select-none ml="1.2">{{
+              t('editor.menu.fastpath-option-quote')
+            }}</span>
           </div>
           <div
             class="hetero-editor__input-fastpath-option codeBlock"
@@ -96,8 +119,15 @@ watch(
             editor-input-fastpath-option
             @click="onFastpathTrigger({ option: 'codeblock' })"
           >
-            <i class="label-icon" m="r0.5" i-tabler:code editor-input-fastpath-icon />
-            <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-code-block') }}</span>
+            <i
+              class="label-icon"
+              m="r0.5"
+              i-tabler:code
+              editor-input-fastpath-icon
+            />
+            <span select-none ml="1.2">{{
+              t('editor.menu.fastpath-option-code-block')
+            }}</span>
           </div>
           <div
             class="hetero-editor__input-fastpath-option horizontal"
@@ -105,8 +135,15 @@ watch(
             editor-input-fastpath-option
             @click="onFastpathTrigger({ option: 'horizontal' })"
           >
-            <i class="label-icon" m="r0.5" i-octicon:horizontal-rule-24 editor-input-fastpath-icon />
-            <span select-none ml="1.2">{{ t('editor.menu.fastpath-option-horizontal') }}</span>
+            <i
+              class="label-icon"
+              m="r0.5"
+              i-octicon:horizontal-rule-24
+              editor-input-fastpath-icon
+            />
+            <span select-none ml="1.2">{{
+              t('editor.menu.fastpath-option-horizontal')
+            }}</span>
           </div>
         </div>
       </transition>

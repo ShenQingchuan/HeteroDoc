@@ -1,11 +1,11 @@
-import type { Node, Slice } from 'prosemirror-model'
 import { NodeSelection, Plugin, PluginKey } from 'prosemirror-state'
 import { findParentNodeClosestToPos } from 'prosemirror-utils'
 import { EXTENSION_NAMES } from '../../constants'
-import type { EditorCore } from '../../core'
-import type { IEditorExtension } from '../../types'
 import { ExtensionType } from '../../types'
 import { isHeteroBlock } from '../../utils/isSomewhat'
+import type { EditorCore } from '../../core'
+import type { IEditorExtension } from '../../types'
+import type { Node, Slice } from 'prosemirror-model'
 
 export class DragAndDrop implements IEditorExtension {
   type = ExtensionType.func
@@ -27,7 +27,10 @@ export class DragAndDrop implements IEditorExtension {
       }
       this.draggingPos = dragNodePos
       this.draggingNode = draggingNode
-      core.logger.debug({ draggingPos: this.draggingPos, draggingNodeType: this.draggingNode?.type.name })
+      core.logger.debug({
+        draggingPos: this.draggingPos,
+        draggingNodeType: this.draggingNode?.type.name,
+      })
       const { doc } = core.view.state
       this.draggingSlice = NodeSelection.create(doc, dragNodePos).content()
     })
@@ -36,11 +39,17 @@ export class DragAndDrop implements IEditorExtension {
         return
       }
       const dropResolvedPos = core.view.state.doc.resolve(dropPos)
-      const dropAreaClosetBlock = findParentNodeClosestToPos(dropResolvedPos, node => node.isBlock)
+      const dropAreaClosetBlock = findParentNodeClosestToPos(
+        dropResolvedPos,
+        (node) => node.isBlock
+      )
       if (!dropAreaClosetBlock) {
         return this.clearDraggingStatus()
       }
-      core.logger.debug({ dropOnBlockPos: dropAreaClosetBlock.pos, dropOnBlockNodeType: dropAreaClosetBlock.node.type.name })
+      core.logger.debug({
+        dropOnBlockPos: dropAreaClosetBlock.pos,
+        dropOnBlockNodeType: dropAreaClosetBlock.node.type.name,
+      })
       core.logger.debug('dragging slice', this.draggingSlice)
       const { pos: dropAreaClosetBlockPos } = dropAreaClosetBlock
       const { tr } = core.view.state
@@ -50,7 +59,10 @@ export class DragAndDrop implements IEditorExtension {
       // before removing the dragging node, we need to re-compute the `draggingPos` by `tr.map`
       // because the `draggingPos` is based on the original document
       const draggingPosAfterInsert = tr.mapping.map(this.draggingPos)
-      tr.delete(draggingPosAfterInsert, draggingPosAfterInsert + this.draggingNode.nodeSize)
+      tr.delete(
+        draggingPosAfterInsert,
+        draggingPosAfterInsert + this.draggingNode.nodeSize
+      )
 
       // Set the dragging meta to prevent `selectionChange` event
       // because this case is special and handled by this extension

@@ -1,6 +1,6 @@
-import type { MarkType } from 'prosemirror-model'
 import { getMarkType } from '../../core/helpers/getMarkType'
 import { isMarkActive } from '../../core/helpers/isMarkActive'
+import type { MarkType } from 'prosemirror-model'
 import type { Command } from '../../types'
 
 declare global {
@@ -16,15 +16,18 @@ declare global {
   }
 }
 
-export const toggleMark: Commands['toggleMark'] = (
-  { typeOrName, attrs = {}, options = {} },
-) => ({ commands, state }) => {
-  const { extendEmptyMarkRange = false } = options
-  const type = getMarkType(typeOrName, state.schema)
-  const isActive = isMarkActive(state, type, attrs)
+export const toggleMark: Commands['toggleMark'] =
+  ({ typeOrName, attrs = {}, options = {} }) =>
+  ({ commands, state }) => {
+    const { extendEmptyMarkRange = false } = options
+    const type = getMarkType(typeOrName, state.schema)
+    const isActive = isMarkActive(state, type, attrs)
 
-  if (isActive)
-    return commands.unsetMark({ typeOrName: type, options: { extendEmptyMarkRange } })
+    if (isActive)
+      return commands.unsetMark({
+        typeOrName: type,
+        options: { extendEmptyMarkRange },
+      })
 
-  return commands.setMark({ typeOrName: type, attrs })
-}
+    return commands.setMark({ typeOrName: type, attrs })
+  }

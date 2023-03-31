@@ -7,7 +7,10 @@ const editorStore = useEditorStore()
 
 <template>
   <n-button
-    class="hetero-editor__float-menu-item bold" quaternary px1 m="x0.25"
+    class="hetero-editor__float-menu-item bold"
+    quaternary
+    px1
+    m="x0.25"
     :class="{ active: editorStore.menuActiveState.bold }"
     @click="editorCore?.cmdManager.chain.focus().toggleBold().run()"
   >
@@ -16,7 +19,10 @@ const editorStore = useEditorStore()
     </template>
   </n-button>
   <n-button
-    class="hetero-editor__float-menu-item italic" quaternary px1 m="x0.25"
+    class="hetero-editor__float-menu-item italic"
+    quaternary
+    px1
+    m="x0.25"
     :class="{ active: editorStore.menuActiveState.italic }"
     @click="editorCore?.cmdManager.chain.focus().toggleItalic().run()"
   >
@@ -25,7 +31,10 @@ const editorStore = useEditorStore()
     </template>
   </n-button>
   <n-button
-    class="hetero-editor__float-menu-item code" quaternary px1 m="x0.25"
+    class="hetero-editor__float-menu-item code"
+    quaternary
+    px1
+    m="x0.25"
     :class="{ active: editorStore.menuActiveState.code }"
     @click="editorCore?.cmdManager.chain.focus().toggleCode().run()"
   >
@@ -34,7 +43,10 @@ const editorStore = useEditorStore()
     </template>
   </n-button>
   <n-button
-    class="hetero-editor__float-menu-item underline" quaternary px1 m="x0.25"
+    class="hetero-editor__float-menu-item underline"
+    quaternary
+    px1
+    m="x0.25"
     :class="{ active: editorStore.menuActiveState.underline }"
     @click="editorCore?.cmdManager.chain.focus().toggleUnderline().run()"
   >
@@ -43,7 +55,10 @@ const editorStore = useEditorStore()
     </template>
   </n-button>
   <n-button
-    class="hetero-editor__float-menu-item deleteLine" quaternary px1 m="x0.25"
+    class="hetero-editor__float-menu-item deleteLine"
+    quaternary
+    px1
+    m="x0.25"
     :class="{ active: editorStore.menuActiveState.deleteLine }"
     @click="editorCore?.cmdManager.chain.focus().toggleDeleteLine().run()"
   >

@@ -3,7 +3,10 @@ import { HETERO_BLOCK_NODE_DATA_TAG } from '../../constants'
 import { isHeteroBlock } from '../../utils/isSomewhat'
 import type { EditorCore } from '../index'
 
-function getRectLeftForCloset(el: HTMLElement, selector: string): [number, HTMLElement] | void {
+function getRectLeftForCloset(
+  el: HTMLElement,
+  selector: string
+): [number, HTMLElement] | void {
   const closetTopBlockElement = el.closest(selector) as HTMLElement | null
   if (!closetTopBlockElement) {
     return
@@ -13,15 +16,26 @@ function getRectLeftForCloset(el: HTMLElement, selector: string): [number, HTMLE
 }
 
 const getClosetTopLevelBlockLeft = (el: HTMLElement) => {
-  return getRectLeftForCloset(el, `.ProseMirror > [${HETERO_BLOCK_NODE_DATA_TAG}="true"]`)
+  return getRectLeftForCloset(
+    el,
+    `.ProseMirror > [${HETERO_BLOCK_NODE_DATA_TAG}="true"]`
+  )
 }
 const getClosetBlockLeft = (el: HTMLElement) => {
   return getRectLeftForCloset(el, `[${HETERO_BLOCK_NODE_DATA_TAG}="true"]`)
 }
 
 export const activateSideBtns = (core: EditorCore) => {
-  const showSideToolBtn = (left: number, pos: number, hoveredBlockElement: HTMLElement, topBlockElement: HTMLElement) =>
-    core.emit('activateSideBtns', { left, hoverCtx: { pos, hoveredBlockElement, topBlockElement } })
+  const showSideToolBtn = (
+    left: number,
+    pos: number,
+    hoveredBlockElement: HTMLElement,
+    topBlockElement: HTMLElement
+  ) =>
+    core.emit('activateSideBtns', {
+      left,
+      hoverCtx: { pos, hoveredBlockElement, topBlockElement },
+    })
 
   core.on('selectionChange', ({ tr, prevState }) => {
     const prevCursor = prevState.selection.from
@@ -29,8 +43,8 @@ export const activateSideBtns = (core: EditorCore) => {
     const currentCursorPos = tr.selection.from
     const domAtCurrentCursorPos = core.view.domAtPos(currentCursorPos).node
     if (
-      !(domAtPrevCursorPos instanceof HTMLElement)
-      || !(domAtCurrentCursorPos instanceof HTMLElement)
+      !(domAtPrevCursorPos instanceof HTMLElement) ||
+      !(domAtCurrentCursorPos instanceof HTMLElement)
     ) {
       return
     }
@@ -51,7 +65,7 @@ export const activateSideBtns = (core: EditorCore) => {
         currentRectX,
         currentCursorPos,
         hoveredBlockElement,
-        topBlockElement,
+        topBlockElement
       )
     }
   })
@@ -60,7 +74,8 @@ export const activateSideBtns = (core: EditorCore) => {
     props: {
       handleDOMEvents: {
         mouseover(view, event) {
-          const toElement = event.target as HTMLElement; const fromElement = event.relatedTarget as HTMLElement
+          const toElement = event.target as HTMLElement
+          const fromElement = event.relatedTarget as HTMLElement
           const isGoingIntoOneBlock = isHeteroBlock(event.target)
           const isLeavingFromOneBlock = isHeteroBlock(event.relatedTarget)
 
@@ -68,8 +83,7 @@ export const activateSideBtns = (core: EditorCore) => {
             if (isLeavingFromOneBlock) {
               if (fromElement.contains(toElement)) {
                 // pass, execute underlaying logic to update y position
-              }
-              else if (toElement.contains(fromElement)) {
+              } else if (toElement.contains(fromElement)) {
                 // pass, leave from one block to its parent block
                 // don't need to update y position
                 return false

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type { EditorCore } from '@hetero/editor'
 import { EditorProvideKey } from '../../constants/editor'
 import { editorEventBus } from '../../eventBus'
 import { composeExtensions } from './composeExtensions'
+import type { EditorCore } from '@hetero/editor'
 
 const props = defineProps<{ mockData?: any }>()
 const { t } = useI18n()
@@ -17,20 +17,21 @@ useTitle(t('pages.playground.title'))
 provide(EditorProvideKey, editorCore)
 onMounted(() => {
   const container = editorRef.value!
-  editorCore.value = createHeteroEditor({
-    doc: props.mockData,
-    container,
-    isReadOnly: false,
-    autofocus: true,
-    isOffline: true,
-  }, {
-    themeMode: envStore.isDark ? 'dark' : 'light',
-    i18nTr: t,
-    extensions: (core: EditorCore) => composeExtensions(core),
-  })
-  container
-    .querySelector('.ProseMirror')
-    ?.setAttribute('spellcheck', 'false')
+  editorCore.value = createHeteroEditor(
+    {
+      doc: props.mockData,
+      container,
+      isReadOnly: false,
+      autofocus: true,
+      isOffline: true,
+    },
+    {
+      themeMode: envStore.isDark ? 'dark' : 'light',
+      i18nTr: t,
+      extensions: (core: EditorCore) => composeExtensions(core),
+    }
+  )
+  container.querySelector('.ProseMirror')?.setAttribute('spellcheck', 'false')
   editorEventBus.emit('editorMounted', {
     core: editorCore.value!,
     editorDOM: editorRef.value!,
@@ -44,12 +45,19 @@ onMounted(() => {
     <HdEditorContext>
       <div
         class="page-misc__editor-test"
-        bg-base flex-col items-center justify-center
-        w100vw min-h-100vh p-y-10
+        bg-base
+        flex-col
+        items-center
+        justify-center
+        w100vw
+        min-h-100vh
+        p-y-10
       >
         <div
           class="page-misc__editor-test__settings"
-          flex-items-center justify-center m-y-4
+          flex-items-center
+          justify-center
+          m-y-4
         >
           <n-button m-x-4 @click="envStore.toggleDark()">
             <div v-if="envStore.isDark" i-carbon-light text-6 mr2 font-light />
@@ -59,8 +67,10 @@ onMounted(() => {
         </div>
         <div
           class="page-misc__editor-test-container"
-          w70vw m-x-auto
-          border-base border-rounded
+          w70vw
+          m-x-auto
+          border-base
+          border-rounded
         >
           <div
             ref="editorRef"

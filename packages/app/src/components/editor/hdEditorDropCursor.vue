@@ -13,7 +13,7 @@ const setRectForDropCursor = (rect: DOMRect) => {
   dropCursorClientY.value = top
 }
 
-editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
+editorEventBus.on('editorMounted', ({ core }) => {
   core.on('dragBlock', ({ hoverBlockRect }) => {
     isShowDropCursor.value = true
     setRectForDropCursor(hoverBlockRect)
@@ -32,7 +32,9 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
 <template>
   <teleport to="body">
     <div
-      v-show="isShowDropCursor" class="heterodoc-drop-cursor h2px" :style="{
+      v-show="isShowDropCursor"
+      class="heterodoc-drop-cursor h2px"
+      :style="{
         width: `${dropCursorWidth}px`,
         left: `${dropCursorClientX}px`,
         top: `${dropCursorClientY}px`,

@@ -1,9 +1,10 @@
 import { omit } from '@hetero/shared'
-import type { AttributeSpec, Node } from 'prosemirror-model'
 import { getUUID } from './getUUID'
+import type { AttributeSpec, Node } from 'prosemirror-model'
 
 export function extendsBlockAttrs(
-  others: Record<string, AttributeSpec> = {}, excludes?: string[],
+  others: Record<string, AttributeSpec> = {},
+  excludes?: string[]
 ) {
   const blockAttrsBase: Record<string, AttributeSpec> = {
     blockId: { default: null },

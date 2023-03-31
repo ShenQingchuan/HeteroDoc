@@ -103,7 +103,7 @@ export const useEditorStore = defineStore('editor', {
     },
     setFloatMenuPosition(
       pos: Partial<{ left: number; top: number; right: number }>,
-      action: EditorFloatMenuAction,
+      action: EditorFloatMenuAction
     ) {
       const { left, right, top } = pos
       this.floatTargetNodeLeft = left ?? Number.NaN

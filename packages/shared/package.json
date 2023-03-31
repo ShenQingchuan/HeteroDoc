@@ -3,7 +3,13 @@
   "version": "0.0.1",
   "description": "Shared library for heterodoc project",
   "type": "module",
+  "keywords": [
+    "Utilities"
+  ],
+  "license": "MIT",
+  "author": "ShenQingchuan",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "dev": "./src/index.ts",
@@ -12,7 +18,6 @@
     },
     "./*": "./*"
   },
-  "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "cross-env NODE_ENV=development && tsup --watch",
     "build": "cross-env NODE_ENV=production && tsup"
@@ -21,10 +26,5 @@
     "cross-env": "^7.0.3",
     "tsup": "^6.7.0",
     "typescript": "^5.0.3"
-  },
-  "keywords": [
-    "Utilities"
-  ],
-  "author": "ShenQingchuan",
-  "license": "MIT"
+  }
 }

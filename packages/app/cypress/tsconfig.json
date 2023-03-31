@@ -7,8 +7,5 @@
     "types": ["cypress", "node"],
     "jsx": "preserve"
   },
-  "include": [
-    "**/*.ts", 
-    "../cypress.d.ts"
-  ]
+  "include": ["**/*.ts", "../cypress.d.ts"]
 }
