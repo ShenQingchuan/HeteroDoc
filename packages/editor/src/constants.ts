@@ -49,7 +49,9 @@ export enum EXTENSION_NAMES {
   ITALIC = 'italic',
   UNDERLINE = 'underline',
   HORIZONTAL_LINE = 'horizontalLine',
+  SEARCH_AND_REPLACE = 'searchAndReplace',
 }
 
+export const HETERODOC_SEARCH_AND_REPLACE_CLASS_NAME = 'heterodoc-search-and-replace'
 export const HETERODOC_PLACEHOLER_CLASS_NAME = 'heterodoc-placeholder'
 export const HETERODOC_HORIZONTAL_LINE_CLASS_NAME = 'heterodoc-horizontal-line'

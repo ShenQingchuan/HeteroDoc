@@ -15,6 +15,7 @@
   --heterodoc-blockquote-border-left-color: #c0c0c0;
   --heterodoc-blockquote-bg-color: rgb(239, 237, 237);
   --heterodoc-horizontal-line-color: rgba(22, 22, 22, 0.1);
+  --heterodoc-search-highlight: #eed514;
 }
 
 :root.dark {
@@ -30,6 +31,7 @@
   --heterodoc-blockquote-border-left-color: #d5d5d5;
   --heterodoc-blockquote-bg-color: rgb(95, 94, 94);
   --heterodoc-horizontal-line-color: #444444;
+  --heterodoc-search-highlight: #e7a80f;
 }
 
 .ProseMirror {
@@ -134,6 +136,11 @@
     margin-bottom: 1rem;
     border-bottom: 1px solid var(--heterodoc-horizontal-line-color);
     height: 1px;
+  }
+
+  // search and replace highlight
+  .heterodoc-search-and-replace {
+    background-color: var(--heterodoc-search-highlight);
   }
 }
 

@@ -13,7 +13,7 @@ import { merge } from 'lodash'
 import { getLogger } from '../utils/logger'
 import { ExtensionType } from '../types'
 import type { EditorLogger } from '../utils/logger'
-import type { EditorThemeMode, IEditorExtension, IEditorMark, InputFastpathOptions } from '../types'
+import type { EditorThemeMode, IEditorExtension, IEditorMark } from '../types'
 import { createBuiltinFuncExts } from '../extensions/funcs/builtinFuncExts'
 import { mergeSchemaSpecs } from './schema'
 import { inputRules, pasteRules } from './rule'
@@ -22,6 +22,7 @@ import { HelpersManager } from './helpers/helpersManager'
 import { ActiveManager } from './activeManager'
 import { getAllBuiltinPlugins } from './plugins'
 import type { PatternRule } from './rule'
+import type { EditorCoreEvent } from './events'
 
 export interface EditorOptions {
   container: string | HTMLElement // editor mount point
@@ -29,23 +30,6 @@ export interface EditorOptions {
   doc?: any // given document data to initialize editor
   autofocus?: boolean
   isOffline?: boolean
-}
-export interface EditorCoreEvent {
-  'rendered': { timeCost: number }
-  'changeTheme': { theme: 'light' | 'dark' }
-  'beforeDispatchTransaction': { tr: Transaction }
-  'dispatchedTransaction': null
-  'selectionChange': { tr: Transaction; prevState: EditorState }
-  'activateInputFastPath': { left: number; top: number; options: InputFastpathOptions }
-  'deactivateInputFastPath': { isContentChanged: boolean }
-  'activateSideBtns': { left: number; hoverCtx: { pos: number; hoveredBlockElement: HTMLElement; topBlockElement: HTMLElement } }
-  'fastpathActionKey': { event: KeyboardEvent }
-  'updateCodeBlock': { codeBlockDOM: HTMLElement; langName: string; alias?: string }
-  /** Start drag block node, and we need handle the 'mouseover' event to make hovered blocks show a highlight border, in order to indicate the dropable position */
-  'dragBlock': { hoverNodePos: number; hoverBlockRect: DOMRect }
-  'dragMoving': { hoverElement: HTMLElement }
-  /** End of block node dragging. on this event handling, we need to move the dragged node to its target position  */
-  'dropBlock': { dropPos: number }
 }
 
 export class EditorCore extends TypeEvent<EditorCoreEvent> {

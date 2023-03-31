@@ -2,6 +2,7 @@ import type { EditorCore } from '../../core'
 import { BaseKeymap } from './baseKeymap'
 import { Blockify } from './blockify'
 import { DragAndDrop } from './dragAndDrop'
+import { SearchAndReplaceExtension } from './searchAndRelace'
 import { TextAlign } from './textAlign'
 import { TextIdent } from './textIndent'
 
@@ -11,4 +12,5 @@ export const createBuiltinFuncExts = (core: EditorCore) => [
   new TextIdent(core),
   new DragAndDrop(core),
   new Blockify(core),
+  new SearchAndReplaceExtension(core),
 ]
