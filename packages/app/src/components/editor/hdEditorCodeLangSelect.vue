@@ -22,10 +22,10 @@ const handleSelectLangText = (langName: string) => {
     langName === 'plaintext'
       ? t('editor.menu.code-block-lang-text-placeholder')
       : langName
-  langName = langNameToLangIdAliasMap[langName] ?? langName
+  const langId = langNameToLangIdAliasMap[langName] ?? langName
   editorCore?.value.emit('updateCodeBlock', {
     codeBlockDOM: currentCodeBlockElement.value!,
-    langName,
+    langId,
     alias,
   })
   editorStore.setShowCodeBlockLangSelector(false)

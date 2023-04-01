@@ -22,9 +22,10 @@ export interface EditorCoreEvent {
     }
   }
   fastpathActionKey: { event: KeyboardEvent }
+  prepareHighlight: { langId: string }
   updateCodeBlock: {
     codeBlockDOM: HTMLElement
-    langName: string
+    langId: string
     alias?: string
   }
   /** Start drag block node, and we need handle the 'mouseover' event to make hovered blocks show a highlight border, in order to indicate the dropable position */

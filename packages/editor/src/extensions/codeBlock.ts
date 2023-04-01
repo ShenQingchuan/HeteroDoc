@@ -1,6 +1,7 @@
 import { highlightPlugin } from 'prosemirror-highlightjs'
 import { TextSelection } from 'prosemirror-state'
 import { findParentNode } from 'prosemirror-utils'
+import hljs from 'highlight.js'
 import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
 import { textblockTypeInputRule } from '../core/rule'
 import { ExtensionType } from '../types'
@@ -9,6 +10,7 @@ import {
   extendsBlockAttrs,
   getBlockAttrsFromElement,
 } from '../utils/blockSchema'
+import type { HLJSApi } from 'highlight.js'
 import type { EditorCore } from '../core'
 import type { PatternRule } from '../core/rule'
 import type {
@@ -19,7 +21,6 @@ import type {
   NoArgsCommand,
 } from '../types'
 import type { Plugin } from 'prosemirror-state'
-import type { HLJSApi } from 'highlight.js'
 
 const codeblockRegExp = /^(·{3}|`{3})(?<params>[a-z]+)?\s$/
 
@@ -45,9 +46,11 @@ export class CodeBlockExtension implements IEditorExtension {
   type = ExtensionType.node
   name = EXTENSION_NAMES.CODE_BLOCK
   options = {}
+  hljs: HLJSApi
 
-  constructor(public core: EditorCore, public hljs: HLJSApi) {
-    this.core.on('updateCodeBlock', ({ codeBlockDOM, langName, alias }) => {
+  constructor(public core: EditorCore) {
+    this.hljs = hljs
+    this.core.on('updateCodeBlock', ({ codeBlockDOM, langId, alias }) => {
       this.core.cmdManager.chain
         .command({
           fn: ({ view, tr }) => {
@@ -58,7 +61,7 @@ export class CodeBlockExtension implements IEditorExtension {
             return true
           },
         })
-        .setCodeblock({ params: langName, alias })
+        .setCodeblock({ params: langId, alias })
         .run()
     })
   }
@@ -155,10 +158,15 @@ export class CodeBlockExtension implements IEditorExtension {
   }
 
   commands: () => CodeBlockCommandsDefs = () => {
+    const prepareHighlight = (params: string) => {
+      this.core.emit('prepareHighlight', { langId: params })
+    }
+
     return {
       setCodeblock:
         ({ params }) =>
         ({ commands }) => {
+          prepareHighlight(params)
           return commands.setNode({
             typeOrName: EXTENSION_NAMES.CODE_BLOCK,
             attrs: { params },
@@ -167,6 +175,7 @@ export class CodeBlockExtension implements IEditorExtension {
       toggleCodeblock:
         ({ params }) =>
         ({ commands }) => {
+          prepareHighlight(params)
           return commands.toggleNode({
             turnOn: EXTENSION_NAMES.CODE_BLOCK,
             turnOff: EXTENSION_NAMES.PARAGRAPH,

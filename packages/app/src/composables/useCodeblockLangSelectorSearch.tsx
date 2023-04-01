@@ -1,7 +1,7 @@
 import { NInput } from 'naive-ui'
-import { langsMap } from '../utils/setupHighlightjs'
+import { supportCodeBlockLangsName } from '../constants/editor'
 
-const langOptions = Object.keys(langsMap).map((langName) => ({
+const langOptions = supportCodeBlockLangsName.map((langName) => ({
   label: langName,
   key: langName,
 }))
