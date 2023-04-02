@@ -8,7 +8,7 @@ interface TextAlignCommandDefs {
   unsetTextAlign: NoArgsCommand
 }
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setTextAlign: TextAlignCommandDefs['setTextAlign']
     unsetTextAlign: TextAlignCommandDefs['unsetTextAlign']

@@ -15,7 +15,7 @@ const horizontalLineRegExp = /^---\s/
 interface HorizontalCommandsDefs {
   setHorizontal: NoArgsCommand
 }
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setHorizontal: HorizontalCommandsDefs['setHorizontal']
   }

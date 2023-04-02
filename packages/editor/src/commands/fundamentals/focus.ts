@@ -1,6 +1,6 @@
 import { resolveFocusPosition } from '../../core/helpers/resolveFocusPosition'
 import { isTextSelection, isiOS } from '../../utils/isSomewhat'
-import type { FocusPosition, OptionalArgsCommand } from '../../types'
+import type { Commands, FocusPosition, OptionalArgsCommand } from '../../types'
 
 export interface FocusArgs {
   position?: FocusPosition
@@ -9,7 +9,7 @@ export interface FocusArgs {
   }
 }
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     focus: OptionalArgsCommand<FocusArgs>
   }

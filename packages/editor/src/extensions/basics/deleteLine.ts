@@ -14,7 +14,7 @@ const deleteLineDOM: DOMOutputSpec = ['del', 0]
 const deleteLineInputRegex = /(?:^|\s)(~(?<text>[^~]+)~)$/
 const deleteLinePasteRegex = /(?:^|\s)(~(?<text>[^~]+)~)/g
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setDeleteLine: NoArgsCommand
     unsetDeleteLine: NoArgsCommand

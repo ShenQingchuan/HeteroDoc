@@ -16,7 +16,7 @@ interface BlockquoteCommandsDefs {
   setBlockquote: NoArgsCommand
 }
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setBlockquote: BlockquoteCommandsDefs['setBlockquote']
   }

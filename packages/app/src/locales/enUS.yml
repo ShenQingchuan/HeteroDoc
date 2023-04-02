@@ -10,9 +10,11 @@ editor:
   search-and-replace:
     search-placeholder: Search content
     replace-placeholder: Replace content
+    total-label: Total
     replace-button: Replace
     replace-all-button: Replace all
     search-button: Search
+    case-sensitive-tooltip: Case sensitve
   menu:
     code-block-lang-text-placeholder: Plain text
     code-block-lang-search-placeholder: Search for language names ...

@@ -14,7 +14,7 @@ const singleStarPasteRegex = /(?:^|\s)(\*(?<text>[^*]+)\*)/g
 const singleUnderscoreInputRegex = /(?:^|\s)(_(?<text>[^_]+)_)$/
 const singleUnderscorePasteRegex = /(?:^|\s)(_(?<text>[^_]+)_)/g
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setItalic: NoArgsCommand
     unsetItalic: NoArgsCommand

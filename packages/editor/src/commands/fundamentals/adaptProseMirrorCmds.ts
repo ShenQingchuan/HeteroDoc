@@ -12,9 +12,10 @@ import {
 } from 'prosemirror-commands'
 import { getNodeType } from '../../core/helpers/getNodeType'
 import type { NodeType } from 'prosemirror-model'
-import type { Command, NoArgsCommand } from '../../types'
+import type { Command, Commands, NoArgsCommand } from '../../types'
 
-declare global {
+declare module '@hetero/editor' {
+  // @eslint-ignore
   interface Commands {
     deleteSelection: NoArgsCommand
     joinBackward: NoArgsCommand

@@ -1,7 +1,7 @@
 import { Selection } from 'prosemirror-state'
-import type { NoArgsCommand } from '../../types'
+import type { Commands, NoArgsCommand } from '../../types'
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     supportRemoveFirstLine: NoArgsCommand
   }

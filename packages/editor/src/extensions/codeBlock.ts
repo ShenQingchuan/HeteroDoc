@@ -2,7 +2,11 @@ import { highlightPlugin } from 'prosemirror-highlightjs'
 import { TextSelection } from 'prosemirror-state'
 import { findParentNode } from 'prosemirror-utils'
 import hljs from 'highlight.js'
-import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
+import {
+  EXTENSION_NAMES,
+  HETERO_BLOCK_NODE_DATA_TAG,
+  PARAGRAPH_SCHEMA_NODE_NAME,
+} from '../constants'
 import { textblockTypeInputRule } from '../core/rule'
 import { ExtensionType } from '../types'
 import {
@@ -34,7 +38,7 @@ interface CodeBlockCommandsDefs {
   removeEmptyCodeBlock: NoArgsCommand
 }
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setCodeblock: CodeBlockCommandsDefs['setCodeblock']
     toggleCodeblock: CodeBlockCommandsDefs['toggleCodeblock']
@@ -178,7 +182,7 @@ export class CodeBlockExtension implements IEditorExtension {
           prepareHighlight(params)
           return commands.toggleNode({
             turnOn: EXTENSION_NAMES.CODE_BLOCK,
-            turnOff: EXTENSION_NAMES.PARAGRAPH,
+            turnOff: PARAGRAPH_SCHEMA_NODE_NAME,
             attrs: { params },
           })
         },

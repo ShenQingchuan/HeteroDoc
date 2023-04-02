@@ -1,9 +1,9 @@
 import { setBlockType } from 'prosemirror-commands'
 import { getNodeType } from '../../core/helpers/getNodeType'
 import type { NodeType } from 'prosemirror-model'
-import type { Command } from '../../types'
+import type { Command, Commands } from '../../types'
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setNode: Command<{
       typeOrName: string | NodeType

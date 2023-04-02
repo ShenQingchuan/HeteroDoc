@@ -18,7 +18,7 @@ interface FontColorCommandDefs {
   unsetFontBgColor: NoArgsCommand
 }
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setFontColor: FontColorCommandDefs['setFontColor']
     unsetFontColor: FontColorCommandDefs['unsetFontColor']

@@ -1,9 +1,9 @@
 import { getMarkType } from '../../core/helpers/getMarkType'
 import { isMarkActive } from '../../core/helpers/isMarkActive'
 import type { MarkType } from 'prosemirror-model'
-import type { Command } from '../../types'
+import type { Command, Commands } from '../../types'
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     toggleMark: Command<{
       typeOrName: string | MarkType

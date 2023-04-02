@@ -13,7 +13,7 @@ const doubleUnderscoreInputRegex = /(?:^|\s)(_{2}(?<text>[^_]+)_{2})$/
 const doubleUnderscorePasteRegex = /(?:^|\s)(_{2}(?<text>[^_]+)_{2})/g
 const boldDOM: DOMOutputSpec = ['strong', 0]
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setBold: NoArgsCommand
     unsetBold: NoArgsCommand

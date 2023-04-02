@@ -13,10 +13,16 @@ import { CommandManager } from './commandManager'
 import { HelpersManager } from './helpers/helpersManager'
 import { ActiveManager } from './activeManager'
 import { getAllBuiltinPlugins } from './plugins'
-import type { EditorThemeMode, IEditorExtension, IEditorMark } from '../types'
+import type {
+  EditorExtensionMap,
+  EditorThemeMode,
+  IEditorExtension,
+  IEditorMark,
+} from '../types'
 import type { EditorLogger } from '../utils/logger'
 import type {
   EditorStateConfig,
+  PluginKey,
   Plugin as ProseMirrorPlugin,
   Transaction,
 } from 'prosemirror-state'
@@ -249,6 +255,16 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
 
   public getDocJson() {
     return this.view.state.doc.toJSON()
+  }
+
+  public getProseMirrorPlugin(key: PluginKey) {
+    return this.view.state.plugins.find((plugin) => plugin.spec.key === key)
+  }
+
+  public getExtension<N extends keyof EditorExtensionMap>(name: N) {
+    return this.extensions.find(
+      (ext) => ext.name === name
+    ) as EditorExtensionMap[N]
   }
 
   public get isDestroyed() {

@@ -14,7 +14,7 @@ interface TextIdentCommandDefs {
   unsetTextIdent: NoArgsCommand
 }
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setTextIdent: TextIdentCommandDefs['setTextIdent']
     unsetTextIdent: TextIdentCommandDefs['unsetTextIdent']

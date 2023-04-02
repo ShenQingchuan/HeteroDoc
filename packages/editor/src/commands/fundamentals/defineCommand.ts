@@ -1,6 +1,6 @@
-import type { Command, CommandProps } from '../../types'
+import type { Command, CommandProps, Commands } from '../../types'
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     command: Command<{
       fn: (props: CommandProps) => boolean

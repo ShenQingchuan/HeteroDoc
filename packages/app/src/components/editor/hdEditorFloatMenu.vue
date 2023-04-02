@@ -109,11 +109,10 @@ useEventListener(document, 'click', (event) => {
   </teleport>
 </template>
 
-<style>
-.hetero-editor__float-menu-item.active {
-  background-color: rgba(46, 51, 56, 0.09);
-}
-.dark .hetero-editor__float-menu-item.active {
-  background-color: rgba(255, 255, 255, 0.12);
+<style lang="less">
+@import '../../styles/utils.less';
+
+.hetero-editor__float-menu-item {
+  .active-text-btn;
 }
 </style>

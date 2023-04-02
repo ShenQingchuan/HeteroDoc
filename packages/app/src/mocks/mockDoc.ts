@@ -4,9 +4,11 @@ export const jsonData = {
     {
       type: 'heading',
       attrs: {
+        textAlign: 'left',
+        textIndent: 0,
+        blockId: '3F262FF9-ED8B-4F65-99B5-DA98427D6D1B',
         level: 1,
         anchorId: 'yAegjg',
-        blockId: '3F262FF9-ED8B-4F65-99B5-DA98427D6D1B',
       },
       content: [
         {
@@ -25,7 +27,33 @@ export const jsonData = {
       content: [
         {
           type: 'text',
-          text: 'This is a demo site for Heterodoc, you can try editing something here!',
+          text: 'This is a ',
+        },
+        {
+          type: 'text',
+          marks: [
+            {
+              type: 'italic',
+            },
+          ],
+          text: 'demo',
+        },
+        {
+          type: 'text',
+          text: ' site for ',
+        },
+        {
+          type: 'text',
+          marks: [
+            {
+              type: 'bold',
+            },
+          ],
+          text: 'Heterodoc',
+        },
+        {
+          type: 'text',
+          text: ', you can try editing something here!',
         },
       ],
     },

@@ -31,8 +31,8 @@ export const fontBgColorSet = [
   ['rgba(233, 30, 44, 0.2)', 'rgba(226, 80, 88, 0.28)'],
 ] as const
 
+export const PARAGRAPH_SCHEMA_NODE_NAME = 'paragraph'
 export enum EXTENSION_NAMES {
-  PARAGRAPH = 'paragraph',
   BLOCK_QUOTE = 'blockquote',
   CODE_BLOCK = 'codeBlock',
   FONT_FANCY = 'fontFancy',

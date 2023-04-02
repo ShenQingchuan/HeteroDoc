@@ -1,6 +1,6 @@
 import { Plugin } from 'prosemirror-state'
 import { findParentDomRef, findParentNode } from 'prosemirror-utils'
-import { EXTENSION_NAMES } from '../../constants'
+import { EXTENSION_NAMES, PARAGRAPH_SCHEMA_NODE_NAME } from '../../constants'
 import type { Node } from 'prosemirror-model'
 import type { EditorCore } from '../index'
 
@@ -40,7 +40,7 @@ export const activateInputFastPath = (core: EditorCore) => {
           const { selection } = state
           const { empty } = selection
           const paragraphPredicate = (node: Node) =>
-            node.type.name === EXTENSION_NAMES.PARAGRAPH
+            node.type.name === PARAGRAPH_SCHEMA_NODE_NAME
           const blockquotePredicate = (node: Node) =>
             node.type.name === EXTENSION_NAMES.BLOCK_QUOTE
           const parentParagraph = findParentNode(paragraphPredicate)(selection)

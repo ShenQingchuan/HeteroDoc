@@ -1,8 +1,8 @@
 import { TextSelection } from 'prosemirror-state'
 import { minMax } from '../../utils/minMax'
-import type { Command, Range } from '../../types'
+import type { Command, Commands, Range } from '../../types'
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setTextSelection: Command<{
       position: number | Range

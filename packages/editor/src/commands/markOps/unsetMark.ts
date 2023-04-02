@@ -1,9 +1,9 @@
 import { getMarkRange } from '../../core/helpers/getMarkRange'
 import { getMarkType } from '../../core/helpers/getMarkType'
 import type { MarkType } from 'prosemirror-model'
-import type { Command } from '../../types'
+import type { Command, Commands } from '../../types'
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     unsetMark: Command<{
       typeOrName: string | MarkType

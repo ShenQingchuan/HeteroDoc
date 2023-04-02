@@ -1,13 +1,13 @@
 import { setTextSelection } from 'prosemirror-utils'
 import { chooseFoundBlockForHoverPos } from '../../core/helpers/chooseFoundBlockForHoverPos'
 import type { ContentNodeWithPos } from 'prosemirror-utils'
-import type { Command } from '../../types'
+import type { Command, Commands } from '../../types'
 
 export interface InsertBeforeOrAfterArgs {
   pos: number
 }
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     insertBefore: Command<InsertBeforeOrAfterArgs>
     insertAfter: Command<InsertBeforeOrAfterArgs>

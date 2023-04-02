@@ -1,7 +1,7 @@
 import { liftTarget } from 'prosemirror-transform'
-import type { NoArgsCommand } from '../../types'
+import type { Commands, NoArgsCommand } from '../../types'
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     clearNodes: NoArgsCommand
   }

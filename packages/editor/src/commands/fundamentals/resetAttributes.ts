@@ -2,10 +2,10 @@ import { getMarkType } from '../../core/helpers/getMarkType'
 import { getNodeType } from '../../core/helpers/getNodeType'
 import { getSchemaTypeNameByName } from '../../core/helpers/getSchemaTypeNameByName'
 import { deleteProps } from '../../utils/deleteProps'
-import type { Command } from '../../types'
+import type { Command, Commands } from '../../types'
 import type { MarkType, NodeType } from 'prosemirror-model'
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     resetAttributes: Command<{
       typeOrName: string | NodeType | MarkType

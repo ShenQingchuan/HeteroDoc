@@ -2,9 +2,9 @@ import { getMarkType } from '../../core/helpers/getMarkType'
 import { getNodeType } from '../../core/helpers/getNodeType'
 import { getSchemaTypeNameByName } from '../../core/helpers/getSchemaTypeNameByName'
 import type { MarkType, NodeType } from 'prosemirror-model'
-import type { Command } from '../../types'
+import type { Command, Commands } from '../../types'
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     updateAttributes: Command<{
       typeOrName: string | NodeType | MarkType

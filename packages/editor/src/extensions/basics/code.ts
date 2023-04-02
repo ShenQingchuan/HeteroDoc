@@ -20,7 +20,7 @@ const codeDOM: DOMOutputSpec = [
   whiteSpaceDom,
 ]
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setCode: NoArgsCommand
     unsetCode: NoArgsCommand

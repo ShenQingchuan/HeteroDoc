@@ -35,7 +35,7 @@ interface HyperlinkCommandsDefs {
   toggleHyperlink: Command<HyperlinkAttrs>
 }
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     updateHyperlink: HyperlinkCommandsDefs['updateHyperlink']
     unsetHyperlink: HyperlinkCommandsDefs['unsetHyperlink']

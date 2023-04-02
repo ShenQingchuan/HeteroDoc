@@ -1,9 +1,9 @@
 import { getNodeType } from '../../core/helpers/getNodeType'
 import { isNodeActive } from '../../core/helpers/isNodeActive'
 import type { NodeType } from 'prosemirror-model'
-import type { Command } from '../../types'
+import type { Command, Commands } from '../../types'
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     toggleNode: Command<{
       turnOn: string | NodeType

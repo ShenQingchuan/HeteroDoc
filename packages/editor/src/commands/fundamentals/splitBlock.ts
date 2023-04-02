@@ -3,7 +3,11 @@ import { canSplit } from 'prosemirror-transform'
 import { getSplittedAttributes } from '../../core/helpers/getSplittedAttributes'
 import type { EditorState } from 'prosemirror-state'
 import type { ContentMatch } from 'prosemirror-model'
-import type { ExtensionAttribute, OptionalArgsCommand } from '../../types'
+import type {
+  Commands,
+  ExtensionAttribute,
+  OptionalArgsCommand,
+} from '../../types'
 
 function defaultBlockAt(match: ContentMatch) {
   for (let i = 0; i < match.edgeCount; i += 1) {
@@ -27,7 +31,7 @@ function ensureMarks(state: EditorState, splittableMarks?: string[]) {
   }
 }
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     splitBlock: OptionalArgsCommand<{
       keepMarks?: boolean

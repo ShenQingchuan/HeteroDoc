@@ -1,6 +1,11 @@
-import type { Command, CommandPrimitive, CommandProps } from '../../types'
+import type {
+  Command,
+  CommandPrimitive,
+  CommandProps,
+  Commands,
+} from '../../types'
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     first: Command<{
       commands: Command[] | ((props: CommandProps) => CommandPrimitive[])

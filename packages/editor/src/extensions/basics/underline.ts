@@ -10,7 +10,7 @@ import type {
 
 const underlineDOM: DOMOutputSpec = ['u', 0]
 
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setUnderline: NoArgsCommand
     unsetUnderline: NoArgsCommand

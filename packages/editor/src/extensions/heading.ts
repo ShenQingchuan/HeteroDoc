@@ -1,6 +1,10 @@
 import { getUUID } from '../utils/getUUID'
 import { textblockTypeInputRule } from '../core/rule'
-import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
+import {
+  EXTENSION_NAMES,
+  HETERO_BLOCK_NODE_DATA_TAG,
+  PARAGRAPH_SCHEMA_NODE_NAME,
+} from '../constants'
 import { ExtensionType } from '../types'
 import {
   extendsTextBlockAttrs,
@@ -22,7 +26,7 @@ interface HeadingCommandsDefs {
   setHeading: Command<HeadingSetterAttrs>
   toggleHeading: Command<HeadingSetterAttrs>
 }
-declare global {
+declare module '@hetero/editor' {
   interface Commands {
     setHeading: HeadingCommandsDefs['setHeading']
     toggleHeading: HeadingCommandsDefs['toggleHeading']
@@ -110,12 +114,12 @@ export class HeadingExtension implements IEditorExtension {
         ({ commands }) => {
           if (level === 0) {
             return commands.setNode({
-              typeOrName: EXTENSION_NAMES.PARAGRAPH,
+              typeOrName: PARAGRAPH_SCHEMA_NODE_NAME,
             })
           }
           return commands.toggleNode({
             turnOn: this.name,
-            turnOff: EXTENSION_NAMES.PARAGRAPH,
+            turnOff: PARAGRAPH_SCHEMA_NODE_NAME,
             attrs: {
               level,
               anchorId: getRandomHeadingID(),

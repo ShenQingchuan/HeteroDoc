@@ -1,6 +1,7 @@
 export * from './extensionsMap'
 export * from './funcs/textAlign'
 export * from './funcs/textIndent'
+export * from './funcs/searchAndRelace'
 export * from './basics/bold'
 export * from './basics/italic'
 export * from './basics/underline'

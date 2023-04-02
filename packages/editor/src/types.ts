@@ -1,4 +1,21 @@
 import type {
+  BlockquoteExtension,
+  BoldExtension,
+  CodeBlockExtension,
+  CodeExtension,
+  DeleteLineExtension,
+  FontFancyExtension,
+  HeadingExtension,
+  HorizontalLine,
+  HyperlinkExtension,
+  ItalicExtension,
+  SearchAndReplaceExtension,
+  TextAlign,
+  TextIdent,
+  UnderlineExtension,
+} from './extensions'
+import type { EXTENSION_NAMES } from './constants'
+import type {
   Mark as ProseMirrorMark,
   Node as ProseMirrorNode,
   SchemaSpec,
@@ -11,6 +28,12 @@ import type {
 import type { EditorView } from 'prosemirror-view'
 import type { EditorCore } from './core'
 import type { PatternRule } from './core/rule'
+import type { DragAndDrop } from './extensions/funcs/dragAndDrop'
+import type { Blockify } from './extensions/funcs/blockify'
+import type { BaseKeymap } from './extensions/funcs/baseKeymap'
+
+/* eslint-disable @typescript-eslint/no-empty-interface */
+export interface Commands {}
 
 export enum ExtensionType {
   func,
@@ -21,7 +44,7 @@ export enum ExtensionType {
 export interface IEditorExtension<OptionsDefs = {}> {
   core: EditorCore
   type: ExtensionType
-  name: string
+  name: EXTENSION_NAMES
   options: OptionsDefs
 
   schemaSpec?: () => Partial<SchemaSpec>
@@ -141,3 +164,23 @@ export interface FontFancyAttrs {
 }
 
 export type EditorThemeMode = 'light' | 'dark'
+
+export interface EditorExtensionMap {
+  blockquote: BlockquoteExtension
+  codeBlock: CodeBlockExtension
+  fontFancy: FontFancyExtension
+  heading: HeadingExtension
+  hyperlink: HyperlinkExtension
+  textAlign: TextAlign
+  textIdent: TextIdent
+  dragAndDrop: DragAndDrop
+  blockify: Blockify
+  baseKeymap: BaseKeymap
+  bold: BoldExtension
+  code: CodeExtension
+  deleteLine: DeleteLineExtension
+  italic: ItalicExtension
+  underline: UnderlineExtension
+  horizontalLine: HorizontalLine
+  searchAndReplace: SearchAndReplaceExtension
+}

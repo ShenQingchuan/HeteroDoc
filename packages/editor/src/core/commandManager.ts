@@ -3,6 +3,7 @@ import { createChainableState } from './helpers/createChainableState'
 import type { Transaction } from 'prosemirror-state'
 import type {
   CommandProps,
+  Commands,
   PrimitiveCommandsMap,
   RunCommandsChain,
 } from '../types'
