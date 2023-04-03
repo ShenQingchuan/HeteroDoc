@@ -1,3 +1,5 @@
+locale:
+  name: 中文
 common-header:
   menu:
     action-login: 登录
@@ -39,3 +41,5 @@ editor:
 pages:
   playground:
     title: Heterodoc editor playground
+playground:
+  navigate-github-link: 查看源码

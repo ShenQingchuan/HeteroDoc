@@ -1,3 +1,5 @@
+locale:
+  name: English
 common-header:
   menu:
     action-login: Login
@@ -39,3 +41,5 @@ editor:
 pages:
   playground:
     title: Heterodoc editor playground
+playground:
+  navigate-github-link: Explore in Github

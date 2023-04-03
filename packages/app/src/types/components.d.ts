@@ -23,6 +23,7 @@ declare module '@vue/runtime-core' {
     HdEditorSideTool: typeof import('./../components/editor/hdEditorSideTool.vue')['default']
     HdPageHeader: typeof import('./../components/layouts/hdPageHeader.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
+    NButtontext: typeof import('naive-ui')['NButtontext']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
     NDivider: typeof import('naive-ui')['NDivider']
     NDropdown: typeof import('naive-ui')['NDropdown']
