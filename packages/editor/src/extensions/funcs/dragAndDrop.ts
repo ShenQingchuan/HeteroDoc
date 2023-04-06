@@ -74,24 +74,21 @@ export class DragAndDrop implements IEditorExtension {
 
       // 2.1 If the dragging node is a list item, and the item is the only one in the list,
       // we need to remove the list node as well
-      let deleteStartBeforeMapping = this.draggingPos
+      let deleteStart = tr.mapping.map(this.draggingPos)
       let deleteSize = this.draggingNode.nodeSize
-      const isDraggingListItem = isListItem(this.draggingNode.type)
-      if (isDraggingListItem) {
+      if (isListItem(this.draggingNode.type)) {
         const draggingListTypeNode = findParentNodeClosestToPos(
-          tr.doc.resolve(this.draggingPos),
+          tr.doc.resolve(deleteStart),
           (node) => isList(node.type.name, core)
         )
         if (draggingListTypeNode?.node.childCount === 1) {
           const { pos: draggingListNodePos, node } = draggingListTypeNode
           core.logger.debug(`dragging the only child of ${node.type.name}`)
-          deleteStartBeforeMapping = draggingListNodePos
+          deleteStart = draggingListNodePos
           deleteSize = draggingListTypeNode.node.nodeSize
         }
       }
-
-      const draggingPosAfterInsert = tr.mapping.map(deleteStartBeforeMapping)
-      tr.delete(draggingPosAfterInsert, draggingPosAfterInsert + deleteSize)
+      tr.delete(deleteStart, deleteStart + deleteSize)
 
       // Set the dragging meta to prevent `selectionChange` event
       // because this case is special and handled by this extension

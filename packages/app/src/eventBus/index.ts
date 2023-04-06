@@ -6,4 +6,6 @@ export const editorEventBus = new TypeEvent<{
     core: EditorCore
     editorDOM: HTMLElement
   }
+  dragStart: null
+  dropEnd: null
 }>()

@@ -19,10 +19,6 @@ editorEventBus.on('editorMounted', ({ core }) => {
     isShowDropCursor.value = true
     setRectForDropCursor(hoverBlockRect)
   })
-  core.on('dropBlock', () => {
-    isShowDropCursor.value = false
-    editorStore.setDraggingOverElement(null)
-  })
   core.on('dragMoving', ({ hoverElement, isAppend = false }) => {
     editorStore.setDropToAppend(isAppend)
     if (hoverElement) {
@@ -30,6 +26,10 @@ editorEventBus.on('editorMounted', ({ core }) => {
       setRectForDropCursor(hoverElement.getBoundingClientRect(), isAppend)
     }
   })
+})
+editorEventBus.on('dropEnd', () => {
+  isShowDropCursor.value = false
+  editorStore.setDraggingOverElement(null)
 })
 </script>
 
@@ -49,7 +49,7 @@ editorEventBus.on('editorMounted', ({ core }) => {
 
 <style scoped>
 .heterodoc-drop-cursor {
-  background: rgb(221, 238, 255);
+  background: var(--heterodoc-drop-cursor-color);
   position: absolute;
   z-index: 9999;
   transform: 'translate(-50%, -50%)';

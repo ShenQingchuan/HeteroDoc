@@ -16,40 +16,48 @@ import type {
   NoArgsCommand,
 } from '../../types'
 
-export const bulletListRegExp = /^\s*([*+-])\s$/
+const START_DATA_ATTRIBUTE = 'data-start'
+export const orderedListRegExp = /^(\d+)\.\s$/
 
-interface BulletListCommandsDefs {
-  toggleBulletList: NoArgsCommand
+interface OrderedListCommandsDefs {
+  toggleOrderedList: NoArgsCommand
 }
 
 declare module '@hetero/editor' {
   interface Commands {
-    toggleBulletList: BulletListCommandsDefs['toggleBulletList']
+    toggleOrderedList: OrderedListCommandsDefs['toggleOrderedList']
   }
 }
 
-export class BulletListExtension implements IEditorExtension {
-  name = EXTENSION_NAMES.BULLET_LIST
+function parseElementStartAttribute(el: HTMLElement) {
+  const start = el.getAttribute(START_DATA_ATTRIBUTE)
+  return start ? Number.parseInt(start, 10) : 1
+}
+
+export class OrderedListExtension implements IEditorExtension {
+  name = EXTENSION_NAMES.ORDERED_LIST
   type = ExtensionType.node
   options = {}
 
   constructor(public core: EditorCore) {}
 
-  schemaSpec: () => AddNodesSchema<EXTENSION_NAMES.BULLET_LIST> = () => {
+  schemaSpec: () => AddNodesSchema<EXTENSION_NAMES.ORDERED_LIST> = () => {
     return {
       nodes: {
-        [EXTENSION_NAMES.BULLET_LIST]: {
+        [EXTENSION_NAMES.ORDERED_LIST]: {
           content: `${EXTENSION_NAMES.LIST_ITEM}+`,
           group: 'block list',
           attrs: {
+            start: { default: 1 },
             ...extendsBlockAttrs(),
           },
           parseDOM: [
             {
-              tag: 'ul',
+              tag: 'ol',
               getAttrs: (el) => {
                 return el instanceof HTMLElement
                   ? {
+                      start: parseElementStartAttribute(el),
                       ...getBlockAttrsFromElement(el),
                     }
                   : {}
@@ -57,9 +65,12 @@ export class BulletListExtension implements IEditorExtension {
             },
           ],
           toDOM(node) {
+            const { attrs } = node
+
             return [
-              'ul',
+              'ol',
               {
+                [START_DATA_ATTRIBUTE]: `${attrs.start}`,
                 [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
                 ...blockIdDataAttrAtDOM(node),
               },
@@ -71,13 +82,13 @@ export class BulletListExtension implements IEditorExtension {
     }
   }
 
-  commands: () => BulletListCommandsDefs = () => {
+  commands: () => OrderedListCommandsDefs = () => {
     return {
-      toggleBulletList:
+      toggleOrderedList:
         () =>
         ({ commands }) => {
           return commands.toggleList({
-            listTypeOrName: EXTENSION_NAMES.BULLET_LIST,
+            listTypeOrName: EXTENSION_NAMES.ORDERED_LIST,
             itemTypeOrName: EXTENSION_NAMES.LIST_ITEM,
           })
         },
@@ -86,17 +97,20 @@ export class BulletListExtension implements IEditorExtension {
 
   inputRules: () => PatternRule[] = () => {
     const bulletListTypeNodeType = getNodeType(this.name, this.core.schema)
-    const bulletListRule = wrappingInputRule({
-      find: bulletListRegExp,
+    const orderedListRule = wrappingInputRule({
+      find: orderedListRegExp,
       type: bulletListTypeNodeType,
+      getAttributes: (match) => ({ start: Number.parseInt(match[1]!, 10) }),
+      joinPredicate: (match, node) =>
+        node.childCount + node.attrs.start === Number.parseInt(match[1]!, 10),
     })
 
-    return [bulletListRule]
+    return [orderedListRule]
   }
 
   keymaps: () => Record<string, KeyboardShortcutCommand> = () => {
     return {
-      'Mod-Shift-8': () => this.core.commands.toggleBulletList(),
+      'Mod-Shift-7': () => this.core.commands.toggleOrderedList(),
     }
   }
 }

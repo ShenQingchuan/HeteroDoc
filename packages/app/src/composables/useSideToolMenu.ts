@@ -1,3 +1,5 @@
+import { editorEventBus } from '../eventBus'
+
 type SideMenuAction = 'insert-before' | 'insert-after'
 interface SideMenuOption {
   key: SideMenuAction
@@ -124,24 +126,28 @@ export function useSideToolMenu() {
     isDragging.value = true
   }
   const onMouseUpForDrop = () => {
-    if (!isDragging.value) {
-      return
+    try {
+      if (!isDragging.value) {
+        return
+      }
+      dragingMirror.value?.remove()
+      // Get current position of the last hovered block
+      // and find its position in the editor
+      const lastHoveredBlock = editorStore.draggingOverElement
+      if (!lastHoveredBlock) {
+        return
+      }
+      const pos = editor?.value.view.posAtDOM(lastHoveredBlock, 0)
+      if (pos === undefined) {
+        return
+      }
+      editor?.value.emit('dropBlock', {
+        dropPos: pos,
+        isAppend: editorStore.isDropToAppend,
+      })
+    } finally {
+      editorEventBus.emit('dropEnd', null)
     }
-    dragingMirror.value?.remove()
-    // Get current position of the last hovered block
-    // and find its position in the editor
-    const lastHoveredBlock = editorStore.draggingOverElement
-    if (!lastHoveredBlock) {
-      return
-    }
-    const pos = editor?.value.view.posAtDOM(lastHoveredBlock, 0)
-    if (pos === undefined) {
-      return
-    }
-    editor?.value.emit('dropBlock', {
-      dropPos: pos,
-      isAppend: editorStore.isDropToAppend,
-    })
   }
 
   watch(
