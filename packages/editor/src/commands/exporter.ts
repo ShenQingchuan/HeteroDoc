@@ -28,6 +28,11 @@ import { resetAttributes } from './fundamentals/resetAttributes'
 import { updateAttributes } from './fundamentals/updateAttributes'
 import { insertAfter, insertBefore } from './fundamentals/insertBeforeOrAfter'
 import { supportRemoveFirstLine } from './fundamentals/supportRemoveFirstLine'
+import { toggleList } from './fundamentals/toggleList'
+import { liftListItem } from './fundamentals/liftListItem'
+import { wrapInList } from './fundamentals/wrapInList'
+import { sinkListItem } from './fundamentals/sinkListItem'
+import { splitListItem } from './fundamentals/splitListItem'
 
 export * from './fundamentals/focus'
 export * from './fundamentals/scrollIntoView'
@@ -76,6 +81,11 @@ export const builtinsCommands = {
   insertBefore,
   insertAfter,
   supportRemoveFirstLine,
+  toggleList,
+  liftListItem,
+  wrapInList,
+  sinkListItem,
+  splitListItem,
 
   toggleMark,
   setMark,

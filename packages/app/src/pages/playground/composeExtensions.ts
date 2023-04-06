@@ -10,6 +10,7 @@ import {
   HyperlinkExtension,
   ItalicExtension,
   UnderlineExtension,
+  installListExtensions,
 } from '@hetero/editor'
 import { EditorFloatMenuAction } from '../../constants/editor'
 import type { EditorCore, IEditorExtension } from '@hetero/editor'
@@ -43,5 +44,6 @@ export function composeExtensions(core: EditorCore): IEditorExtension[] {
     new CodeBlockExtension(core),
     new FontFancyExtension(core),
     new HorizontalLine(core),
+    ...installListExtensions(core),
   ]
 }

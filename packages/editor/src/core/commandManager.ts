@@ -41,6 +41,7 @@ export class CommandManager {
         ? () => undefined // Just a placeholder for behaving like a runnable command
         : undefined,
       chain: () => this.createChain(true, tr),
+      can: () => this.createCan(tr),
       get commands() {
         return Object.fromEntries(
           Object.entries(rawCommands).map(([name, command]) => {

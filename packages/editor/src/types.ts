@@ -120,6 +120,7 @@ export interface CommandProps {
   commands: PrimitiveCommandsMap
   dispatch?: (tr: Transaction) => void
   chain: () => RunCommandsChain
+  can: () => PrimitiveCommandsMap & { chain: () => RunCommandsChain }
 }
 export interface ExtensionAttribute {
   extName: string
@@ -184,3 +185,5 @@ export interface EditorExtensionMap {
   horizontalLine: HorizontalLine
   searchAndReplace: SearchAndReplaceExtension
 }
+
+export type Predicate = (node: ProseMirrorNode) => boolean

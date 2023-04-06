@@ -131,16 +131,22 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
   }
 
   private resolveAllPlugins = () => {
+    // With ProseMirror, first plugins within an array are executed first.
+    // In tiptap, we provide the ability to override plugins,
+    // so it feels more natural to run plugins at the end of an array first.
+    // That’s why we have to reverse the `extensions` array
+    const extensions = this.extensions.reverse()
+
     // Resolve editor extensions' specs
-    const allInputRules = this.extensions.reduce(
+    const allInputRules = extensions.reduce(
       (prev, curr) => [...prev, ...(curr.inputRules?.() ?? [])],
       [] as PatternRule[]
     )
-    const allPasteRules = this.extensions.reduce(
+    const allPasteRules = extensions.reduce(
       (prev, curr) => [...prev, ...(curr.pasteRules?.() ?? [])],
       [] as PatternRule[]
     )
-    const allKeymapPlugins = this.extensions.reduce((prev, curr) => {
+    const allKeymapPlugins = extensions.reduce((prev, curr) => {
       const bindings = Object.fromEntries(
         Object.entries(curr.keymaps?.() || {}).map(
           ([shortcut, keybindingHandler]) => {
@@ -159,7 +165,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       const keyMapPlugin = keymap(bindings)
       return [...prev, keyMapPlugin]
     }, [] as ProseMirrorPlugin[])
-    const proseMirrorPluginsByExtensions = this.extensions.reduce(
+    const proseMirrorPluginsByExtensions = extensions.reduce(
       (prev, curr) => [...prev, ...(curr.getProseMirrorPlugin?.() ?? [])],
       [] as ProseMirrorPlugin[]
     )
@@ -241,6 +247,10 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
     this.isNoEffectDispatch = true
     this.view.dispatch(tr ?? this.view.state.tr)
     this.isNoEffectDispatch = false
+  }
+
+  public getNodeExtensions = (): IEditorExtension[] => {
+    return this.extensions.filter((ext) => ext.type === ExtensionType.node)
   }
 
   public getMarkExtensions = (): IEditorMark[] => {

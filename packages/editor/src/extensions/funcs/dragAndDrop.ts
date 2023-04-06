@@ -3,9 +3,11 @@ import { findParentNodeClosestToPos } from 'prosemirror-utils'
 import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../../constants'
 import { ExtensionType } from '../../types'
 import { isHeteroBlock } from '../../utils/isSomewhat'
+import { isListItem } from '../../core/helpers/isListItem'
+import { isList } from '../../core/helpers/isList'
 import type { EditorCore } from '../../core'
 import type { IEditorExtension } from '../../types'
-import type { Node, Slice } from 'prosemirror-model'
+import type { Node, ResolvedPos, Slice } from 'prosemirror-model'
 
 export class DragAndDrop implements IEditorExtension {
   type = ExtensionType.func
@@ -20,20 +22,23 @@ export class DragAndDrop implements IEditorExtension {
       core.status.isDragging = true
       // -1 is because the pos value we got is actually inside the node,
       // this is in order to get the node outter left point
-      const dragNodePos = hoverNodePos - 1
-      const draggingNode = core.view.state.doc.nodeAt(dragNodePos)
-      if (!draggingNode) {
+      const dragResolvedPos = core.view.state.doc.resolve(hoverNodePos)
+      const draggingTarget = this.findMouseActionClosetTarget(dragResolvedPos)
+      if (!draggingTarget) {
         return
       }
-      this.draggingPos = dragNodePos
-      this.draggingNode = draggingNode
-      core.logger.debug({
+      this.draggingNode = draggingTarget.node
+      this.draggingPos = draggingTarget.pos
+      core.logger.debug('dragging: ', {
         draggingPos: this.draggingPos,
         draggingNodeType: this.draggingNode?.type.name,
         draggingNodeText: this.draggingNode?.textContent,
       })
       const { doc } = core.view.state
-      this.draggingSlice = NodeSelection.create(doc, dragNodePos).content()
+      this.draggingSlice = NodeSelection.create(
+        doc,
+        draggingTarget.pos
+      ).content()
     })
 
     core.on('dropBlock', ({ dropPos, isAppend = false }) => {
@@ -41,36 +46,51 @@ export class DragAndDrop implements IEditorExtension {
         return
       }
       const dropResolvedPos = core.view.state.doc.resolve(dropPos)
-      const dropAreaClosetBlock = findParentNodeClosestToPos(
-        dropResolvedPos,
-        (node) => node.isBlock
-      )
-      if (!dropAreaClosetBlock) {
+      const dropAreaClosetTarget =
+        this.findMouseActionClosetTarget(dropResolvedPos)
+      if (!dropAreaClosetTarget) {
         return this.clearDraggingStatus()
       }
-      core.logger.debug({
-        dropOnBlockPos: dropAreaClosetBlock.pos,
-        dropOnBlockNodeType: dropAreaClosetBlock.node.type.name,
-        dropOnBlockNodeText: dropAreaClosetBlock.node.textContent,
+
+      core.logger.debug('drop: ', {
+        dropOnBlockPos: dropAreaClosetTarget.pos,
+        dropOnBlockNodeType: dropAreaClosetTarget.node.type.name,
+        dropOnBlockNodeText: dropAreaClosetTarget.node.textContent,
       })
       core.logger.debug('dragging slice', this.draggingSlice)
-      const { pos: dropAreaClosetBlockPos, node } = dropAreaClosetBlock
+      const { pos: dropAreaClosetTargetPos, node: dropAreaClosetTargetNode } =
+        dropAreaClosetTarget
       const { tr } = core.view.state
+      const isDraggingListItem = isListItem(dropAreaClosetTargetNode.type)
       // 1. Insert the dragging node before the drop area's closet block
       tr.insert(
         isAppend
-          ? dropAreaClosetBlockPos + node.nodeSize
-          : dropAreaClosetBlockPos,
+          ? dropAreaClosetTargetPos + dropAreaClosetTargetNode.nodeSize
+          : dropAreaClosetTargetPos,
         this.draggingNode
       )
       // 2. Removing the dragging node original position
       // before removing the dragging node, we need to re-compute the `draggingPos` by `tr.map`
       // because the `draggingPos` is based on the original document
-      const draggingPosAfterInsert = tr.mapping.map(this.draggingPos)
-      tr.delete(
-        draggingPosAfterInsert,
-        draggingPosAfterInsert + this.draggingNode.nodeSize
-      )
+
+      // 2.1 If the dragging node is a list item, and the item is the only one in the list,
+      // we need to remove the list node as well
+      let deleteStartBeforeMapping = this.draggingPos
+      let deleteSize = this.draggingNode.nodeSize
+      if (isDraggingListItem) {
+        const draggingListNode = findParentNodeClosestToPos(
+          tr.doc.resolve(this.draggingPos),
+          (node) => isList(node.type.name, core)
+        )
+        if (draggingListNode) {
+          const { pos: draggingListNodePos } = draggingListNode
+          deleteStartBeforeMapping = draggingListNodePos
+          deleteSize = draggingListNode.node.nodeSize
+        }
+      }
+
+      const draggingPosAfterInsert = tr.mapping.map(deleteStartBeforeMapping)
+      tr.delete(draggingPosAfterInsert, draggingPosAfterInsert + deleteSize)
 
       // Set the dragging meta to prevent `selectionChange` event
       // because this case is special and handled by this extension
@@ -81,6 +101,19 @@ export class DragAndDrop implements IEditorExtension {
       // Clear the dragging status
       this.clearDraggingStatus()
     })
+  }
+
+  findMouseActionClosetTarget(resolvedPos: ResolvedPos) {
+    // 1. Find the closet list item
+    const dropAreaClosetListItem = findParentNodeClosestToPos(
+      resolvedPos,
+      (node) => isListItem(node.type)
+    )
+    if (dropAreaClosetListItem) {
+      return dropAreaClosetListItem
+    }
+    // 2. Find the closet block
+    return findParentNodeClosestToPos(resolvedPos, (node) => node.isBlock)
   }
 
   clearDraggingStatus() {

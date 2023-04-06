@@ -50,6 +50,10 @@ export enum EXTENSION_NAMES {
   UNDERLINE = 'underline',
   HORIZONTAL_LINE = 'horizontalLine',
   SEARCH_AND_REPLACE = 'searchAndReplace',
+  LIST_ITEM = 'listItem',
+  BULLET_LIST = 'bulletList',
+  ORDERED_LIST = 'orderedList',
+  TASK_LIST = 'taskList',
 }
 
 export const HETERODOC_SEARCH_AND_REPLACE_CLASS_NAME =
