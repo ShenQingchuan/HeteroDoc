@@ -85,6 +85,80 @@ export const jsonData = {
       ],
     },
     {
+      type: 'bulletList',
+      attrs: {
+        blockId: '586DACBD-092F-4CB5-8558-67F3C048BEDA',
+      },
+      content: [
+        {
+          type: 'listItem',
+          attrs: {
+            blockId: 'A0EE4A01-2268-47D4-9819-33999676688E',
+          },
+          content: [
+            {
+              type: 'paragraph',
+              attrs: {
+                textAlign: 'left',
+                textIndent: 0,
+                blockId: '89EF3F74-8186-4A91-A4FF-CB37CB5C889F',
+              },
+              content: [
+                {
+                  type: 'text',
+                  text: 'Based on ProseMirror',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'listItem',
+          attrs: {
+            blockId: 'BF8A96F1-3125-4678-AD94-50D349F4E7ED',
+          },
+          content: [
+            {
+              type: 'paragraph',
+              attrs: {
+                textAlign: 'left',
+                textIndent: 0,
+                blockId: 'C29D6803-474A-4A5B-8155-8CF9B69B749E',
+              },
+              content: [
+                {
+                  type: 'text',
+                  text: 'WYSIWYG',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          type: 'listItem',
+          attrs: {
+            blockId: '07A83133-6F31-40F3-BF57-93D5118640CE',
+          },
+          content: [
+            {
+              type: 'paragraph',
+              attrs: {
+                textAlign: 'left',
+                textIndent: 0,
+                blockId: 'BB9E1601-3BAE-414D-9818-889E62987796',
+              },
+              content: [
+                {
+                  type: 'text',
+                  text: 'Semantic HTML structure',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
       type: 'paragraph',
       attrs: {
         textAlign: 'left',

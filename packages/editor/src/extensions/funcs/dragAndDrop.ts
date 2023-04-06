@@ -61,7 +61,6 @@ export class DragAndDrop implements IEditorExtension {
       const { pos: dropAreaClosetTargetPos, node: dropAreaClosetTargetNode } =
         dropAreaClosetTarget
       const { tr } = core.view.state
-      const isDraggingListItem = isListItem(dropAreaClosetTargetNode.type)
       // 1. Insert the dragging node before the drop area's closet block
       tr.insert(
         isAppend
@@ -77,15 +76,17 @@ export class DragAndDrop implements IEditorExtension {
       // we need to remove the list node as well
       let deleteStartBeforeMapping = this.draggingPos
       let deleteSize = this.draggingNode.nodeSize
+      const isDraggingListItem = isListItem(this.draggingNode.type)
       if (isDraggingListItem) {
-        const draggingListNode = findParentNodeClosestToPos(
+        const draggingListTypeNode = findParentNodeClosestToPos(
           tr.doc.resolve(this.draggingPos),
           (node) => isList(node.type.name, core)
         )
-        if (draggingListNode) {
-          const { pos: draggingListNodePos } = draggingListNode
+        if (draggingListTypeNode?.node.childCount === 1) {
+          const { pos: draggingListNodePos, node } = draggingListTypeNode
+          core.logger.debug(`dragging the only child of ${node.type.name}`)
           deleteStartBeforeMapping = draggingListNodePos
-          deleteSize = draggingListNode.node.nodeSize
+          deleteSize = draggingListTypeNode.node.nodeSize
         }
       }
 
