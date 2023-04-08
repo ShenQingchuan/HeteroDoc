@@ -38,6 +38,8 @@ editor:
     edit-link-url-placeholder: Edit link URL ...
     edit-link-text-label: Text
     edit-link-text-placeholder: Edit link display text ...
+  tips:
+    code-block-copy-success: Copied code block content
 pages:
   playground:
     title: Heterodoc editor playground

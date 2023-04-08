@@ -9,6 +9,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    HdEditorCodeBlockAction: typeof import('./../components/editor/hdEditorCodeBlockAction.vue')['default']
     HdEditorCodeLangSelect: typeof import('./../components/editor/hdEditorCodeLangSelect.vue')['default']
     HdEditorContext: typeof import('./../components/editor/hdEditorContext.vue')['default']
     HdEditorDropCursor: typeof import('./../components/editor/hdEditorDropCursor.vue')['default']
@@ -29,6 +30,7 @@ declare module '@vue/runtime-core' {
     NDropdown: typeof import('naive-ui')['NDropdown']
     NIcon: typeof import('naive-ui')['NIcon']
     NInput: typeof import('naive-ui')['NInput']
+    NMessageProvider: typeof import('naive-ui')['NMessageProvider']
     NTooltip: typeof import('naive-ui')['NTooltip']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

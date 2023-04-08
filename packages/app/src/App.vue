@@ -10,7 +10,9 @@ const naiveUITheme = useNaiveThemeSetup()
     :theme="naiveUITheme"
     :locale="naiveUILocale[locale.value]"
   >
-    <router-view />
+    <n-message-provider>
+      <router-view />
+    </n-message-provider>
   </n-config-provider>
 </template>
 

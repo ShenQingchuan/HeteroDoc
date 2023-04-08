@@ -19,5 +19,8 @@ export default defineConfig({
     'editor-input-fastpath-icon':
       'text-4 text-neutral-700/60 dark:text-neutral-100/60',
   },
-  include: path.join(__dirname, 'src/**/*.{vue,ts}'),
+  include: [
+    path.join(__dirname, 'src/**/*.{vue,ts}'),
+    path.join(__dirname, '../editor/**/*.ts'),
+  ],
 })

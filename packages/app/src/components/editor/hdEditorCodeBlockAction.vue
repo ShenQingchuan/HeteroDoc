@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { useMessage } from 'naive-ui'
 import { useCodeBlockLangSearchOptions } from '../../composables/useCodeblockLangSelectorSearch'
 import {
+  EditorCodeBlockCopyBtnClassName,
   EditorCodeBlockLangBtnClassName,
   EditorFloatMenuAction,
 } from '../../constants/editor'
@@ -10,6 +12,7 @@ const langSelectorDropdownClassName =
   'hetero-editor__code-block-selector-dropdown'
 
 const { t } = useI18n()
+const message = useMessage()
 const editorCore = useEditorCoreInject()
 const editorStore = useEditorStore()
 const langSelectorDropdownRef = ref<HTMLElement>()
@@ -47,18 +50,32 @@ const handleClickDropdownOutside = () => {
 }
 
 editorEventBus.on('editorMounted', ({ editorDOM }) => {
+  const closetCodeBlockSelector = 'pre.hljs[data-hetero-block="true"]'
   editorDOM.addEventListener('click', (e) => {
-    if (
-      e.target instanceof HTMLDivElement &&
-      e.target.classList.contains(EditorCodeBlockLangBtnClassName)
-    ) {
-      const codeBlockElement = e.target.parentElement!
-      currentCodeBlockElement.value = codeBlockElement
-      const { x, y } = e.target.getBoundingClientRect()
-      showLangSelectorDropdown({
-        right: x,
-        top: y + 30,
-      })
+    if (e.target instanceof HTMLDivElement) {
+      if (e.target.classList.contains(EditorCodeBlockLangBtnClassName)) {
+        const codeBlockElement = e.target.closest<HTMLPreElement>(
+          closetCodeBlockSelector
+        )!
+        currentCodeBlockElement.value = codeBlockElement
+        const { x, y } = e.target.getBoundingClientRect()
+        showLangSelectorDropdown({
+          right: x,
+          top: y + 30,
+        })
+      } else if (e.target.closest(`.${EditorCodeBlockCopyBtnClassName}`)) {
+        const codeBlockElement = e.target.closest<HTMLPreElement>(
+          closetCodeBlockSelector
+        )!
+        currentCodeBlockElement.value = codeBlockElement
+        if (codeBlockElement.textContent) {
+          navigator.clipboard
+            .writeText(codeBlockElement.textContent)
+            .then(() => {
+              message.success(t('editor.tips.code-block-copy-success'))
+            })
+        }
+      }
     }
   })
 })

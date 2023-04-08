@@ -17,6 +17,7 @@ export const FloatMenuHeadingSubMenuStyleDark = {
 }
 
 export const EditorCodeBlockLangBtnClassName = 'code-block-lang'
+export const EditorCodeBlockCopyBtnClassName = 'code-block-copy'
 
 export const SIDE_BTN_GAP = 30 // pixels
 export const SIDE_BTN_HEIGHT = 24 // pixels

@@ -173,7 +173,7 @@ export class EditorCore extends TypeEvent<EditorCoreEvent> {
       history(),
       keymap({
         'Mod-z': undo,
-        'Alt-Mod-z': redo,
+        'Shift-Mod-z': redo,
       }),
     ]
 

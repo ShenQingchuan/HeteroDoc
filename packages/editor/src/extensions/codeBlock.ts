@@ -110,13 +110,24 @@ export class CodeBlockExtension implements IEditorExtension {
               [
                 'div',
                 {
-                  class: 'code-block-lang',
-                  'data-lang-name':
-                    node.attrs.alias ||
-                    (node.attrs.params === 'plaintext'
-                      ? i18nTr('editor.menu.code-block-lang-text-placeholder')
-                      : node.attrs.params),
+                  class: 'code-block-actions',
                 },
+                [
+                  'div',
+                  { class: 'code-block-copy' },
+                  ['div', { class: 'i-carbon:copy' }],
+                ],
+                [
+                  'div',
+                  {
+                    class: 'code-block-lang',
+                    'data-lang-name':
+                      node.attrs.alias ||
+                      (node.attrs.params === 'plaintext'
+                        ? i18nTr('editor.menu.code-block-lang-text-placeholder')
+                        : node.attrs.params),
+                  },
+                ],
               ],
               ['code', 0],
             ]

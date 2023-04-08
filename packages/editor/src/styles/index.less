@@ -111,19 +111,29 @@
     font-family: JetBrains Mono, monospace;
     font-size: 14px;
   }
-  pre[class='hljs'] .code-block-lang {
-    width: fit-content;
+  pre[class='hljs'] .code-block-actions {
     position: absolute;
     right: 1rem;
     top: 0.5rem;
-    padding: 0.125rem 0.5rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    user-select: none;
-    background-color: var(--heterodoc-code-lang-bg-color);
-    font-family: var(--heterodoc-inline-code-font);
-
-    &::before {
+    display: flex;
+    align-items: center;
+    
+    .code-block-lang,
+    .code-block-copy {
+      display: flex;
+      align-items: center;
+      min-height: 30px;
+      margin-left: 0.25rem;
+      width: fit-content;
+      padding: 0.125rem 0.5rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      user-select: none;
+      background-color: var(--heterodoc-code-lang-bg-color);
+      font-family: var(--heterodoc-inline-code-font);
+    }
+    
+    .code-block-lang::before {
       content: attr(data-lang-name);
     }
   }
