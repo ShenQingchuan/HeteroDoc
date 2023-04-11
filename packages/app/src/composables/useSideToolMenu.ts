@@ -236,9 +236,17 @@ export function useSideToolMenu() {
   useEventListener(sideDragBtn, 'mousedown', onSideDragBtnMouseDown)
   useEventListener(document, 'mousemove', onMouseMove)
   useEventListener(document, 'mouseup', onMouseUp)
-  onClickOutside(sideToolMenu, () => {
-    isSideToolMenuShow.value = false
-  })
+  onClickOutside(
+    sideToolMenu,
+    () => {
+      if (isSideToolMenuShow.value) {
+        isSideToolMenuShow.value = false
+      }
+    },
+    {
+      ignore: [sideDragBtn],
+    }
+  )
 
   return {
     isDisableSideBtnMoving,
