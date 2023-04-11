@@ -13,5 +13,5 @@
     "lib": ["esnext", "dom"],
     "skipLibCheck": true
   },
-  "include": ["cypress.config.ts"]
+  "include": ["cypress.config.ts", "src/types"]
 }

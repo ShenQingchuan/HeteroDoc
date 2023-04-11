@@ -1,4 +1,8 @@
-import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../../constants'
+import {
+  EXTENSION_NAMES,
+  HETERO_BLOCK_NODE_DATA_TAG,
+  HETERO_BLOCK_NODE_TYPE_DATA_ORDERED_LIST,
+} from '../../constants'
 import { ExtensionType } from '../../types'
 import {
   blockIdDataAttrAtDOM,
@@ -71,7 +75,8 @@ export class OrderedListExtension implements IEditorExtension {
               'ol',
               {
                 [START_DATA_ATTRIBUTE]: `${attrs.start}`,
-                [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+                [HETERO_BLOCK_NODE_DATA_TAG]:
+                  HETERO_BLOCK_NODE_TYPE_DATA_ORDERED_LIST,
                 ...blockIdDataAttrAtDOM(node),
               },
               0,

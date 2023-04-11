@@ -50,7 +50,7 @@ const handleClickDropdownOutside = () => {
 }
 
 editorEventBus.on('editorMounted', ({ editorDOM }) => {
-  const closetCodeBlockSelector = 'pre.hljs[data-hetero-block="true"]'
+  const closetCodeBlockSelector = 'pre.hljs[data-hetero-block]'
   editorDOM.addEventListener('click', (e) => {
     if (e.target instanceof HTMLDivElement) {
       if (e.target.classList.contains(EditorCodeBlockLangBtnClassName)) {

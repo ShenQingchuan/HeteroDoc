@@ -1,19 +1,11 @@
 <script setup lang="ts">
-import { naiveUILocale } from './constants/locales'
-
-const { locale } = useI18n()
-const naiveUITheme = useNaiveThemeSetup()
+import NaiveContext from './components/context/naiveUIContext.vue'
 </script>
 
 <template>
-  <n-config-provider
-    :theme="naiveUITheme"
-    :locale="naiveUILocale[locale.value]"
-  >
-    <n-message-provider>
-      <router-view />
-    </n-message-provider>
-  </n-config-provider>
+  <NaiveContext>
+    <router-view />
+  </NaiveContext>
 </template>
 
 <style>

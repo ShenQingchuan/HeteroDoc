@@ -2,6 +2,10 @@ export const whiteSpaceDom = ['span', { class: 'whitespace' }, '']
 
 // Available to be used by other packages:
 export const HETERO_BLOCK_NODE_DATA_TAG = 'data-hetero-block'
+export const HETERO_BLOCK_NODE_TYPE_DATA_BULLET_LIST = 'bullet-list'
+export const HETERO_BLOCK_NODE_TYPE_DATA_ORDERED_LIST = 'ordered-list'
+export const HETERO_BLOCK_NODE_TYPE_DATA_LIST_ITEM = 'list-item'
+
 export const fontColorSet = [
   ['', ''],
   ['rgb(140, 140, 140)', 'rgb(102, 102, 102)'],

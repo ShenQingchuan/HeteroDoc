@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { SIDE_BTN_GAP, SIDE_BTN_HEIGHT } from '../../constants/editor'
+import { SIDE_BTN_GAP } from '../../constants/editor'
 import { editorEventBus } from '../../eventBus'
 
 const {
-  sideToolBtn,
   sideDragBtn,
   sideToolMenu,
+  isDisableSideBtnMoving,
   isShowHoverElementBouding,
   isSideToolBtnShow,
   isSideToolMenuShow,
@@ -14,8 +14,8 @@ const {
   hoverNodePos,
   hoveringBlockElement,
   hoveringBlockElementRect,
-  hoveringTopBlockElement,
-  hoveringTopBlockElementRect,
+  hoveringLayerWidth,
+  hoveringLayerExtraWidth,
   menuOptions,
   handleMenuClick,
   controlSideToolStatusForEditorDOMArea,
@@ -24,21 +24,18 @@ const {
 editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   core.on(
     'activateSideBtns',
-    ({ left, hoverCtx: { pos, hoveredBlockElement, topBlockElement } }) => {
-      const topBlockRect = topBlockElement.getBoundingClientRect()
+    ({ left, width, hoverCtx: { pos, hoveredBlockElement } }) => {
+      if (isDisableSideBtnMoving.value) {
+        return
+      }
+
       const hoverBlockRect = hoveredBlockElement.getBoundingClientRect()
-      const top = hoverBlockRect.top + window.scrollY
       isSideToolBtnShow.value = true
       hoverNodePos.value = pos
-
       hoveringBlockElement.value = hoveredBlockElement
       hoveringBlockElementRect.value = hoverBlockRect
-      hoveringTopBlockElement.value = topBlockElement
-      hoveringTopBlockElementRect.value = topBlockRect
-
+      hoveringLayerWidth.value = width
       sideToolBtnLeft.value = left
-      sideToolBtnTop.value =
-        top + 0.5 * hoverBlockRect.height - 0.5 * SIDE_BTN_HEIGHT
     }
   )
   controlSideToolStatusForEditorDOMArea(editorDOM)
@@ -49,24 +46,6 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   <teleport to="body">
     <transition name="float-slide-fade">
       <div v-show="isSideToolBtnShow" class="flex items-center">
-        <n-button
-          ref="sideToolBtn"
-          secondary
-          bg="cool-gray-300/50 dark:cool-gray-500/50"
-          border="neutral-400/50 solid 1px"
-          class="hetero-editor__side-btn mr1"
-          :style="{
-            top: `${sideToolBtnTop}px`,
-            left: `${sideToolBtnLeft}px`,
-          }"
-          @click="isSideToolMenuShow = true"
-        >
-          <template #icon>
-            <n-icon size="24">
-              <div i-carbon:add />
-            </n-icon>
-          </template>
-        </n-button>
         <n-button
           ref="sideDragBtn"
           quaternary
@@ -96,7 +75,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
         border="1px solid neutral-400/50"
         editor-float-card
         border-rounded
-        w140px
+        w-auto
         :style="{
           top: `${sideToolBtnTop}px`,
           left: `${sideToolBtnLeft}px`,
@@ -111,9 +90,9 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
           cursor-pointer
           mx1
           px3
-          my="1.5"
+          my="1"
           pt="1.5"
-          pb2
+          pb1
           border-rounded
           text="dark:white"
           hover="bg-neutral-400/40"
@@ -123,7 +102,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
             }
           "
         >
-          <div :class="option.icon" text-5 />
+          <div :class="option.icon" text-4 />
           <div ml-2>
             {{ option.label }}
           </div>
@@ -143,8 +122,13 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
       bg="sky-200/50"
       :style="{
         display: isShowHoverElementBouding ? 'block' : 'none',
-        width: `${hoveringBlockElementRect.width + 8}px`,
+        width: `calc(${hoveringLayerWidth + 8}px ${
+          hoveringLayerExtraWidth ?? ''
+        })`,
         height: `${hoveringBlockElementRect.height + 4}px`,
+        transform: hoveringLayerExtraWidth
+          ? `translateX(-${hoveringLayerExtraWidth})`
+          : undefined,
         left: `${hoveringBlockElementRect.x - 4}px`,
         top: `${hoveringBlockElementRect.y - 2}px`,
       }"
@@ -155,18 +139,18 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
 <style scoped lang="less">
 .hetero-editor__side-btn {
   position: absolute;
-  width: 24px;
+  width: 18px;
   height: 24px;
-  transform: translateX(-275%);
+  transform: translateX(-3.5rem);
   transition: all 0.1s ease;
   padding: 0 !important;
 }
 .hetero-editor__side-toolbar-menu {
   position: absolute;
-  width: 200px;
+  width: auto;
   transition: all 0.1s ease;
   z-index: 99;
-  transform: translateX(-140%);
+  transform: translateX(-120%);
 
   .hetero-editor__side-toolbar-menu-item:first-child {
     margin-bottom: 0;

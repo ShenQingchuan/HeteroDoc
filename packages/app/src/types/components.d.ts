@@ -9,6 +9,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    E2eTestContainer: typeof import('./../components/e2eTestContainer.vue')['default']
     HdEditorCodeBlockAction: typeof import('./../components/editor/hdEditorCodeBlockAction.vue')['default']
     HdEditorCodeLangSelect: typeof import('./../components/editor/hdEditorCodeLangSelect.vue')['default']
     HdEditorContext: typeof import('./../components/editor/hdEditorContext.vue')['default']
@@ -23,6 +24,7 @@ declare module '@vue/runtime-core' {
     HdEditorSearchAndReplace: typeof import('./../components/editor/hdEditorSearchAndReplace.vue')['default']
     HdEditorSideTool: typeof import('./../components/editor/hdEditorSideTool.vue')['default']
     HdPageHeader: typeof import('./../components/layouts/hdPageHeader.vue')['default']
+    NaiveUIContext: typeof import('./../components/context/naiveUIContext.vue')['default']
     NButton: typeof import('naive-ui')['NButton']
     NButtontext: typeof import('naive-ui')['NButtontext']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']

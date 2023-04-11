@@ -1,4 +1,8 @@
-import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../../constants'
+import {
+  EXTENSION_NAMES,
+  HETERO_BLOCK_NODE_DATA_TAG,
+  HETERO_BLOCK_NODE_TYPE_DATA_BULLET_LIST,
+} from '../../constants'
 import { ExtensionType } from '../../types'
 import {
   blockIdDataAttrAtDOM,
@@ -60,7 +64,8 @@ export class BulletListExtension implements IEditorExtension {
             return [
               'ul',
               {
-                [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+                [HETERO_BLOCK_NODE_DATA_TAG]:
+                  HETERO_BLOCK_NODE_TYPE_DATA_BULLET_LIST,
                 ...blockIdDataAttrAtDOM(node),
               },
               0,

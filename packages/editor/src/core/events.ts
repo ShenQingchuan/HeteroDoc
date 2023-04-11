@@ -15,10 +15,10 @@ export interface EditorCoreEvent {
   deactivateInputFastPath: { isContentChanged: boolean }
   activateSideBtns: {
     left: number
+    width: number
     hoverCtx: {
       pos: number
       hoveredBlockElement: HTMLElement
-      topBlockElement: HTMLElement
     }
   }
   fastpathActionKey: { event: KeyboardEvent }

@@ -1,6 +1,6 @@
 import { createPinia } from 'pinia'
 import { createI18nPlugin } from '../../i18n'
-import Playground from './playground.vue'
+import PlaygroundE2E from './playground.test.vue'
 
 // CONSTANTS:
 const testHyperlinkURL = 'https://heterocube.top'
@@ -14,7 +14,7 @@ const codeblockTestCode = `function test() {
 }`
 
 function mountEditor() {
-  const mounted = cy.viewport(1368, 1000).mount(Playground, {
+  const mounted = cy.viewport(1368, 1000).mount(PlaygroundE2E, {
     extensions: {
       plugins: [createPinia(), createI18nPlugin()],
       stubs: {
@@ -218,7 +218,7 @@ describe('Editor playground test', () => {
       .get('.ProseMirror > p')
       .should('have.text', 'test input first part ')
       .get('.ProseMirror')
-      .typeWithModKey('{alt}z') // mock redo action
+      .typeWithModKey('{Shift}z') // mock redo action
       .waitUntilElementAttached('.ProseMirror > p', (el) => {
         expect(el).to.text('test input first part test input second part')
       })

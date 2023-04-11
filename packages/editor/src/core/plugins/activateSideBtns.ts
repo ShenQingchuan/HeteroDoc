@@ -1,40 +1,47 @@
 import { Plugin } from 'prosemirror-state'
-import { HETERO_BLOCK_NODE_DATA_TAG } from '../../constants'
+import {
+  HETERO_BLOCK_NODE_DATA_TAG,
+  HETERO_BLOCK_NODE_TYPE_DATA_BULLET_LIST,
+  HETERO_BLOCK_NODE_TYPE_DATA_ORDERED_LIST,
+} from '../../constants'
 import { isHeteroBlock } from '../../utils/isSomewhat'
 import type { EditorCore } from '../index'
 
-function getRectLeftForCloset(
-  el: HTMLElement,
-  selector: string
-): [number, HTMLElement] | void {
-  const closetTopBlockElement = el.closest(selector) as HTMLElement | null
-  if (!closetTopBlockElement) {
+const getClosetBlockRect = (el: HTMLElement) => {
+  const closetBlockElement = el.closest<HTMLElement>(
+    `[${HETERO_BLOCK_NODE_DATA_TAG}]`
+  )
+  if (!closetBlockElement) {
     return
   }
-  const { left } = closetTopBlockElement.getBoundingClientRect()
-  return [left, closetTopBlockElement]
-}
 
-const getClosetTopLevelBlockLeft = (el: HTMLElement) => {
-  return getRectLeftForCloset(
-    el,
-    `.ProseMirror > [${HETERO_BLOCK_NODE_DATA_TAG}="true"]`
+  let { left, width } = closetBlockElement.getBoundingClientRect()
+
+  // Special handler for list item,
+  // because list item has a marker which would take some width space of this line
+  const closetListContainerElement = el.closest<HTMLElement>(
+    `[${HETERO_BLOCK_NODE_DATA_TAG}="${HETERO_BLOCK_NODE_TYPE_DATA_BULLET_LIST}"],` +
+      `[${HETERO_BLOCK_NODE_DATA_TAG}="${HETERO_BLOCK_NODE_TYPE_DATA_ORDERED_LIST}"]`
   )
-}
-const getClosetBlockLeft = (el: HTMLElement) => {
-  return getRectLeftForCloset(el, `[${HETERO_BLOCK_NODE_DATA_TAG}="true"]`)
+  if (closetListContainerElement) {
+    left = closetListContainerElement.getBoundingClientRect().left
+    width = closetListContainerElement.getBoundingClientRect().width
+  }
+
+  return [left, width, closetBlockElement] as const
 }
 
 export const activateSideBtns = (core: EditorCore) => {
   const showSideToolBtn = (
     left: number,
+    width: number,
     pos: number,
-    hoveredBlockElement: HTMLElement,
-    topBlockElement: HTMLElement
+    hoveredBlockElement: HTMLElement
   ) =>
     core.emit('activateSideBtns', {
       left,
-      hoverCtx: { pos, hoveredBlockElement, topBlockElement },
+      width,
+      hoverCtx: { pos, hoveredBlockElement },
     })
 
   core.on('selectionChange', ({ tr, prevState }) => {
@@ -56,16 +63,15 @@ export const activateSideBtns = (core: EditorCore) => {
       return
     }
 
-    const closetBlock = getClosetBlockLeft(domAtCurrentCursorPos)
-    const closetTopBlock = getClosetTopLevelBlockLeft(domAtCurrentCursorPos)
-    if (closetBlock && closetTopBlock) {
-      const [, hoveredBlockElement] = closetBlock
-      const [currentRectX, topBlockElement] = closetTopBlock
+    const closetBlock = getClosetBlockRect(domAtCurrentCursorPos)
+    if (closetBlock) {
+      const [hoveredBlockLeft, hoveredBlockWidth, hoveredBlockElement] =
+        closetBlock
       showSideToolBtn(
-        currentRectX,
+        hoveredBlockLeft,
+        hoveredBlockWidth,
         currentCursorPos,
-        hoveredBlockElement,
-        topBlockElement
+        hoveredBlockElement
       )
     }
   })
@@ -89,21 +95,16 @@ export const activateSideBtns = (core: EditorCore) => {
                 return false
               }
             }
-            const closetBlock = getClosetBlockLeft(toElement)
-            const closetTopBlock = getClosetTopLevelBlockLeft(toElement)
-            if (!closetBlock || !closetTopBlock) {
+            const closetBlock = getClosetBlockRect(toElement)
+            if (!closetBlock) {
               return false
             }
-            const [, blockElement] = closetBlock
-            const [topBlockX, topBlockElement] = closetTopBlock
+            const [blockLeft, blockWidth, blockElement] = closetBlock
             const pos = view.posAtDOM(blockElement, 0)
             if (pos === undefined) {
               return false
             }
-
-            // why we need topblockX? because we want the side tool btn constantly stick to the same vertical position
-            // and use the toElement's y position as the vertical position
-            showSideToolBtn(topBlockX, pos, toElement, topBlockElement)
+            showSideToolBtn(blockLeft, blockWidth, pos, toElement)
           }
           return false
         },
