@@ -1,5 +1,5 @@
 import { setTextSelection } from 'prosemirror-utils'
-import { chooseFoundBlockForHoverPos } from '../../core/helpers/chooseFoundBlockForHoverPos'
+import { chooseFoundBlockForHoverPos as chooseInsertTargetBlockForHoverPos } from '../../core/helpers/chooseFoundBlockForHoverPos'
 import type { ContentNodeWithPos } from 'prosemirror-utils'
 import type { Command, Commands } from '../../types'
 
@@ -21,8 +21,8 @@ const createInssertBeforeOrAfterJudge =
     foundTextBlock: ContentNodeWithPos | undefined
   ) => {
     if (foundBlockTreeAble && foundTextBlock) {
-      // if the found text block is the first child of the found block tree able node,
-      // we should choose the found block tree able node to return
+      // if the found text block is the first child of the found BlockTree-able node,
+      // we should choose the BlockTree-able node node to return
       const { pos: blockTreeAblePos } = foundBlockTreeAble
       const { pos: textBlockPos } = foundTextBlock
       return actionType === 'insertBefore'
@@ -45,9 +45,9 @@ export const insertBefore: Commands['insertBefore'] =
   ({ pos }) =>
   ({ core, tr, dispatch }) => {
     if (dispatch) {
-      // find which block is current selection in
-      // and insert a new paragraph before it
-      const choosedFoundBlock = chooseFoundBlockForHoverPos(
+      // find which block is the target pos in
+      // and insert a new block item before it, maybe paragraph or something else
+      const choosedFoundBlock = chooseInsertTargetBlockForHoverPos(
         tr,
         pos,
         createInssertBeforeOrAfterJudge('insertBefore')
@@ -66,9 +66,9 @@ export const insertAfter: Commands['insertAfter'] =
   ({ pos }) =>
   ({ core, tr, dispatch }) => {
     if (dispatch) {
-      // find which block is current selection in
-      // and insert a new paragraph after it
-      const choosedFoundBlock = chooseFoundBlockForHoverPos(
+      // find which block is the target pos in
+      // and insert a new block item after it, maybe paragraph or something else
+      const choosedFoundBlock = chooseInsertTargetBlockForHoverPos(
         tr,
         pos,
         createInssertBeforeOrAfterJudge('insertAfter')

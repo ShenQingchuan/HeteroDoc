@@ -6,9 +6,9 @@ const {
   sideDragBtn,
   sideToolMenu,
   isDisableSideBtnMoving,
-  isShowHoverElementBouding,
   isSideToolBtnShow,
   isSideToolMenuShow,
+  isNotHoveringSideDragBtn,
   sideToolBtnTop,
   sideToolBtnLeft,
   hoverNodePos,
@@ -121,7 +121,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
       border="1 sky-700/50"
       bg="sky-200/50"
       :style="{
-        display: isShowHoverElementBouding ? 'block' : 'none',
+        display: isNotHoveringSideDragBtn ? 'none' : 'block',
         width: `calc(${hoveringLayerWidth + 8}px ${
           hoveringLayerExtraWidth ?? ''
         })`,

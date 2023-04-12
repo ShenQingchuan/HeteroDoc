@@ -12,7 +12,7 @@ export function mergeSchemaSpecs(specs: Partial<SchemaSpec>[]): SchemaSpec {
     nodes: {
       doc: { content: 'block+', topNode: true },
       paragraph: {
-        group: 'block non_quote_block',
+        group: 'block can_inside_quote_block',
         content: 'inline*',
         attrs: extendsTextBlockAttrs(),
         parseDOM: [

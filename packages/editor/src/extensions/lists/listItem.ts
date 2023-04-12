@@ -26,6 +26,7 @@ export class ListItemExtension implements IEditorExtension {
           attrs: {
             ...extendsBlockAttrs(),
           },
+          group: 'block can_inside_quote_block',
           content: 'paragraph block*',
           parseDOM: [
             {

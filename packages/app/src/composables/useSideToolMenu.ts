@@ -36,7 +36,6 @@ export function useSideToolMenu() {
   const hoveringBlockElement = shallowRef<HTMLElement>()
   const hoveringBlockElementRect = shallowRef<DOMRect>()
   const hoveringLayerWidth = ref(0)
-  const isShowHoverElementBouding = ref(false)
   const sideDragBtn = shallowRef<HTMLElement>()
   const sideToolMenu = shallowRef<HTMLElement>()
   const isMousePressingDown = ref(false)
@@ -81,10 +80,6 @@ export function useSideToolMenu() {
         }
       }
     )
-  }
-  const onSideBtnMouseOver = () => {
-    isSideToolBtnShow.value = true
-    isShowHoverElementBouding.value = !isMousePressingDown.value
   }
   const onSideBtnClick = () => {
     isSideToolMenuShow.value = true
@@ -215,11 +210,6 @@ export function useSideToolMenu() {
     isMouseMoved.value = false
   }
 
-  watch(isNotHoveringSideDragBtn, (isNotHoveringDragBtn) => {
-    if (isNotHoveringDragBtn) {
-      isShowHoverElementBouding.value = false
-    }
-  })
   watch([winWidth, winHeight], () => {
     hideSideToolBtn()
   })
@@ -232,7 +222,6 @@ export function useSideToolMenu() {
   })
 
   // Bind events
-  useEventListener(sideDragBtn, 'mouseover', onSideBtnMouseOver)
   useEventListener(sideDragBtn, 'mousedown', onSideDragBtnMouseDown)
   useEventListener(document, 'mousemove', onMouseMove)
   useEventListener(document, 'mouseup', onMouseUp)
@@ -257,8 +246,8 @@ export function useSideToolMenu() {
     hoveringLayerWidth,
     hoveringLayerExtraWidth,
     menuOptions,
-    isShowHoverElementBouding,
     isSideToolBtnShow,
+    isNotHoveringSideDragBtn,
     sideDragBtn,
     sideToolBtnTop,
     sideToolBtnLeft,

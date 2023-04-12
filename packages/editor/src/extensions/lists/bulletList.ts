@@ -44,7 +44,7 @@ export class BulletListExtension implements IEditorExtension {
       nodes: {
         [EXTENSION_NAMES.BULLET_LIST]: {
           content: `${EXTENSION_NAMES.LIST_ITEM}+`,
-          group: 'block list',
+          group: 'block can_inside_quote_block list',
           attrs: {
             ...extendsBlockAttrs(),
           },

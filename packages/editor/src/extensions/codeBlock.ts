@@ -76,7 +76,7 @@ export class CodeBlockExtension implements IEditorExtension {
       nodes: {
         [EXTENSION_NAMES.CODE_BLOCK]: {
           content: 'text*',
-          group: 'block non_quote_block',
+          group: 'block can_inside_quote_block',
           code: true,
           defining: true,
           marks: '',

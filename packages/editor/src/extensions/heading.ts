@@ -49,7 +49,7 @@ export class HeadingExtension implements IEditorExtension {
             anchorId: {},
           }),
           content: 'inline*',
-          group: 'block non_quote_block',
+          group: 'block can_inside_quote_block',
           defining: true,
           parseDOM: Array.from({ length: 6 }).map((_, i) => ({
             tag: `h${i + 1}`,

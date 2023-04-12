@@ -50,7 +50,7 @@ export class OrderedListExtension implements IEditorExtension {
       nodes: {
         [EXTENSION_NAMES.ORDERED_LIST]: {
           content: `${EXTENSION_NAMES.LIST_ITEM}+`,
-          group: 'block list',
+          group: 'block can_inside_quote_block list',
           attrs: {
             start: { default: 1 },
             ...extendsBlockAttrs(),

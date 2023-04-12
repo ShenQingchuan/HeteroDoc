@@ -33,7 +33,7 @@ export class BlockquoteExtension implements IEditorExtension {
     return {
       nodes: {
         [EXTENSION_NAMES.BLOCK_QUOTE]: {
-          content: 'non_quote_block+',
+          content: 'can_inside_quote_block+',
           attrs: {
             ...extendsBlockAttrs(),
           },
