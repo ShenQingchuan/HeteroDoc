@@ -1,4 +1,5 @@
 import vue from '@vitejs/plugin-vue'
+import mkcert from 'vite-plugin-mkcert'
 import vueJSX from '@vitejs/plugin-vue-jsx'
 import vueI18n from '@intlify/unplugin-vue-i18n/vite'
 import Unocss from 'unocss/vite'
@@ -23,6 +24,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    mkcert(),
     vue(),
     vueJSX(),
     vueI18n({
