@@ -1,4 +1,7 @@
-import { HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
+import {
+  HETERO_BLOCK_NODE_DATA_TAG,
+  HETERO_BLOCK_PARAGRAPH_NODE_NAME,
+} from '../constants'
 import { blockIdDataAttrAtDOM } from '../utils/blockSchema'
 import {
   extendsTextBlockAttrs,
@@ -12,7 +15,7 @@ export function mergeSchemaSpecs(specs: Partial<SchemaSpec>[]): SchemaSpec {
     nodes: {
       doc: { content: 'block+', topNode: true },
       paragraph: {
-        group: 'block can_inside_quote_block',
+        group: 'block ',
         content: 'inline*',
         attrs: extendsTextBlockAttrs(),
         parseDOM: [
@@ -30,7 +33,7 @@ export function mergeSchemaSpecs(specs: Partial<SchemaSpec>[]): SchemaSpec {
             'p',
             {
               style: stylesOfTextBlock(node),
-              [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+              [HETERO_BLOCK_NODE_DATA_TAG]: HETERO_BLOCK_PARAGRAPH_NODE_NAME,
               ...blockIdDataAttrAtDOM(node),
             },
             0,

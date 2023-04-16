@@ -1,8 +1,9 @@
 import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../constants'
-import { wrappingInputRule } from '../core/rule'
+import { textblockTypeInputRule } from '../core/rule'
 import { ExtensionType } from '../types'
 import {
   blockIdDataAttrAtDOM,
+  createBlockIdAttr,
   extendsBlockAttrs,
   getBlockAttrsFromElement,
 } from '../utils/blockSchema'
@@ -33,7 +34,7 @@ export class BlockquoteExtension implements IEditorExtension {
     return {
       nodes: {
         [EXTENSION_NAMES.BLOCK_QUOTE]: {
-          content: 'can_inside_quote_block+',
+          content: 'inline*',
           attrs: {
             ...extendsBlockAttrs(),
           },
@@ -55,7 +56,7 @@ export class BlockquoteExtension implements IEditorExtension {
             return [
               'blockquote',
               {
-                [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+                [HETERO_BLOCK_NODE_DATA_TAG]: EXTENSION_NAMES.BLOCK_QUOTE,
                 ...blockIdDataAttrAtDOM(node),
               },
               0,
@@ -69,9 +70,8 @@ export class BlockquoteExtension implements IEditorExtension {
   inputRules: () => PatternRule[] = () => {
     const nodeType = this.core.schema.nodes[EXTENSION_NAMES.BLOCK_QUOTE]!
     return [
-      wrappingInputRule({
-        find: blockquoteInputRuleRegExp,
-        type: nodeType,
+      textblockTypeInputRule(blockquoteInputRuleRegExp, nodeType, {
+        ...createBlockIdAttr(),
       }),
     ]
   }

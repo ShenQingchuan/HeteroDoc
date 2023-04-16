@@ -76,7 +76,7 @@ export class CodeBlockExtension implements IEditorExtension {
       nodes: {
         [EXTENSION_NAMES.CODE_BLOCK]: {
           content: 'text*',
-          group: 'block can_inside_quote_block',
+          group: 'block ',
           code: true,
           defining: true,
           marks: '',
@@ -104,7 +104,7 @@ export class CodeBlockExtension implements IEditorExtension {
               {
                 'data-params': node.attrs.params,
                 class: 'hljs',
-                [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+                [HETERO_BLOCK_NODE_DATA_TAG]: EXTENSION_NAMES.CODE_BLOCK,
                 ...blockIdDataAttrAtDOM(node),
               },
               [

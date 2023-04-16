@@ -2,9 +2,7 @@ export const whiteSpaceDom = ['span', { class: 'whitespace' }, '']
 
 // Available to be used by other packages:
 export const HETERO_BLOCK_NODE_DATA_TAG = 'data-hetero-block'
-export const HETERO_BLOCK_NODE_TYPE_DATA_BULLET_LIST = 'bullet-list'
-export const HETERO_BLOCK_NODE_TYPE_DATA_ORDERED_LIST = 'ordered-list'
-export const HETERO_BLOCK_NODE_TYPE_DATA_LIST_ITEM = 'list-item'
+export const HETERO_BLOCK_PARAGRAPH_NODE_NAME = 'paragraph'
 
 export const fontColorSet = [
   ['', ''],
@@ -64,3 +62,14 @@ export const HETERODOC_SEARCH_AND_REPLACE_CLASS_NAME =
   'heterodoc-search-and-replace'
 export const HETERODOC_PLACEHOLER_CLASS_NAME = 'heterodoc-placeholder'
 export const HETERODOC_HORIZONTAL_LINE_CLASS_NAME = 'heterodoc-horizontal-line'
+export const HETERODOC_LIST_CLASS_NAME_PREFIX = 'heterodoc-list'
+export const HETERODOC_LIST_CONTAINER_CLASS_NAME =
+  `${HETERODOC_LIST_CLASS_NAME_PREFIX}-container` as const
+export const HETERODOC_LIST_SPINE_CLASS_NAME =
+  `${HETERODOC_LIST_CLASS_NAME_PREFIX}-spine` as const
+export const HETERODOC_LIST_ITEM_MARKER_CLASS_NAME =
+  `${HETERODOC_LIST_CLASS_NAME_PREFIX}-item-marker` as const
+export const HETERODOC_LIST_ITEM_MARKER_SYMBOL_CLASS_NAME =
+  `${HETERODOC_LIST_CLASS_NAME_PREFIX}-item-marker-symbol` as const
+export const HETERODOC_LIST_ITEM_CONTENT_CLASS_NAME =
+  `${HETERODOC_LIST_CLASS_NAME_PREFIX}-item-content` as const

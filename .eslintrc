@@ -1,6 +1,7 @@
 {
   "extends": "@sxzz",
   "rules": {
-    "unicorn/no-array-callback-reference": "off"
+    "unicorn/no-array-callback-reference": "off",
+    "@typescript-eslint/no-unused-vars": "warn"
   }
 }

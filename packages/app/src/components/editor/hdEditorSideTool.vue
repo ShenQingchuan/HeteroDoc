@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SIDE_BTN_GAP } from '../../constants/editor'
+import { SIDE_BTN_OFFSET } from '../../constants/editor'
 import { editorEventBus } from '../../eventBus'
 
 const {
@@ -8,14 +8,12 @@ const {
   isDisableSideBtnMoving,
   isSideToolBtnShow,
   isSideToolMenuShow,
-  isNotHoveringSideDragBtn,
   sideToolBtnTop,
   sideToolBtnLeft,
   hoverNodePos,
   hoveringBlockElement,
   hoveringBlockElementRect,
   hoveringLayerWidth,
-  hoveringLayerExtraWidth,
   menuOptions,
   handleMenuClick,
   controlSideToolStatusForEditorDOMArea,
@@ -24,16 +22,14 @@ const {
 editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   core.on(
     'activateSideBtns',
-    ({ left, width, hoverCtx: { pos, hoveredBlockElement } }) => {
+    async ({ left, width, hoverCtx: { pos, hoveredBlockElement } }) => {
       if (isDisableSideBtnMoving.value) {
         return
       }
-
-      const hoverBlockRect = hoveredBlockElement.getBoundingClientRect()
       isSideToolBtnShow.value = true
       hoverNodePos.value = pos
       hoveringBlockElement.value = hoveredBlockElement
-      hoveringBlockElementRect.value = hoverBlockRect
+      await nextTick()
       hoveringLayerWidth.value = width
       sideToolBtnLeft.value = left
     }
@@ -54,12 +50,12 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
           class="hetero-editor__side-btn"
           :style="{
             top: `${sideToolBtnTop}px`,
-            left: `${sideToolBtnLeft + SIDE_BTN_GAP}px`,
+            left: `calc(${sideToolBtnLeft}px + ${SIDE_BTN_OFFSET}px)`,
           }"
         >
           <template #icon>
             <n-icon size="24">
-              <div i-ph:dots-six-vertical-bold />
+              <div i-fluent:re-order-dots-vertical-20-filled />
             </n-icon>
           </template>
         </n-button>
@@ -121,16 +117,11 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
       border="1 sky-700/50"
       bg="sky-200/50"
       :style="{
-        display: isNotHoveringSideDragBtn ? 'none' : 'block',
-        width: `calc(${hoveringLayerWidth + 8}px ${
-          hoveringLayerExtraWidth ?? ''
-        })`,
-        height: `${hoveringBlockElementRect.height + 4}px`,
-        transform: hoveringLayerExtraWidth
-          ? `translateX(-${hoveringLayerExtraWidth})`
-          : undefined,
-        left: `${hoveringBlockElementRect.x - 4}px`,
-        top: `${hoveringBlockElementRect.y - 2}px`,
+        display: isSideToolMenuShow ? 'block' : 'none',
+        width: `${hoveringLayerWidth + 8}px`,
+        height: `${hoveringBlockElementRect.height + 2}px`,
+        left: `${hoveringBlockElementRect.x - 2}px`,
+        top: `${hoveringBlockElementRect.y - 1}px`,
       }"
     />
   </teleport>
@@ -141,7 +132,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
   position: absolute;
   width: 18px;
   height: 24px;
-  transform: translateX(-3.5rem);
+  transform: translateX(-50%);
   transition: all 0.1s ease;
   padding: 0 !important;
 }

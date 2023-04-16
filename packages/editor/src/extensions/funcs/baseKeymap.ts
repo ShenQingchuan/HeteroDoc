@@ -41,7 +41,10 @@ export class BaseKeymap implements IEditorExtension {
       })
     const baseKeymap = {
       Enter: handleEnter,
-      'Mod-Enter': () => this.core.commands.exitCode(),
+      'Mod-Enter': () =>
+        this.core.commands.first({
+          commands: ({ commands }) => [() => commands.exitCode()],
+        }),
       Backspace: handleBackspace,
       'Mod-Backspace': handleBackspace,
       'Shift-Backspace': handleBackspace,

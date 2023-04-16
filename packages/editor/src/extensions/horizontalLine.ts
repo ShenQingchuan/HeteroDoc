@@ -3,6 +3,7 @@ import { findParentNode } from 'prosemirror-utils'
 import {
   EXTENSION_NAMES,
   HETERODOC_HORIZONTAL_LINE_CLASS_NAME,
+  HETERO_BLOCK_NODE_DATA_TAG,
 } from '../constants'
 import { getNodeType } from '../core/helpers/getNodeType'
 import { PatternRule } from '../core/rule'
@@ -36,7 +37,13 @@ export class HorizontalLine implements IEditorExtension {
           defining: true,
           parseDOM: [{ tag: 'hr' }],
           toDOM() {
-            return ['div', { class: `${HETERODOC_HORIZONTAL_LINE_CLASS_NAME}` }]
+            return [
+              'div',
+              {
+                [HETERO_BLOCK_NODE_DATA_TAG]: EXTENSION_NAMES.HORIZONTAL_LINE,
+                class: `${HETERODOC_HORIZONTAL_LINE_CLASS_NAME}`,
+              },
+            ]
           },
         },
       },

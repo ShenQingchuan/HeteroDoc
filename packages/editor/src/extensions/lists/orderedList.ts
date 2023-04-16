@@ -1,8 +1,4 @@
-import {
-  EXTENSION_NAMES,
-  HETERO_BLOCK_NODE_DATA_TAG,
-  HETERO_BLOCK_NODE_TYPE_DATA_ORDERED_LIST,
-} from '../../constants'
+import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../../constants'
 import { ExtensionType } from '../../types'
 import {
   blockIdDataAttrAtDOM,
@@ -50,7 +46,7 @@ export class OrderedListExtension implements IEditorExtension {
       nodes: {
         [EXTENSION_NAMES.ORDERED_LIST]: {
           content: `${EXTENSION_NAMES.LIST_ITEM}+`,
-          group: 'block can_inside_quote_block list',
+          group: 'block list',
           attrs: {
             start: { default: 1 },
             ...extendsBlockAttrs(),
@@ -75,8 +71,7 @@ export class OrderedListExtension implements IEditorExtension {
               'ol',
               {
                 [START_DATA_ATTRIBUTE]: `${attrs.start}`,
-                [HETERO_BLOCK_NODE_DATA_TAG]:
-                  HETERO_BLOCK_NODE_TYPE_DATA_ORDERED_LIST,
+                [HETERO_BLOCK_NODE_DATA_TAG]: EXTENSION_NAMES.ORDERED_LIST,
                 ...blockIdDataAttrAtDOM(node),
               },
               0,

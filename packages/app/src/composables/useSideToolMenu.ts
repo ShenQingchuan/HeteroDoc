@@ -34,14 +34,12 @@ export function useSideToolMenu() {
   const sideToolBtnLeft = ref(0)
   const hoverNodePos = ref(0)
   const hoveringBlockElement = shallowRef<HTMLElement>()
-  const hoveringBlockElementRect = shallowRef<DOMRect>()
   const hoveringLayerWidth = ref(0)
   const sideDragBtn = shallowRef<HTMLElement>()
   const sideToolMenu = shallowRef<HTMLElement>()
   const isMousePressingDown = ref(false)
   const isMouseMoved = ref(false)
   const dragingMirror = shallowRef<HTMLElement>()
-  const { isOutside: isNotHoveringSideDragBtn } = useMouseInElement(sideDragBtn)
   const { isOutside: isNotHoveringSideToolMenu } =
     useMouseInElement(sideToolMenu)
   const isSideToolBtnShow = ref(false)
@@ -89,6 +87,12 @@ export function useSideToolMenu() {
   })
 
   // Computed:
+  const hoveringBlockElementRect = computed(() => {
+    if (hoveringBlockElement.value) {
+      return hoveringBlockElement.value.getBoundingClientRect()
+    }
+    return null
+  })
   const sideToolBtnTop = computed(() => {
     if (!hoveringBlockElementRect.value) {
       return 0
@@ -111,11 +115,6 @@ export function useSideToolMenu() {
       hoveringBlockElement.value &&
       listTypeTags.includes(hoveringBlockElement.value.tagName.toLowerCase())
     )
-  })
-  const hoveringLayerExtraWidth = computed(() => {
-    if (hoveringBlockElement.value && isHoveringListType.value) {
-      return '1rem'
-    }
   })
 
   // ------ About Drag and Drop ---------
@@ -244,10 +243,8 @@ export function useSideToolMenu() {
     hoveringBlockElement,
     hoveringBlockElementRect,
     hoveringLayerWidth,
-    hoveringLayerExtraWidth,
     menuOptions,
     isSideToolBtnShow,
-    isNotHoveringSideDragBtn,
     sideDragBtn,
     sideToolBtnTop,
     sideToolBtnLeft,

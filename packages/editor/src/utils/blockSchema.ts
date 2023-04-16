@@ -31,7 +31,7 @@ export function createBlockIdAttr() {
   }
 }
 
-export function blockIdDataAttrAtDOM(node: Node) {
+export function blockIdDataAttrAtDOM(node: Node): Record<string, string> {
   return node.attrs.blockId
     ? {
         'data-blockId': node.attrs.blockId,

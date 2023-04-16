@@ -1,34 +1,93 @@
-import { Plugin } from 'prosemirror-state'
+import { Plugin, TextSelection } from 'prosemirror-state'
+import { findParentDomRef } from 'prosemirror-utils'
 import {
+  EXTENSION_NAMES,
+  HETERODOC_LIST_ITEM_CONTENT_CLASS_NAME,
   HETERO_BLOCK_NODE_DATA_TAG,
-  HETERO_BLOCK_NODE_TYPE_DATA_BULLET_LIST,
-  HETERO_BLOCK_NODE_TYPE_DATA_ORDERED_LIST,
 } from '../../constants'
 import { isHeteroBlock } from '../../utils/isSomewhat'
 import type { EditorCore } from '../index'
 
-const getClosetBlockRect = (el: HTMLElement) => {
-  const closetBlockElement = el.closest<HTMLElement>(
+const getClosetTargetRect = (el: HTMLElement) => {
+  let closetTargetElement = el.closest<HTMLElement>(
     `[${HETERO_BLOCK_NODE_DATA_TAG}]`
   )
-  if (!closetBlockElement) {
+  if (!closetTargetElement) {
     return
   }
+  let { left, width } = closetTargetElement.getBoundingClientRect()
 
-  let { left, width } = closetBlockElement.getBoundingClientRect()
-
-  // Special handler for list item,
-  // because list item has a marker which would take some width space of this line
-  const closetListContainerElement = el.closest<HTMLElement>(
-    `[${HETERO_BLOCK_NODE_DATA_TAG}="${HETERO_BLOCK_NODE_TYPE_DATA_BULLET_LIST}"],` +
-      `[${HETERO_BLOCK_NODE_DATA_TAG}="${HETERO_BLOCK_NODE_TYPE_DATA_ORDERED_LIST}"]`
+  // Special handlers, because some wrapper element would take some width space before this line width
+  // 1. handler for blockquote
+  const closetBlockquoteContainerElement = el.closest<HTMLElement>(
+    `[${HETERO_BLOCK_NODE_DATA_TAG}="${EXTENSION_NAMES.BLOCK_QUOTE}"]`
   )
-  if (closetListContainerElement) {
-    left = closetListContainerElement.getBoundingClientRect().left
-    width = closetListContainerElement.getBoundingClientRect().width
+  if (closetBlockquoteContainerElement) {
+    left = closetBlockquoteContainerElement.getBoundingClientRect().left
+    width = closetBlockquoteContainerElement.getBoundingClientRect().width
+    closetTargetElement = closetBlockquoteContainerElement
+    return [left, width, closetTargetElement] as const
   }
 
-  return [left, width, closetBlockElement] as const
+  // 2. handler for list item
+  const closetListItemElement = el.closest<HTMLElement>(
+    `[${HETERO_BLOCK_NODE_DATA_TAG}="${EXTENSION_NAMES.LIST_ITEM}"]`
+  )
+  // if the current closet target is the first child of the list item,
+  // then we need to use the list item's left and width
+  // else, we use the child's left and width
+  if (closetListItemElement) {
+    const listItemContent = closetListItemElement.querySelector<HTMLElement>(
+      `.${HETERODOC_LIST_ITEM_CONTENT_CLASS_NAME}`
+    )
+    const isClosetToListItemContentFirstChild =
+      listItemContent?.firstChild?.contains(closetTargetElement)
+    if (isClosetToListItemContentFirstChild) {
+      left = closetListItemElement.getBoundingClientRect().left
+      width = closetListItemElement.getBoundingClientRect().width
+      return [left, width, closetListItemElement] as const
+    }
+  }
+
+  return [left, width, closetTargetElement] as const
+}
+
+/**
+ * @returns {boolean} true if the event is handled
+ */
+const isSpecialHandledMouseOverForActivateSideBtns = (
+  event: MouseEvent
+): boolean => {
+  const toElement = event.target
+  const fromElement = event.relatedTarget
+  const isGoingIntoOneBlock = isHeteroBlock(event.target)
+  const isLeavingFromOneBlock = isHeteroBlock(event.relatedTarget)
+  if (
+    toElement instanceof HTMLElement &&
+    fromElement instanceof HTMLElement &&
+    isGoingIntoOneBlock &&
+    isLeavingFromOneBlock &&
+    toElement.contains(fromElement)
+  ) {
+    // pass, leave from one block to its parent block
+    // don't need to update y position
+    return true
+  }
+
+  if (
+    toElement instanceof HTMLElement &&
+    fromElement instanceof HTMLElement &&
+    fromElement.closest(
+      `[${HETERO_BLOCK_NODE_DATA_TAG}="${EXTENSION_NAMES.LIST_ITEM}"]`
+    ) &&
+    toElement.contains(fromElement)
+  ) {
+    // pass, leave from one sub-list item to its parent list item
+    // don't need to update y position
+    return true
+  }
+
+  return false
 }
 
 export const activateSideBtns = (core: EditorCore) => {
@@ -46,9 +105,15 @@ export const activateSideBtns = (core: EditorCore) => {
 
   core.on('selectionChange', ({ tr, prevState }) => {
     const prevCursor = prevState.selection.from
-    const domAtPrevCursorPos = core.view.domAtPos(prevCursor).node
+    const domAtPrevCursorPos = findParentDomRef(
+      (node) => node.isBlock,
+      core.view.domAtPos.bind(core.view)
+    )(TextSelection.create(prevState.doc, prevCursor))
     const currentCursorPos = tr.selection.from
-    const domAtCurrentCursorPos = core.view.domAtPos(currentCursorPos).node
+    const domAtCurrentCursorPos = findParentDomRef(
+      (node) => node.isBlock,
+      core.view.domAtPos.bind(core.view)
+    )(TextSelection.create(core.view.state.doc, currentCursorPos))
     if (
       !(domAtPrevCursorPos instanceof HTMLElement) ||
       !(domAtCurrentCursorPos instanceof HTMLElement)
@@ -63,49 +128,38 @@ export const activateSideBtns = (core: EditorCore) => {
       return
     }
 
-    const closetBlock = getClosetBlockRect(domAtCurrentCursorPos)
-    if (closetBlock) {
-      const [hoveredBlockLeft, hoveredBlockWidth, hoveredBlockElement] =
-        closetBlock
-      showSideToolBtn(
-        hoveredBlockLeft,
-        hoveredBlockWidth,
-        currentCursorPos,
-        hoveredBlockElement
-      )
+    const closetBlock = getClosetTargetRect(domAtCurrentCursorPos)
+    if (!closetBlock) {
+      return
     }
+    const [hoveredBlockLeft, hoveredBlockWidth, hoveredBlockElement] =
+      closetBlock
+    showSideToolBtn(
+      hoveredBlockLeft,
+      hoveredBlockWidth,
+      currentCursorPos,
+      hoveredBlockElement
+    )
   })
 
   return new Plugin({
     props: {
       handleDOMEvents: {
-        mouseover(view, event) {
+        mouseover: (view, event) => {
           const toElement = event.target as HTMLElement
-          const fromElement = event.relatedTarget as HTMLElement
-          const isGoingIntoOneBlock = isHeteroBlock(event.target)
-          const isLeavingFromOneBlock = isHeteroBlock(event.relatedTarget)
-
-          if (isGoingIntoOneBlock) {
-            if (isLeavingFromOneBlock) {
-              if (fromElement.contains(toElement)) {
-                // pass, execute underlaying logic to update y position
-              } else if (toElement.contains(fromElement)) {
-                // pass, leave from one block to its parent block
-                // don't need to update y position
-                return false
-              }
-            }
-            const closetBlock = getClosetBlockRect(toElement)
-            if (!closetBlock) {
-              return false
-            }
-            const [blockLeft, blockWidth, blockElement] = closetBlock
-            const pos = view.posAtDOM(blockElement, 0)
-            if (pos === undefined) {
-              return false
-            }
-            showSideToolBtn(blockLeft, blockWidth, pos, toElement)
+          if (isSpecialHandledMouseOverForActivateSideBtns(event)) {
+            return false
           }
+          const closetTarget = getClosetTargetRect(toElement)
+          if (!closetTarget) {
+            return false
+          }
+          const [targetLeft, targetWidth, targetElement] = closetTarget
+          const pos = view.posAtDOM(targetElement, 0)
+          if (pos === undefined) {
+            return false
+          }
+          showSideToolBtn(targetLeft, targetWidth, pos, targetElement)
           return false
         },
       },

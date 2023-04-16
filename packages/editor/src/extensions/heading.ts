@@ -49,7 +49,7 @@ export class HeadingExtension implements IEditorExtension {
             anchorId: {},
           }),
           content: 'inline*',
-          group: 'block can_inside_quote_block',
+          group: 'block ',
           defining: true,
           parseDOM: Array.from({ length: 6 }).map((_, i) => ({
             tag: `h${i + 1}`,
@@ -71,7 +71,7 @@ export class HeadingExtension implements IEditorExtension {
                 style: stylesOfTextBlock(node),
                 id: anchorId,
                 'data-anchorId': anchorId,
-                [HETERO_BLOCK_NODE_DATA_TAG]: 'true',
+                [HETERO_BLOCK_NODE_DATA_TAG]: EXTENSION_NAMES.HEADING,
                 ...blockIdDataAttrAtDOM(node),
               },
               0,

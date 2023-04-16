@@ -60,12 +60,14 @@ export function isTextSelection(value: unknown): value is TextSelection {
 }
 
 export const isHeteroBlock = (
-  node: EventTarget | null
+  node: EventTarget | null,
+  blockType?: string
 ): node is HTMLElement => {
-  return (
-    node instanceof HTMLElement &&
-    node.getAttribute(HETERO_BLOCK_NODE_DATA_TAG) === 'true'
-  )
+  const isBlock =
+    node instanceof HTMLElement && node.hasAttribute(HETERO_BLOCK_NODE_DATA_TAG)
+  return blockType
+    ? isBlock && node?.getAttribute(HETERO_BLOCK_NODE_DATA_TAG) === blockType
+    : isBlock
 }
 export const isHeteroPlaceholder = (
   node: EventTarget | null

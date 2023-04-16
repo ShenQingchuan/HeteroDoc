@@ -18,6 +18,8 @@
   --heterodoc-horizontal-line-color: rgba(22, 22, 22, 0.1);
   --heterodoc-search-highlight: #eed514;
   --heterodoc-drop-cursor-color: rgb(118, 139, 161);
+  --heterodoc-list-item-mark-symbol-color: #8a8a8a;
+  --heterodoc-list-item-mark-spine-color: #c0c0c0;
 }
 
 :root.dark {
@@ -35,6 +37,8 @@
   --heterodoc-horizontal-line-color: #444444;
   --heterodoc-search-highlight: #e7a80f;
   --heterodoc-drop-cursor-color: rgb(221, 238, 255);
+  --heterodoc-list-item-mark-symbol-color: #d5d5d5;
+  --heterodoc-list-item-mark-spine-color: #d5d5d5;
 }
 
 .ProseMirror {
@@ -54,16 +58,16 @@
     white-space: pre-wrap;
   }
 
-  h1[data-hetero-block='true'],
-  h2[data-hetero-block='true'],
-  h3[data-hetero-block='true'],
-  h4[data-hetero-block='true'],
-  h5[data-hetero-block='true'],
-  h6[data-hetero-block='true'] {
+  h1[data-hetero-block],
+  h2[data-hetero-block],
+  h3[data-hetero-block],
+  h4[data-hetero-block],
+  h5[data-hetero-block],
+  h6[data-hetero-block] {
     margin-bottom: 10px;
   }
 
-  p[data-hetero-block='true'] {
+  p[data-hetero-block] {
     margin: 0;
     line-height: 2rem;
   }
@@ -157,8 +161,50 @@
   }
 
   // list types
-  ul, ol {
-    padding: 0 1rem;
+  li[data-hetero-block] {
+    list-style: none;
+  }
+
+  .heterodoc-list-item-marker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    text-align: center;
+    left: 0px;
+    top: 4px;
+    width: 1.75rem;
+    height: 1.5rem;
+    
+    &-symbol {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      user-select: none;
+      background-color: var(--heterodoc-list-item-mark-symbol-color);
+    }
+  }
+  .heterodoc-list-item-content {
+    padding-left: 1.75rem;
+    display: inline-block;
+    width: 100%;
+
+    [data-hetero-block]:not(ul, ol, li) {
+      padding-left: 0.25rem;
+    }
+  }
+  
+  .heterodoc-list-container {
+    position: relative;
+  }
+  .heterodoc-list-spine {
+    transform: translateX(-50%);
+    position: absolute;
+    left: 14px;
+    top: 1.75rem;
+    width: 1px;
+    height: calc(100% - 1.75rem);
+    background-color: var(--heterodoc-list-item-mark-spine-color);
   }
 }
 
