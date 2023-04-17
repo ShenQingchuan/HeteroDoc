@@ -47,7 +47,6 @@ const useListItemMarker = () => {
   const clearMarker = () => {
     listItemMarkerSymbol.remove()
     listItemMarkerCount.remove()
-    listItemMarkerCount.textContent = ''
   }
   const updateMarker = (
     listNode: ProsemirrorNode,
@@ -58,20 +57,9 @@ const useListItemMarker = () => {
       case EXTENSION_NAMES.BULLET_LIST:
         listItemMarker.append(listItemMarkerSymbol)
         break
-      case EXTENSION_NAMES.ORDERED_LIST: {
-        const itemNodeIndex = findChildrenByType(
-          listNode,
-          itemNode.type,
-          false
-        ).findIndex((itemWithPos) => {
-          return itemWithPos.node === itemNode
-        })
-        if (itemNodeIndex >= 0) {
-          listItemMarkerCount.textContent = `${itemNodeIndex + listNode.attrs.start ?? 1}.`
-          listItemMarker.append(listItemMarkerCount)
-        }
+      case EXTENSION_NAMES.ORDERED_LIST: 
+        listItemMarker.append(listItemMarkerCount)
         break
-      }
       case EXTENSION_NAMES.TASK_LIST:
         // Todo: ...
         break

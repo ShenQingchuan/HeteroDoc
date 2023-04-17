@@ -63,6 +63,7 @@ export const HETERODOC_SEARCH_AND_REPLACE_CLASS_NAME =
 export const HETERODOC_PLACEHOLER_CLASS_NAME = 'heterodoc-placeholder'
 export const HETERODOC_HORIZONTAL_LINE_CLASS_NAME = 'heterodoc-horizontal-line'
 export const HETERODOC_LIST_CLASS_NAME_PREFIX = 'heterodoc-list'
+export const HETERODOC_LIST_ORDERED_CLASS_NAME = 'heterodoc-list-ordered'
 export const HETERODOC_LIST_CONTAINER_CLASS_NAME =
   `${HETERODOC_LIST_CLASS_NAME_PREFIX}-container` as const
 export const HETERODOC_LIST_SPINE_CLASS_NAME =

@@ -7,7 +7,7 @@ import { isListItem } from '../../core/helpers/isListItem'
 import { isList } from '../../core/helpers/isList'
 import type { EditorCore } from '../../core'
 import type { IEditorExtension } from '../../types'
-import type { Node, ResolvedPos, Slice } from 'prosemirror-model'
+import { Fragment, Node, ResolvedPos, Slice } from 'prosemirror-model'
 
 export class DragAndDrop implements IEditorExtension {
   type = ExtensionType.func
@@ -15,7 +15,6 @@ export class DragAndDrop implements IEditorExtension {
   options = {}
   draggingPos = Number.NaN
   draggingNode: Node | null = null
-  draggingSlice: Slice | null = null
 
   constructor(public core: EditorCore) {
     core.on('dragBlock', ({ hoverNodePos }) => {
@@ -34,15 +33,10 @@ export class DragAndDrop implements IEditorExtension {
         draggingNodeType: this.draggingNode?.type.name,
         draggingNodeText: this.draggingNode?.textContent,
       })
-      const { doc } = core.view.state
-      this.draggingSlice = NodeSelection.create(
-        doc,
-        draggingTarget.pos
-      ).content()
     })
 
     core.on('dropBlock', ({ dropPos, isAppend = false }) => {
-      if (!this.draggingNode || !this.draggingSlice) {
+      if (!this.draggingNode) {
         return
       }
       const dropResolvedPos = core.view.state.doc.resolve(dropPos)
@@ -57,7 +51,7 @@ export class DragAndDrop implements IEditorExtension {
         dropOnBlockNodeType: dropAreaClosetTarget.node.type.name,
         dropOnBlockNodeText: dropAreaClosetTarget.node.textContent,
       })
-      core.logger.debug('dragging slice', this.draggingSlice)
+      core.logger.debug('dragging node', this.draggingNode)
       const { pos: dropAreaClosetTargetPos, node: dropAreaClosetTargetNode } =
         dropAreaClosetTarget
       const { tr } = core.view.state
@@ -66,7 +60,7 @@ export class DragAndDrop implements IEditorExtension {
         isAppend
           ? dropAreaClosetTargetPos + dropAreaClosetTargetNode.nodeSize
           : dropAreaClosetTargetPos,
-        this.draggingNode
+        Fragment.from(this.draggingNode)
       )
       // 2. Removing the dragging node original position
       // before removing the dragging node, we need to re-compute the `draggingPos` by `tr.map`
@@ -117,7 +111,6 @@ export class DragAndDrop implements IEditorExtension {
   clearDraggingStatus() {
     this.draggingPos = Number.NaN
     this.draggingNode = null
-    this.draggingSlice = null
     this.core.status.isDragging = true
   }
 
