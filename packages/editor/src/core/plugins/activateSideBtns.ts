@@ -23,7 +23,7 @@ const getClosetTargetRect = (el: HTMLElement) => {
     `[${HETERO_BLOCK_NODE_DATA_TAG}="${EXTENSION_NAMES.BLOCK_QUOTE}"]`
   )
   if (closetBlockquoteContainerElement) {
-    left = closetBlockquoteContainerElement.getBoundingClientRect().left
+    left = closetBlockquoteContainerElement.getBoundingClientRect().x
     width = closetBlockquoteContainerElement.getBoundingClientRect().width
     closetTargetElement = closetBlockquoteContainerElement
     return [left, width, closetTargetElement] as const
@@ -43,7 +43,7 @@ const getClosetTargetRect = (el: HTMLElement) => {
     const isClosetToListItemContentFirstChild =
       listItemContent?.firstChild?.contains(closetTargetElement)
     if (isClosetToListItemContentFirstChild) {
-      left = closetListItemElement.getBoundingClientRect().left
+      left = closetListItemElement.getBoundingClientRect().x
       width = closetListItemElement.getBoundingClientRect().width
       return [left, width, closetListItemElement] as const
     }

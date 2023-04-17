@@ -1,3 +1,7 @@
 {
-  "recommendations": ["Vue.volar", "antfu.unocss"]
+  "recommendations": [
+    "Vue.volar",
+    "antfu.unocss",
+    "yoavbls.pretty-ts-errors"
+  ]
 }

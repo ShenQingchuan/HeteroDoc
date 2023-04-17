@@ -43,6 +43,7 @@ editorEventBus.on('editorMounted', ({ core, editorDOM }) => {
     <transition name="float-slide-fade">
       <div v-show="isSideToolBtnShow" class="flex items-center">
         <n-button
+          tabindex="-1"
           ref="sideDragBtn"
           quaternary
           bg="hover:cool-gray-300/50 hover:dark:cool-gray-500/50"

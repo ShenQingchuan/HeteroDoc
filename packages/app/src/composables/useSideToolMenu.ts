@@ -88,10 +88,7 @@ export function useSideToolMenu() {
 
   // Computed:
   const hoveringBlockElementRect = computed(() => {
-    if (hoveringBlockElement.value) {
-      return hoveringBlockElement.value.getBoundingClientRect()
-    }
-    return null
+    return hoveringBlockElement.value?.getBoundingClientRect() ?? null
   })
   const sideToolBtnTop = computed(() => {
     if (!hoveringBlockElementRect.value) {
@@ -100,7 +97,7 @@ export function useSideToolMenu() {
     const { height: hoverBlockRectHeight, top: hoverBlockRectTop } =
       hoveringBlockElementRect.value
     if (isHoveringListType.value) {
-      return hoverBlockRectTop + 4
+      return hoverBlockRectTop + window.scrollY + 4
     }
 
     return (
@@ -227,9 +224,7 @@ export function useSideToolMenu() {
   onClickOutside(
     sideToolMenu,
     () => {
-      if (isSideToolMenuShow.value) {
-        isSideToolMenuShow.value = false
-      }
+      isSideToolMenuShow.value = false
     },
     {
       ignore: [sideDragBtn],
