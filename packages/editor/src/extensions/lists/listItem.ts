@@ -67,7 +67,7 @@ const useListItemMarker = () => {
           return itemWithPos.node === itemNode
         })
         if (itemNodeIndex >= 0) {
-          listItemMarkerCount.textContent = `${itemNodeIndex + 1}.`
+          listItemMarkerCount.textContent = `${itemNodeIndex + listNode.attrs.start ?? 1}.`
           listItemMarker.append(listItemMarkerCount)
         }
         break
