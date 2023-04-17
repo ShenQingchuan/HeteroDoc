@@ -1,8 +1,13 @@
 import { Plugin } from 'prosemirror-state'
 import {
+  findChildrenByType,
+  findParentNodeClosestToPos,
+} from 'prosemirror-utils'
+import {
   EXTENSION_NAMES,
   HETERODOC_LIST_ITEM_CONTENT_CLASS_NAME,
   HETERODOC_LIST_ITEM_MARKER_CLASS_NAME,
+  HETERODOC_LIST_ITEM_MARKER_COUNT_CLASS_NAME,
   HETERODOC_LIST_ITEM_MARKER_SYMBOL_CLASS_NAME,
   HETERODOC_LIST_SPINE_CLASS_NAME,
   HETERO_BLOCK_NODE_DATA_TAG,
@@ -21,6 +26,63 @@ import type {
   IEditorExtension,
   KeyboardShortcutCommand,
 } from '../../types'
+
+const useListItemMarker = () => {
+  const listItemMarker = createElement('label')
+  listItemMarker.contentEditable = 'false'
+  listItemMarker.classList.add(HETERODOC_LIST_ITEM_MARKER_CLASS_NAME)
+
+  // ListItemMarkerSymbol is for bullet list
+  const listItemMarkerSymbol = createElement('div')
+  listItemMarkerSymbol.contentEditable = 'false'
+  listItemMarkerSymbol.classList.add(
+    HETERODOC_LIST_ITEM_MARKER_SYMBOL_CLASS_NAME
+  )
+
+  // ListItemMarkerCount is for ordered list
+  const listItemMarkerCount = createElement('div')
+  listItemMarkerCount.contentEditable = 'false'
+  listItemMarkerCount.classList.add(HETERODOC_LIST_ITEM_MARKER_COUNT_CLASS_NAME)
+
+  const clearMarker = () => {
+    listItemMarkerSymbol.remove()
+    listItemMarkerCount.remove()
+    listItemMarkerCount.textContent = ''
+  }
+  const updateMarker = (
+    listNode: ProsemirrorNode,
+    itemNode: ProsemirrorNode
+  ) => {
+    clearMarker()
+    switch (listNode.type.name) {
+      case EXTENSION_NAMES.BULLET_LIST:
+        listItemMarker.append(listItemMarkerSymbol)
+        break
+      case EXTENSION_NAMES.ORDERED_LIST: {
+        const itemNodeIndex = findChildrenByType(
+          listNode,
+          itemNode.type,
+          false
+        ).findIndex((itemWithPos) => {
+          return itemWithPos.node === itemNode
+        })
+        if (itemNodeIndex >= 0) {
+          listItemMarkerCount.textContent = `${itemNodeIndex + 1}.`
+          listItemMarker.append(listItemMarkerCount)
+        }
+        break
+      }
+      case EXTENSION_NAMES.TASK_LIST:
+        // Todo: ...
+        break
+    }
+  }
+
+  return {
+    listItemMarker,
+    updateMarker,
+  }
+}
 
 export class ListItemExtension implements IEditorExtension {
   name = EXTENSION_NAMES.LIST_ITEM
@@ -72,7 +134,7 @@ export class ListItemExtension implements IEditorExtension {
       new Plugin({
         props: {
           nodeViews: {
-            [EXTENSION_NAMES.LIST_ITEM]: (node) => {
+            [EXTENSION_NAMES.LIST_ITEM]: (node, view, getPos) => {
               const dom = createElement('li', {
                 [HETERO_BLOCK_NODE_DATA_TAG]: EXTENSION_NAMES.LIST_ITEM,
                 ...blockIdDataAttrAtDOM(node),
@@ -81,23 +143,29 @@ export class ListItemExtension implements IEditorExtension {
                 HETERO_BLOCK_NODE_DATA_TAG,
                 EXTENSION_NAMES.LIST_ITEM
               )
-              const listItemMarker = document.createElement('label')
-              listItemMarker.contentEditable = 'false'
-              listItemMarker.classList.add(
-                HETERODOC_LIST_ITEM_MARKER_CLASS_NAME
-              )
-              const listItemMarkerSymbol = document.createElement('div')
-              listItemMarkerSymbol.contentEditable = 'false'
-              listItemMarkerSymbol.classList.add(
-                HETERODOC_LIST_ITEM_MARKER_SYMBOL_CLASS_NAME
-              )
-              listItemMarker.append(listItemMarkerSymbol)
               const contentDOM = document.createElement('div')
               contentDOM.classList.add(HETERODOC_LIST_ITEM_CONTENT_CLASS_NAME)
-              const update = (newNode: ProsemirrorNode): boolean => {
+
+              const { listItemMarker, updateMarker } = useListItemMarker()
+
+              const updateListItemNodeView = (
+                newNode: ProsemirrorNode
+              ): boolean => {
                 if (newNode.type !== node.type) {
                   return false
                 }
+
+                const $pos = view.state.doc.resolve(getPos() as number)
+                const foundListTypeParent = findParentNodeClosestToPos(
+                  $pos,
+                  (node) => Boolean(node.type.spec.group?.includes('list'))
+                )
+                if (foundListTypeParent) {
+                  const { node: foundParentListTypeNode } = foundListTypeParent
+                  updateMarker(foundParentListTypeNode, newNode)
+                }
+
+                // Add spine line for nested sub-list items
                 if (
                   newNode.childCount > 1 &&
                   !dom.querySelector(`.${HETERODOC_LIST_SPINE_CLASS_NAME}`)
@@ -113,12 +181,13 @@ export class ListItemExtension implements IEditorExtension {
                 }
                 return true
               }
-              update(node)
+
+              updateListItemNodeView(node)
               dom.append(listItemMarker, contentDOM)
               return {
                 dom,
                 contentDOM,
-                update,
+                update: updateListItemNodeView,
               }
             },
           },

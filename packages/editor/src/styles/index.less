@@ -20,6 +20,7 @@
   --heterodoc-drop-cursor-color: rgb(118, 139, 161);
   --heterodoc-list-item-mark-symbol-color: #8a8a8a;
   --heterodoc-list-item-mark-spine-color: #c0c0c0;
+  --heterodoc-list-item-mark-count-color: #c0c0c0;
 }
 
 :root.dark {
@@ -38,7 +39,8 @@
   --heterodoc-search-highlight: #e7a80f;
   --heterodoc-drop-cursor-color: rgb(221, 238, 255);
   --heterodoc-list-item-mark-symbol-color: #d5d5d5;
-  --heterodoc-list-item-mark-spine-color: #d5d5d5;
+  --heterodoc-list-item-mark-spine-color: #848181;
+  --heterodoc-list-item-mark-count-color: #848181;
 }
 
 .ProseMirror {
@@ -176,6 +178,10 @@
     width: 1.75rem;
     height: 1.5rem;
     
+    &-count {
+      color: var(--heterodoc-list-item-mark-count-color);
+      font-weight: bold;
+    }
     &-symbol {
       width: 6px;
       height: 6px;
@@ -201,9 +207,9 @@
     transform: translateX(-50%);
     position: absolute;
     left: 14px;
-    top: 1.75rem;
+    top: 2rem;
     width: 1px;
-    height: calc(100% - 1.75rem);
+    height: calc(100% - 2rem);
     background-color: var(--heterodoc-list-item-mark-spine-color);
   }
 }
