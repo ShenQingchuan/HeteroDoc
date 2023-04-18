@@ -25,7 +25,7 @@ export function getBlockAttrsFromElement(el: HTMLElement) {
   }
 }
 
-export function createBlockIdAttr() {
+export function  createBlockMetaAttr() {
   return {
     blockId: getUUID(),
   }

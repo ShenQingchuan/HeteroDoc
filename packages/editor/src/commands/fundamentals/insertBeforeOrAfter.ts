@@ -1,10 +1,13 @@
+import { EditorCore } from '../../core'
+import { type Attrs, Node as ProsemirrorNode } from 'prosemirror-model'
 import { setTextSelection } from 'prosemirror-utils'
-import { chooseFoundBlockForHoverPos as chooseInsertTargetBlockForHoverPos } from '../../core/helpers/chooseFoundBlockForHoverPos'
-import type { ContentNodeWithPos } from 'prosemirror-utils'
+import { getHoveredBlock } from '../../core/helpers/blockForHoverPos'
 import type { Command, Commands } from '../../types'
+import { EXTENSION_NAMES } from '../../constants'
+import {  createBlockMetaAttr } from '../../utils/blockSchema'
 
 export interface InsertBeforeOrAfterArgs {
-  pos: number
+  hoveredBlockElement: HTMLElement | undefined
 }
 
 declare module '@hetero/editor' {
@@ -14,48 +17,46 @@ declare module '@hetero/editor' {
   }
 }
 
-const createInssertBeforeOrAfterJudge =
-  (actionType: 'insertBefore' | 'insertAfter') =>
-  (
-    foundBlockTreeAble: ContentNodeWithPos | undefined,
-    foundTextBlock: ContentNodeWithPos | undefined
-  ) => {
-    if (foundBlockTreeAble && foundTextBlock) {
-      // if the found text block is the first child of the found BlockTree-able node,
-      // we should choose the BlockTree-able node node to return
-      const { pos: blockTreeAblePos } = foundBlockTreeAble
-      const { pos: textBlockPos } = foundTextBlock
-      return actionType === 'insertBefore'
-        ? blockTreeAblePos + 1 === textBlockPos
-          ? foundBlockTreeAble
-          : foundTextBlock
-        : blockTreeAblePos +
-            foundBlockTreeAble.node.nodeSize -
-            1 -
-            foundTextBlock.node.nodeSize ===
-          textBlockPos
-        ? foundBlockTreeAble
-        : foundTextBlock
-    }
-
-    return foundTextBlock
+function createNodeForInserting(
+  core: EditorCore,
+  targetNode: ProsemirrorNode,
+) {
+  // Adopts the targetNode's attributes
+  // but needs to override the blockify meta
+  const newAttrs: Attrs = {
+    ...targetNode.attrs,
+    ...createBlockMetaAttr()
   }
 
+  // If the targetNode is a list item, create a new list item
+  if (targetNode.type.name === EXTENSION_NAMES.LIST_ITEM) {
+    // We need to create a paragraph node inside the list item
+    const paragraphNode = core.schema.nodes.paragraph!.create(newAttrs)
+    return core.schema.nodes[EXTENSION_NAMES.LIST_ITEM]!.create(
+      newAttrs,
+      paragraphNode,
+    )
+  }
+
+  // Return paragraph node by default
+  return core.schema.nodes.paragraph!.create(newAttrs);
+}
+
 export const insertBefore: Commands['insertBefore'] =
-  ({ pos }) =>
+  ({ hoveredBlockElement }) =>
   ({ core, tr, dispatch }) => {
-    if (dispatch) {
+    if (dispatch && hoveredBlockElement) {
       // find which block is the target pos in
-      // and insert a new block item before it, maybe paragraph or something else
-      const choosedFoundBlock = chooseInsertTargetBlockForHoverPos(
-        tr,
-        pos,
-        createInssertBeforeOrAfterJudge('insertBefore')
+      // and insert a new 'same-type' block item before it
+      const { node, pos } = getHoveredBlock(
+        core,
+        hoveredBlockElement,
       )
-      if (choosedFoundBlock) {
-        const { pos } = choosedFoundBlock
-        tr.insert(pos, core.schema.nodes.paragraph!.create())
-        setTextSelection(pos)(tr)
+      if (node) {
+        const newNode = createNodeForInserting(core, node);
+        tr.insert(pos, newNode)
+        const newCursorPos = tr.mapping.map(pos) - newNode.nodeSize
+        setTextSelection(newCursorPos)(tr)
       }
     }
 
@@ -63,21 +64,24 @@ export const insertBefore: Commands['insertBefore'] =
   }
 
 export const insertAfter: Commands['insertAfter'] =
-  ({ pos }) =>
+  ({ hoveredBlockElement }) =>
   ({ core, tr, dispatch }) => {
-    if (dispatch) {
+    if (dispatch && hoveredBlockElement) {
       // find which block is the target pos in
-      // and insert a new block item after it, maybe paragraph or something else
-      const choosedFoundBlock = chooseInsertTargetBlockForHoverPos(
-        tr,
-        pos,
-        createInssertBeforeOrAfterJudge('insertAfter')
+      // and insert a new 'same-type' block item after it, maybe paragraph or something else
+      const { node, pos } = getHoveredBlock(
+        core,
+        hoveredBlockElement,
       )
-      if (choosedFoundBlock) {
-        const { pos, node } = choosedFoundBlock
-        const newParagraph = core.schema.nodes.paragraph!.create()
-        tr.insert(pos + node.nodeSize, newParagraph)
-        setTextSelection(pos + node.nodeSize)(tr)
+      if (node) {
+        const newNode = createNodeForInserting(core, node)
+        console.log('inserting pos: ', pos + node.nodeSize)
+        tr.insert(pos + node.nodeSize, newNode)
+        // Q: Why no need tr.mapping here?
+        // A: Because insert something after the given pos, 
+        //    the given pos is actually the start pos of the inserted node 
+        const newCursorPos = pos + node.nodeSize
+        setTextSelection(newCursorPos)(tr)
       }
     }
 

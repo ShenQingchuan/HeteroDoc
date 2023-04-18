@@ -50,7 +50,6 @@ const useListItemMarker = () => {
   }
   const updateMarker = (
     listNode: ProsemirrorNode,
-    itemNode: ProsemirrorNode
   ) => {
     clearMarker()
     switch (listNode.type.name) {
@@ -150,7 +149,7 @@ export class ListItemExtension implements IEditorExtension {
                 )
                 if (foundListTypeParent) {
                   const { node: foundParentListTypeNode } = foundListTypeParent
-                  updateMarker(foundParentListTypeNode, newNode)
+                  updateMarker(foundParentListTypeNode)
                 }
 
                 // Add spine line for nested sub-list items

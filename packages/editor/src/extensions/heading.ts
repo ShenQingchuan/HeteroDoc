@@ -11,7 +11,7 @@ import {
   getTextBlockAttrsFromElement,
   stylesOfTextBlock,
 } from '../utils/textBlockSchema'
-import { blockIdDataAttrAtDOM, createBlockIdAttr } from '../utils/blockSchema'
+import { blockIdDataAttrAtDOM,  createBlockMetaAttr } from '../utils/blockSchema'
 import type { PatternRule } from '../core/rule'
 import type { AddNodesSchema, Command, IEditorExtension } from '../types'
 import type { EditorCore } from '../core'
@@ -89,7 +89,7 @@ export class HeadingExtension implements IEditorExtension {
         return {
           level: match[1]!.length,
           anchorId: getRandomHeadingID(),
-          ...createBlockIdAttr(),
+          ... createBlockMetaAttr(),
         }
       }),
     ]
@@ -105,7 +105,7 @@ export class HeadingExtension implements IEditorExtension {
             attrs: {
               level,
               anchorId: getRandomHeadingID(),
-              ...createBlockIdAttr(),
+              ... createBlockMetaAttr(),
             },
           })
         },
@@ -123,7 +123,7 @@ export class HeadingExtension implements IEditorExtension {
             attrs: {
               level,
               anchorId: getRandomHeadingID(),
-              ...createBlockIdAttr(),
+              ... createBlockMetaAttr(),
             },
           })
         },
