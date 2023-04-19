@@ -1,6 +1,10 @@
-import { HETERO_BLOCK_NODE_DATA_TAG, EXTENSION_NAMES, HETERODOC_LIST_ITEM_CONTENT_CLASS_NAME } from '../../constants'
+import {
+  EXTENSION_NAMES,
+  HETERODOC_LIST_ITEM_CONTENT_CLASS_NAME,
+  HETERO_BLOCK_NODE_DATA_TAG,
+} from '../../constants'
 import { getLogger } from '../../utils/logger'
-import { EditorCore } from '../index'
+import type { EditorCore } from '../index'
 
 const logger = getLogger('blockForHoverPos')
 
@@ -50,16 +54,16 @@ export const getClosetTarget = (el: HTMLElement) => {
 
 export const getHoveredBlock = (
   core: EditorCore,
-  hoveredBlockElement: HTMLElement,
+  hoveredBlockElement: HTMLElement
 ) => {
   const resolvedPos = core.view.state.doc.resolve(
     core.view.posAtDOM(hoveredBlockElement, 0)
   )
-  logger.debug("[getHoveredBlock] resolvedPos", resolvedPos)
+  logger.debug('[getHoveredBlock] resolvedPos', resolvedPos)
   const result = {
     pos: resolvedPos.before(resolvedPos.depth),
     node: resolvedPos.parent,
   }
-  logger.debug("[getHoveredBlock] result", result)
+  logger.debug('[getHoveredBlock] result', result)
   return result
 }

@@ -1,6 +1,6 @@
 import { highlightPlugin } from 'prosemirror-highlightjs'
 import { TextSelection } from 'prosemirror-state'
-import { findParentNode } from 'prosemirror-utils'
+import { findParentNode, setTextSelection } from 'prosemirror-utils'
 import hljs from 'highlight.js'
 import {
   EXTENSION_NAMES,
@@ -154,6 +154,56 @@ export class CodeBlockExtension implements IEditorExtension {
 
   keymaps: () => Record<string, KeyboardShortcutCommand> = () => {
     return {
+      ArrowUp: (_, state, dispatch) => {
+        // If the cursor is inside the first line of code block, move the cursor to the previous block
+        const { $head } = state.selection
+        if (!$head.parent.type.spec.code) {
+          return false
+        }
+        const codeBlockContentFirstLineWrapIndex =
+          $head.parent.textContent.indexOf('\n')
+        if ($head.parentOffset <= codeBlockContentFirstLineWrapIndex) {
+          const beforeCodeblockResolved = state.doc.resolve(
+            $head.before($head.depth) - 1
+          )
+          const beforePos =
+            beforeCodeblockResolved.before(beforeCodeblockResolved.depth) + 1
+          if (dispatch) {
+            dispatch(
+              state.tr
+                .setSelection(TextSelection.create(state.doc, beforePos))
+                .scrollIntoView()
+            )
+          }
+          return true
+        }
+        return false
+      },
+      ArrowDown: (_, state, dispatch) => {
+        // If the cursor is inside the last line of code block, move the cursor to the next block
+        const { $head } = state.selection
+        if (!$head.parent.type.spec.code) {
+          return false
+        }
+        const codeBlockContentLastLineWrapIndex =
+          $head.parent.textContent.lastIndexOf('\n')
+        if ($head.parentOffset >= codeBlockContentLastLineWrapIndex + 1) {
+          const afterCodeblockResolved = state.doc.resolve(
+            $head.after($head.depth) + 1
+          )
+          const afterPos =
+            afterCodeblockResolved.before(afterCodeblockResolved.depth) + 1
+          if (dispatch) {
+            dispatch(
+              state.tr
+                .setSelection(TextSelection.create(state.doc, afterPos))
+                .scrollIntoView()
+            )
+          }
+          return true
+        }
+        return false
+      },
       Tab: (_, state, dispatch) => {
         const { $head } = state.selection
         if (!$head.parent.type.spec.code) {

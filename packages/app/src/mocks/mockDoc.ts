@@ -198,5 +198,19 @@ export const jsonData = {
         },
       ],
     },
+    {
+      type: 'paragraph',
+      attrs: {
+        textAlign: 'left',
+        textIndent: 0,
+        blockId: 'EA237399-E765-449E-926B-584B33624D9C',
+      },
+      content: [
+        {
+          type: 'text',
+          text: 'Looking forward to your exploration!',
+        },
+      ],
+    },
   ],
 }
