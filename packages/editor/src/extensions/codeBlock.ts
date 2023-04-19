@@ -1,6 +1,6 @@
 import { highlightPlugin } from 'prosemirror-highlightjs'
 import { TextSelection } from 'prosemirror-state'
-import { findParentNode, setTextSelection } from 'prosemirror-utils'
+import { findParentNode } from 'prosemirror-utils'
 import hljs from 'highlight.js'
 import {
   EXTENSION_NAMES,

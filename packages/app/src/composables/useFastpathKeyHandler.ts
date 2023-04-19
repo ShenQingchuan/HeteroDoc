@@ -1,7 +1,4 @@
-type FastpathKey = `h${number}` | 'quote' | 'codeblock' | 'horizontal'
-type FastPathKeyMap = Record<FastpathKey, (...args: any) => void>
-
-const FastpathKeyOptions: FastpathKey[] = [
+const FastpathKeyOptions = [
   'h1',
   'h2',
   'h3',
@@ -10,7 +7,12 @@ const FastpathKeyOptions: FastpathKey[] = [
   'quote',
   'codeblock',
   'horizontal',
-]
+  'bulletList',
+  'orderedList',
+] as const
+
+type FastPathKeyMap = Record<FastpathKey, (...args: any) => void>
+type FastpathKey = (typeof FastpathKeyOptions)[number]
 
 export function useFastpathHandler() {
   const editorCore = useEditorCoreInject()
@@ -39,6 +41,12 @@ export function useFastpathHandler() {
   const onClickHorizontalFastpath = runInputFastPath(() => {
     editorCore?.value.commands.setHorizontal()
   })
+  const onClickBulletListFastpath = runInputFastPath(() => {
+    editorCore?.value.commands.toggleBulletList()
+  })
+  const onClickOrderedListFastpath = runInputFastPath(() => {
+    editorCore?.value.commands.toggleOrderedList()
+  })
 
   const fastPathHandlerMap = {
     ...Array.from({ length: 5 }, (_, i) => i + 1).reduce((acc, level) => {
@@ -48,6 +56,8 @@ export function useFastpathHandler() {
     quote: onClickQuoteFastpath,
     codeblock: onClickCodeblockFastpath,
     horizontal: onClickHorizontalFastpath,
+    bulletList: onClickBulletListFastpath,
+    orderedList: onClickOrderedListFastpath,
   } as FastPathKeyMap
 
   const onFastpathTrigger = (clickParams?: { option: FastpathKey }) => {

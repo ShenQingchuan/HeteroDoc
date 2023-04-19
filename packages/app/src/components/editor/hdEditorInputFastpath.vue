@@ -76,13 +76,17 @@ watch(
             {{ t('editor.menu.fastpath-options-title-basic-textblocks') }}
           </div>
           <div
-            v-for="i in 5"
+            v-for="i in [1, 2, 3, 4, 5] as const"
             :key="`heading-${i}`"
             :class="`hetero-editor__input-fastpath-option heading-${i} ${getActiveClassByOption(
               `h${i}`
             )}`"
             editor-input-fastpath-option
-            @click="onFastpathTrigger({ option: `h${i}` as const })"
+            @click="
+              onFastpathTrigger({
+                option: `h${i}` satisfies `h${1 | 2 | 3 | 4 | 5}`,
+              })
+            "
           >
             <i
               class="label-icon"
@@ -143,6 +147,38 @@ watch(
             />
             <span select-none ml="1.2">{{
               t('editor.menu.fastpath-option-horizontal')
+            }}</span>
+          </div>
+          <div
+            class="hetero-editor__input-fastpath-option bulletList"
+            :class="`${getActiveClassByOption('bulletList')}`"
+            editor-input-fastpath-option
+            @click="onFastpathTrigger({ option: 'bulletList' })"
+          >
+            <i
+              class="label-icon"
+              m="r0.5"
+              i-octicon:list-unordered
+              editor-input-fastpath-icon
+            />
+            <span select-none ml="1.2">{{
+              t('editor.menu.fastpath-option-bullet-list')
+            }}</span>
+          </div>
+          <div
+            class="hetero-editor__input-fastpath-option orderedList"
+            :class="`${getActiveClassByOption('orderedList')}`"
+            editor-input-fastpath-option
+            @click="onFastpathTrigger({ option: 'orderedList' })"
+          >
+            <i
+              class="label-icon"
+              m="r0.5"
+              i-octicon:list-ordered
+              editor-input-fastpath-icon
+            />
+            <span select-none ml="1.2">{{
+              t('editor.menu.fastpath-option-ordered-list')
             }}</span>
           </div>
         </div>

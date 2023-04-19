@@ -32,6 +32,8 @@ editor:
     fontfancy-picker-title-tips: 第一个选项都是重设为默认
     fontfancy-picker-title-textcolor: 文字颜色
     fontfancy-picker-title-bgcolor: 背景颜色
+    fastpath-option-bullet-list: 无序列表
+    fastpath-option-ordered-list: 有序列表
   popover:
     edit-link-confirm: 确定
     edit-link-url-label: 链接

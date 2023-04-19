@@ -32,6 +32,8 @@ editor:
     fontfancy-picker-title-tips: First option is "Reset to default"
     fontfancy-picker-title-textcolor: Text color
     fontfancy-picker-title-bgcolor: Background color
+    fastpath-option-bullet-list: Bullet list
+    fastpath-option-ordered-list: Ordered list
   popover:
     edit-link-confirm: Confirm
     edit-link-url-label: Link

@@ -47,7 +47,7 @@ export default defineConfig({
     }),
     Fonts({
       google: {
-        families: ['JetBrains Mono'],
+        families: ['Fira Code'],
       },
     }),
   ],
