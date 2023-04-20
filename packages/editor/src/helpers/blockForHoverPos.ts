@@ -2,9 +2,9 @@ import {
   EXTENSION_NAMES,
   HETERODOC_LIST_ITEM_CONTENT_CLASS_NAME,
   HETERO_BLOCK_NODE_DATA_TAG,
-} from '../../constants'
-import { getLogger } from '../../utils/logger'
-import type { EditorCore } from '../index'
+} from '../constants'
+import { getLogger } from '../utils/logger'
+import type { EditorCore } from '../core'
 
 const logger = getLogger('blockForHoverPos')
 

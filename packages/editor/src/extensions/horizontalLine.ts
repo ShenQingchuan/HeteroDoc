@@ -5,7 +5,7 @@ import {
   HETERODOC_HORIZONTAL_LINE_CLASS_NAME,
   HETERO_BLOCK_NODE_DATA_TAG,
 } from '../constants'
-import { getNodeType } from '../core/helpers/getNodeType'
+import { getNodeType } from '../helpers/getNodeType'
 import { PatternRule } from '../core/rule'
 import { ExtensionType } from '../types'
 import type { AddNodesSchema, IEditorExtension, NoArgsCommand } from '../types'

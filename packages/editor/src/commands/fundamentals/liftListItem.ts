@@ -1,6 +1,6 @@
 import { liftListItem as originalLiftListItem } from 'prosemirror-schema-list'
 
-import { getNodeType } from '../../core/helpers/getNodeType'
+import { getNodeType } from '../../helpers/getNodeType'
 import type { Command, Commands } from '../../types'
 import type { NodeType } from 'prosemirror-model'
 

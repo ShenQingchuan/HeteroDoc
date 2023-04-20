@@ -1,5 +1,5 @@
 import { builtinsCommands } from '../commands/exporter'
-import { createChainableState } from './helpers/createChainableState'
+import { createChainableState } from '../helpers/createChainableState'
 import type { Transaction } from 'prosemirror-state'
 import type {
   CommandProps,

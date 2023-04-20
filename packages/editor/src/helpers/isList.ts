@@ -1,5 +1,5 @@
 import { getNodeType } from './getNodeType'
-import type { EditorCore } from '../index'
+import type { EditorCore } from '../core'
 
 export function isList(name: string, context: EditorCore): boolean {
   const nodeType = getNodeType(name, context.schema)

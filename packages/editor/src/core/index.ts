@@ -10,9 +10,9 @@ import { createBuiltinFuncExts } from '../extensions/funcs/builtinFuncExts'
 import { mergeSchemaSpecs } from './schema'
 import { inputRules, pasteRules } from './rule'
 import { CommandManager } from './commandManager'
-import { HelpersManager } from './helpers/helpersManager'
+import { HelpersManager } from '../helpers/helpersManager'
 import { ActiveManager } from './activeManager'
-import { getAllBuiltinPlugins } from './plugins'
+import { getAllBuiltinPlugins } from '../plugins'
 import type {
   EditorExtensionMap,
   EditorThemeMode,

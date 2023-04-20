@@ -4,7 +4,7 @@ import { canDeleteFirstLine } from './canDeleteFirstLine'
 import { clickEditorDOMCloseSelection } from './clickEditorDomCloseSelection'
 import { placeholderPlugin } from './placeholder'
 import { pluginResetStoredMarksOnDeleted } from './resetStoredMarksOnDeleted'
-import type { EditorCore } from '../index'
+import type { EditorCore } from '../core'
 import type { Plugin } from 'prosemirror-state'
 
 type builtinPluginConstructor = (core: EditorCore) => Plugin

@@ -1,6 +1,6 @@
 import { wrapInList as originalWrapInList } from 'prosemirror-schema-list'
 
-import { getNodeType } from '../../core/helpers/getNodeType'
+import { getNodeType } from '../../helpers/getNodeType'
 import type { NodeType } from 'prosemirror-model'
 import type { Command, Commands } from '../../types'
 

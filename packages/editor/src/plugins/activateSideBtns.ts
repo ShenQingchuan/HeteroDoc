@@ -3,9 +3,9 @@ import { findParentDomRef } from 'prosemirror-utils'
 import {
   EXTENSION_NAMES,
   HETERO_BLOCK_NODE_DATA_TAG,
-} from '../../constants'
-import { isHeteroBlock } from '../../utils/isSomewhat'
-import type { EditorCore } from '../index'
+} from '../constants'
+import { isHeteroBlock } from '../utils/isSomewhat'
+import type { EditorCore } from '../core'
 import { getClosetTarget } from '../helpers/blockForHoverPos'
 
 /**

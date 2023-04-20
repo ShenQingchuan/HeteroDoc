@@ -10,7 +10,7 @@ import {
   selectNodeForward as originalSelectNodeForward,
   wrapIn as originalWrapIn,
 } from 'prosemirror-commands'
-import { getNodeType } from '../../core/helpers/getNodeType'
+import { getNodeType } from '../../helpers/getNodeType'
 import type { NodeType } from 'prosemirror-model'
 import type { Command, Commands, NoArgsCommand } from '../../types'
 

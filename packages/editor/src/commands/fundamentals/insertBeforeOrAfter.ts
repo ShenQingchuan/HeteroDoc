@@ -1,7 +1,7 @@
 import { EditorCore } from '../../core'
 import { type Attrs, Node as ProsemirrorNode } from 'prosemirror-model'
 import { setTextSelection } from 'prosemirror-utils'
-import { getHoveredBlock } from '../../core/helpers/blockForHoverPos'
+import { getHoveredBlock } from '../../helpers/blockForHoverPos'
 import type { Command, Commands } from '../../types'
 import { EXTENSION_NAMES } from '../../constants'
 import {  createBlockMetaAttr } from '../../utils/blockSchema'

@@ -1,5 +1,5 @@
-import { getMarkType } from '../../core/helpers/getMarkType'
-import { isMarkActive } from '../../core/helpers/isMarkActive'
+import { getMarkType } from '../../helpers/getMarkType'
+import { isMarkActive } from '../../helpers/isMarkActive'
 import type { MarkType } from 'prosemirror-model'
 import type { Command, Commands } from '../../types'
 

@@ -1,7 +1,7 @@
 import { getMarkRange } from './getMarkRange'
 import type { Node as ProseMirrorNode } from 'prosemirror-model'
 
-import type { MarkRange } from '../../types'
+import type { MarkRange } from '../types'
 
 export function getMarksBetween(
   from: number,

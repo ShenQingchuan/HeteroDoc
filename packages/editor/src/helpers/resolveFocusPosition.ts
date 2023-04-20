@@ -1,8 +1,8 @@
 import { Selection, TextSelection } from 'prosemirror-state'
-import { minMax } from '../../utils/minMax'
+import { minMax } from '../utils/minMax'
 import type { Node as ProseMirrorNode } from 'prosemirror-model'
 
-import type { FocusPosition } from '../../types'
+import type { FocusPosition } from '../types'
 
 export function resolveFocusPosition(
   doc: ProseMirrorNode,
