@@ -1,13 +1,14 @@
 import { NodeSelection, Plugin, PluginKey } from 'prosemirror-state'
 import { findParentNodeClosestToPos } from 'prosemirror-utils'
+import { Fragment, Slice } from 'prosemirror-model'
 import { EXTENSION_NAMES, HETERO_BLOCK_NODE_DATA_TAG } from '../../constants'
 import { ExtensionType } from '../../types'
 import { isHeteroBlock } from '../../utils/isSomewhat'
 import { isListItem } from '../../helpers/isListItem'
 import { isList } from '../../helpers/isList'
+import type { Node, ResolvedPos } from 'prosemirror-model'
 import type { EditorCore } from '../../core'
 import type { IEditorExtension } from '../../types'
-import { Fragment, Node, ResolvedPos, Slice } from 'prosemirror-model'
 
 export class DragAndDrop implements IEditorExtension {
   type = ExtensionType.func
@@ -127,21 +128,26 @@ export class DragAndDrop implements IEditorExtension {
               // For drag moving, we need to select the hovered DOM element from mouseover event.
               // It could be done by `event.target` as HTMLElement
               const hoverElement = event.target
-              const { x, y } = event
+              const { pageX, pageY } = event
               const lastHeteroBlock = Array.from(
                 view.dom.querySelectorAll<HTMLElement>(
                   `[${HETERO_BLOCK_NODE_DATA_TAG}]`
                 )
               ).at(-1)
+              if (!lastHeteroBlock) {
+                return false
+              }
+              const lastHeteroBlockRect =
+                lastHeteroBlock.getBoundingClientRect()
               if (
-                lastHeteroBlock &&
-                y > lastHeteroBlock.getBoundingClientRect().bottom
+                pageY >
+                lastHeteroBlockRect.top + lastHeteroBlockRect.height / 2
               ) {
                 this.core.emit('dragMoving', {
                   hoverElement: lastHeteroBlock,
                   isAppend: true,
-                  x,
-                  y,
+                  x: pageX,
+                  y: pageY,
                 })
                 return true
               }
@@ -151,7 +157,11 @@ export class DragAndDrop implements IEditorExtension {
               // 2. when the `hoverElement` is a hetero block
               const isHoveringHeteroBlock = isHeteroBlock(hoverElement)
               if (isHoveringHeteroBlock) {
-                this.core.emit('dragMoving', { hoverElement, x, y })
+                this.core.emit('dragMoving', {
+                  hoverElement,
+                  x: pageX,
+                  y: pageY,
+                })
               }
               return true
             },
