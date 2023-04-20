@@ -1,5 +1,5 @@
-import { getMarkRange } from '../../core/helpers/getMarkRange'
-import { getMarkType } from '../../core/helpers/getMarkType'
+import { getMarkRange } from '../..//helpers/getMarkRange'
+import { getMarkType } from '../..//helpers/getMarkType'
 import type { MarkType } from 'prosemirror-model'
 import type { Command, Commands } from '../../types'
 

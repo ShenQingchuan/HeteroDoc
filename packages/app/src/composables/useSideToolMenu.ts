@@ -37,7 +37,7 @@ export function useSideToolMenu() {
   const hoveringLayerWidth = ref(0)
   const sideDragBtn = shallowRef<HTMLElement>()
   const sideToolMenu = shallowRef<HTMLElement>()
-  const isMousePressingDown = ref(false)
+  const isMouseDownOnSideBtn = ref(false)
   const isMouseMoved = ref(false)
   const dragingMirror = shallowRef<HTMLElement>()
   const { isOutside: isNotHoveringSideToolMenu } =
@@ -83,7 +83,7 @@ export function useSideToolMenu() {
     isSideToolMenuShow.value = true
   }
   const isDisableSideBtnMoving = computed(() => {
-    return isMousePressingDown.value || isSideToolMenuShow.value
+    return isMouseDownOnSideBtn.value || isSideToolMenuShow.value
   })
 
   // Computed:
@@ -156,7 +156,7 @@ export function useSideToolMenu() {
     document.body.append(dragingMirror.value as HTMLElement)
   })
   const onMouseMove = () => {
-    if (isMousePressingDown.value && !isMouseMoved.value) {
+    if (isMouseDownOnSideBtn.value && !isMouseMoved.value) {
       if (!hoveringBlockElement.value) {
         // This also means hoverNodePos can't be 0,
         // because we don't want to drag the whole editor
@@ -174,8 +174,8 @@ export function useSideToolMenu() {
       isMouseMoved.value = true
     }
   }
-  const onSideDragBtnMouseDown = () => {
-    isMousePressingDown.value = true
+  const onSideBtnMouseDown = () => {
+    isMouseDownOnSideBtn.value = true
   }
   const onMouseUp = () => {
     // Since 'click' event is triggered after 'mouseup' event,
@@ -202,10 +202,10 @@ export function useSideToolMenu() {
       } finally {
         editorEventBus.emit('dropEnd', null)
       }
-    } else {
+    } else if (isMouseDownOnSideBtn.value) {
       onSideBtnClick()
     }
-    isMousePressingDown.value = false
+    isMouseDownOnSideBtn.value = false
     isMouseMoved.value = false
   }
 
@@ -221,7 +221,7 @@ export function useSideToolMenu() {
   })
 
   // Bind events
-  useEventListener(sideDragBtn, 'mousedown', onSideDragBtnMouseDown)
+  useEventListener(sideDragBtn, 'mousedown', onSideBtnMouseDown)
   useEventListener(document, 'mousemove', onMouseMove)
   useEventListener(document, 'mouseup', onMouseUp)
   onClickOutside(

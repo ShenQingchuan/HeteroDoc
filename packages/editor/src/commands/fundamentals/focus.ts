@@ -1,4 +1,4 @@
-import { resolveFocusPosition } from '../../core/helpers/resolveFocusPosition'
+import { resolveFocusPosition } from '../..//helpers/resolveFocusPosition'
 import { isTextSelection, isiOS } from '../../utils/isSomewhat'
 import type { Commands, FocusPosition, OptionalArgsCommand } from '../../types'
 

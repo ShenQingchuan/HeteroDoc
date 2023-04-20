@@ -7,12 +7,12 @@ import { history, redo, undo } from 'prosemirror-history'
 import { getLogger } from '../utils/logger'
 import { ExtensionType } from '../types'
 import { createBuiltinFuncExts } from '../extensions/funcs/builtinFuncExts'
+import { HelpersManager } from '../helpers/helpersManager'
+import { getAllBuiltinPlugins } from '../plugins'
 import { mergeSchemaSpecs } from './schema'
 import { inputRules, pasteRules } from './rule'
 import { CommandManager } from './commandManager'
-import { HelpersManager } from './helpers/helpersManager'
 import { ActiveManager } from './activeManager'
-import { getAllBuiltinPlugins } from './plugins'
 import type {
   EditorExtensionMap,
   EditorThemeMode,

@@ -1,6 +1,6 @@
 import { EXTENSION_NAMES } from '../constants'
-import { isActive } from './helpers/isActive'
-import { isFontFancyActive as _isFontFancyActive } from './helpers/isFontFancyActive'
+import { isActive } from '../helpers/isActive'
+import { isFontFancyActive as _isFontFancyActive } from '../helpers/isFontFancyActive'
 import type { Node } from 'prosemirror-model'
 import type { EditorCore } from './index'
 

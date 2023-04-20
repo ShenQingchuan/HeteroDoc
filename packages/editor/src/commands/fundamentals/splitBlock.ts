@@ -1,6 +1,6 @@
 import { NodeSelection, TextSelection } from 'prosemirror-state'
 import { canSplit } from 'prosemirror-transform'
-import { getSplittedAttributes } from '../../core/helpers/getSplittedAttributes'
+import { getSplittedAttributes } from '../..//helpers/getSplittedAttributes'
 import type { EditorState } from 'prosemirror-state'
 import type { ContentMatch } from 'prosemirror-model'
 import type {

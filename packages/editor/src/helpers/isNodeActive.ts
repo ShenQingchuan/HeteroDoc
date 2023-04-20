@@ -1,8 +1,8 @@
-import { objectIncludes } from '../../utils/objectIncludes'
+import { objectIncludes } from '../utils/objectIncludes'
 import { getNodeType } from './getNodeType'
 import type { NodeType } from 'prosemirror-model'
 import type { EditorState } from 'prosemirror-state'
-import type { NodeRange } from '../../types'
+import type { NodeRange } from '../types'
 
 export function isNodeActive(
   state: EditorState,

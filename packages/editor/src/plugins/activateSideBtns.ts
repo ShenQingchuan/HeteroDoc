@@ -4,9 +4,9 @@ import {
   EXTENSION_NAMES,
   HETERODOC_LIST_ITEM_CONTENT_CLASS_NAME,
   HETERO_BLOCK_NODE_DATA_TAG,
-} from '../../constants'
-import { isHeteroBlock } from '../../utils/isSomewhat'
-import type { EditorCore } from '../index'
+} from '../constants'
+import { isHeteroBlock } from '../utils/isSomewhat'
+import type { EditorCore } from '../core'
 
 const getClosetTargetRect = (el: HTMLElement) => {
   let closetTargetElement = el.closest<HTMLElement>(

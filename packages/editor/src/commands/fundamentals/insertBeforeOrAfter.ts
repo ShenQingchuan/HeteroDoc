@@ -1,5 +1,5 @@
 import { setTextSelection } from 'prosemirror-utils'
-import { chooseFoundBlockForHoverPos as chooseInsertTargetBlockForHoverPos } from '../../core/helpers/chooseFoundBlockForHoverPos'
+import { chooseFoundBlockForHoverPos as chooseInsertTargetBlockForHoverPos } from '../..//helpers/chooseFoundBlockForHoverPos'
 import type { ContentNodeWithPos } from 'prosemirror-utils'
 import type { Command, Commands } from '../../types'
 

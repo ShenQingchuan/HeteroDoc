@@ -2,8 +2,8 @@ import { Fragment, Slice } from 'prosemirror-model'
 import { TextSelection } from 'prosemirror-state'
 import { canSplit } from 'prosemirror-transform'
 
-import { getNodeType } from '../../core/helpers/getNodeType'
-import { getSplittedAttributes } from '../../core/helpers/getSplittedAttributes'
+import { getNodeType } from '../..//helpers/getNodeType'
+import { getSplittedAttributes } from '../..//helpers/getSplittedAttributes'
 import type { Command, Commands, ExtensionAttribute } from '../../types'
 import type { NodeType, Node as ProseMirrorNode } from 'prosemirror-model'
 

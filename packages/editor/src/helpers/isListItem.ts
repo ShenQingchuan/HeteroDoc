@@ -1,4 +1,4 @@
-import { EXTENSION_NAMES } from '../../constants'
+import { EXTENSION_NAMES } from '../constants'
 import type { NodeType } from 'prosemirror-model'
 
 export function isListItem(typeOrName: string | NodeType): boolean {

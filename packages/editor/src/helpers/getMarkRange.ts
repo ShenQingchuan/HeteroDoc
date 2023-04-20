@@ -1,11 +1,11 @@
-import { objectIncludes } from '../../utils/objectIncludes'
+import { objectIncludes } from '../utils/objectIncludes'
 import type {
   MarkType,
   Mark as ProseMirrorMark,
   ResolvedPos,
 } from 'prosemirror-model'
 
-import type { Range } from '../../types'
+import type { Range } from '../types'
 
 function findMarkInSet(
   marks: ProseMirrorMark[],

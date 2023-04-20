@@ -1,8 +1,8 @@
 import { canJoin } from 'prosemirror-transform'
 
 import { findParentNode } from 'prosemirror-utils'
-import { getNodeType } from '../../core/helpers/getNodeType'
-import { isList } from '../../core/helpers/isList'
+import { getNodeType } from '../..//helpers/getNodeType'
+import { isList } from '../..//helpers/isList'
 import type { Transaction } from 'prosemirror-state'
 import type { NodeType } from 'prosemirror-model'
 import type { Command, Commands } from '../../types'

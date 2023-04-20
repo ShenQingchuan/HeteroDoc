@@ -1,8 +1,8 @@
-import { objectIncludes } from '../../utils/objectIncludes'
+import { objectIncludes } from '../utils/objectIncludes'
 import { getMarkType } from './getMarkType'
 import type { MarkType } from 'prosemirror-model'
 import type { EditorState } from 'prosemirror-state'
-import type { MarkRange } from '../../types'
+import type { MarkRange } from '../types'
 
 export function isMarkActive(
   state: EditorState,

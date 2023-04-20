@@ -1,7 +1,7 @@
 import { getMarkType } from './getMarkType'
 import type { Mark } from 'prosemirror-model'
 import type { EditorState } from 'prosemirror-state'
-import type { FontFancyAttrs, MarkRange } from '../../types'
+import type { FontFancyAttrs, MarkRange } from '../types'
 
 const getFancyAttrsFromMark = (mark: Mark): FontFancyAttrs | null => {
   const { colorIndex = 0, bgColorIndex = 0 } = mark.attrs

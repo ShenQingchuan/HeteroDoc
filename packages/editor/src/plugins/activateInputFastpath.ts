@@ -1,8 +1,8 @@
 import { Plugin } from 'prosemirror-state'
 import { findParentDomRef, findParentNode } from 'prosemirror-utils'
-import { EXTENSION_NAMES, PARAGRAPH_SCHEMA_NODE_NAME } from '../../constants'
+import { EXTENSION_NAMES, PARAGRAPH_SCHEMA_NODE_NAME } from '../constants'
 import type { Node } from 'prosemirror-model'
-import type { EditorCore } from '../index'
+import type { EditorCore } from '../core'
 
 export const activateInputFastPath = (core: EditorCore) => {
   let isFastPathTriggered = false

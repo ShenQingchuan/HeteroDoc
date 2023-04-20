@@ -6,7 +6,7 @@ import {
   getBlockAttrsFromElement,
 } from '../../utils/blockSchema'
 import { wrappingInputRule } from '../../core/rule'
-import { getNodeType } from '../../core/helpers/getNodeType'
+import { getNodeType } from '../..//helpers/getNodeType'
 import type { PatternRule } from '../../core/rule'
 import type { EditorCore } from '../../core'
 import type {

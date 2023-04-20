@@ -1,10 +1,10 @@
 import { Decoration, DecorationSet } from 'prosemirror-view'
 import { Plugin, PluginKey, TextSelection } from 'prosemirror-state'
 import { findParentNodeClosestToPos, flatten } from 'prosemirror-utils'
-import { HETERODOC_PLACEHOLER_CLASS_NAME } from '../../constants'
-import { applyTrToView } from '../../utils/applyTrToView'
+import { HETERODOC_PLACEHOLER_CLASS_NAME } from '../constants'
+import { applyTrToView } from '../utils/applyTrToView'
 import type { Node } from 'prosemirror-model'
-import type { EditorCore } from '../index'
+import type { EditorCore } from '../core'
 import type { EditorState } from 'prosemirror-state'
 
 function createPlaceholderDecorationSet(

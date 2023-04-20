@@ -1,6 +1,6 @@
 import { getMarkAttrs } from './getMarkAttrs'
 import type { MarkType } from 'prosemirror-model'
-import type { EditorCore } from '../index'
+import type { EditorCore } from '../core'
 
 export class HelpersManager {
   core: EditorCore

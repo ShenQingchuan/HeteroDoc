@@ -1,5 +1,5 @@
-import { getNodeType } from '../../core/helpers/getNodeType'
-import { isNodeActive } from '../../core/helpers/isNodeActive'
+import { getNodeType } from '../..//helpers/getNodeType'
+import { isNodeActive } from '../..//helpers/isNodeActive'
 import type { NodeType } from 'prosemirror-model'
 import type { Command, Commands } from '../../types'
 
