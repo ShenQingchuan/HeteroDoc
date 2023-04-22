@@ -3,6 +3,7 @@ import {
   BoldExtension,
   CodeBlockExtension,
   CodeExtension,
+  CustomEmojiExtension,
   DeleteLineExtension,
   FontFancyExtension,
   HeadingExtension,
@@ -45,5 +46,6 @@ export function composeExtensions(core: EditorCore): IEditorExtension[] {
     new FontFancyExtension(core),
     new HorizontalLine(core),
     ...installListExtensions(core),
+    new CustomEmojiExtension(core),
   ]
 }

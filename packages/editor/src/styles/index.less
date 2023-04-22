@@ -226,6 +226,17 @@
     height: calc(100% - 2rem);
     background-color: var(--heterodoc-list-item-mark-spine-color);
   }
+
+  // custom emoji
+  span[data-heterodoc-emoji-raw] {
+    background-size: 1em 1em;
+    padding: 0.15em;
+    background-position: center center;
+    background-repeat: no-repeat;
+    user-select: text;
+    position: relative;
+    color: transparent;
+  }
 }
 
 .ProseMirror-hideselection *::selection {

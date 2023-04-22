@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@hetero/shared": "workspace:*",
+    "@iconify-emoji/twemoji": "^1.0.2",
     "highlight.js": "^11.7.0",
     "prosemirror-commands": "^1.5.1",
     "prosemirror-highlightjs": "^0.9.1",

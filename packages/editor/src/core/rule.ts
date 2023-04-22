@@ -57,7 +57,6 @@ const createMarkRuleHandler =
       if (excludedMarks.length > 0) return null
 
       if (textEnd < range.to) tr.delete(textEnd, range.to)
-
       if (textStart > range.from) tr.delete(range.from + startSpaces, textStart)
 
       markEnd = range.from + startSpaces + captureGroup.length
@@ -75,15 +74,25 @@ export class PatternRule {
   find: RegExp
   handler: (props: PatternRuleHandlerProps) => void | null
 
+  // Optional properties
+  /** @default false */
+  preventUndo?: boolean
+  /** @default false */
+  onlyMatchNewInput?: boolean
+
   constructor(config: {
     find: RegExp
     handler: (props: PatternRuleHandlerProps) => void | null
+    preventUndo?: boolean
+    onlyMatchNewInput?: boolean
   }) {
     this.find = config.find
     this.handler = config.handler
+    this.preventUndo = config.preventUndo ?? false
+    this.onlyMatchNewInput = config.onlyMatchNewInput ?? false
   }
 }
-const inputRuleMatcherHandler = (
+const inputRuleRegExpMatcherHandler = (
   text: string,
   find: RegExp
 ): RegExpMatchArray | null => {
@@ -118,7 +127,13 @@ function runInputRule(config: {
   rules.forEach((rule) => {
     if (matched) return
 
-    const match = inputRuleMatcherHandler(textBefore, rule.find)
+    if (rule.onlyMatchNewInput) {
+      console.log('rule.onlyMatchNewInput', text)
+    }
+
+    const match = rule.onlyMatchNewInput
+      ? inputRuleRegExpMatcherHandler(text, rule.find)
+      : inputRuleRegExpMatcherHandler(textBefore, rule.find)
     if (!match) return
 
     const tr = view.state.tr
@@ -126,9 +141,8 @@ function runInputRule(config: {
       state: view.state,
       transaction: tr,
     })
-    const matchFirstItem = match[0]
     const range = {
-      from: from - (matchFirstItem ? matchFirstItem.length - text.length : 0),
+      from: from - (match[0]!.length - text.length),
       to,
     }
     const handler = rule.handler({
@@ -189,6 +203,7 @@ export function inputRules(props: {
     },
     props: {
       handleTextInput(_, from, to, text) {
+        console.log(`handleTextInput: from=${from}, to=${to}, text=${text}`)
         return runInputRule({
           core,
           from,
@@ -241,7 +256,6 @@ export function inputRules(props: {
         return false
       },
     },
-    isInputRules: true,
   }) as Plugin
 
   return [plugin]

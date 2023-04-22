@@ -5,10 +5,7 @@
     "dev": "vite",
     "build:app": "pnpm typecheck && vite build",
     "typecheck": "vue-tsc --noEmit -p tsconfig.app.json",
-    "preview": "vite preview",
-    "cypress": "cypress open",
-    "cypress:component": "cypress run --component",
-    "cypress:component-video": "cross-env CYPRESS_VIDEO_RECORD=true cypress run --component"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@hetero/editor": "workspace:*",
@@ -23,14 +20,11 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
-    "@cypress/vite-dev-server": "^5.0.5",
-    "@cypress/vue": "^5.0.5",
     "@iconify/json": "^2.2.42",
     "@pinia/testing": "^0.0.15",
     "@unocss/transformer-directives": "^0.50.6",
     "@vitejs/plugin-vue": "^4.1.0",
     "@vitejs/plugin-vue-jsx": "^3.0.1",
-    "cypress": "^12.9.0",
     "less": "^4.1.2",
     "typescript": "^5.0.3",
     "unocss": "^0.50.6",

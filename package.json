@@ -15,9 +15,6 @@
     "dev:turbo": "NODE_ENV=development turbo run dev",
     "build": "turbo run build",
     "build:app": "turbo run build && pnpm --filter @hetero/doc-web-app build:app",
-    "cypress": "pnpm --filter @hetero/doc-web-app cypress",
-    "cypress:component": "turbo run build && pnpm --filter @hetero/doc-web-app cypress:component",
-    "cypress:component-video": "turbo run build && pnpm --filter @hetero/doc-web-app cypress:component-video",
     "lint": "eslint --ext .js,.ts,.vue,.json ."
   },
   "devDependencies": {

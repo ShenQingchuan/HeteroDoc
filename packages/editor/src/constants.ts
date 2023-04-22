@@ -1,8 +1,9 @@
 export const whiteSpaceDom = ['span', { class: 'whitespace' }, '']
 
 // Available to be used by other packages:
-export const HETERO_BLOCK_NODE_DATA_TAG = 'data-hetero-block'
 export const HETERO_BLOCK_PARAGRAPH_NODE_NAME = 'paragraph'
+export const HETERO_BLOCK_NODE_DATA_TAG = 'data-hetero-block'
+export const HETERO_EMOJI_RAW_DATA_TAG = 'data-heterodoc-emoji-raw'
 
 export const fontColorSet = [
   ['', ''],
@@ -38,6 +39,7 @@ export enum EXTENSION_NAMES {
   BLOCK_QUOTE = 'blockquote',
   CODE_BLOCK = 'codeBlock',
   FONT_FANCY = 'fontFancy',
+  CUSTOM_EMOJI = 'customEmoji',
   HEADING = 'heading',
   HYPERLINK = 'hyperlink',
   TEXT_ALIGN = 'textAlign',
@@ -76,3 +78,4 @@ export const HETERODOC_LIST_ITEM_MARKER_COUNT_CLASS_NAME =
   `${HETERODOC_LIST_CLASS_NAME_PREFIX}-item-marker-count` as const
 export const HETERODOC_LIST_ITEM_CONTENT_CLASS_NAME =
   `${HETERODOC_LIST_CLASS_NAME_PREFIX}-item-content` as const
+export const HETERODOC_EMOJI_RAW_TEXT_CLASS_NAME = 'heterodoc-emoji-raw-text'
