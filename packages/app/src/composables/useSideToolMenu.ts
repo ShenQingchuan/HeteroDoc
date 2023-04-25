@@ -53,13 +53,13 @@ export function useSideToolMenu() {
     switch (action) {
       case 'insert-before':
         editor?.value?.cmdManager.chain
-          .insertBefore({ hoveredBlockElement: hoveringBlockElement.value })
+          .insertLineBefore({ targetBlockElement: hoveringBlockElement.value })
           .focus()
           .run()
         break
       case 'insert-after':
         editor?.value?.cmdManager.chain
-          .insertAfter({ hoveredBlockElement: hoveringBlockElement.value })
+          .insertLineAfter({ targetBlockElement: hoveringBlockElement.value })
           .focus()
           .run()
         break

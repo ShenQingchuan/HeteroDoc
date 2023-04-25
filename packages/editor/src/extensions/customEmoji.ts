@@ -6,7 +6,7 @@ import { getUUID } from '../utils/getUUID'
 import type { EditorCore } from '@hetero/editor'
 import type { AddMarksSchema, IEditorExtension } from '../types'
 
-const emojiPattern = /(?<text>\p{Emoji})/u
+const emojiPattern = /(?<text>\p{Extended_Pictographic})/u
 
 // List of emoji CDN
 const twemojiCDNFromJsDelivr =

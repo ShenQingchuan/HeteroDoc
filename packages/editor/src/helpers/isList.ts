@@ -1,7 +1,8 @@
 import { getNodeType } from './getNodeType'
+import type { NodeType } from 'prosemirror-model'
 import type { EditorCore } from '../core'
 
-export function isList(name: string, context: EditorCore): boolean {
+export function isList(name: string | NodeType, context: EditorCore): boolean {
   const nodeType = getNodeType(name, context.schema)
   if (!nodeType) {
     return false

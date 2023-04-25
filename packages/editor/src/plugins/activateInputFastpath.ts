@@ -1,34 +1,25 @@
-import { Plugin } from 'prosemirror-state'
+import { Plugin, PluginKey } from 'prosemirror-state'
 import { findParentDomRef, findParentNode } from 'prosemirror-utils'
 import { EXTENSION_NAMES, PARAGRAPH_SCHEMA_NODE_NAME } from '../constants'
 import type { Node } from 'prosemirror-model'
 import type { EditorCore } from '../core'
 
+const pluginKey = new PluginKey('activateInputFastpath')
+
 export const activateInputFastPath = (core: EditorCore) => {
   let isFastPathTriggered = false
 
-  core.on('deactivateInputFastPath', ({ isContentChanged }) => {
-    if (isContentChanged) {
-      const { tr, selection } = core.view.state
-      const { from, empty } = selection
-      if (empty) {
-        tr.delete(from - 1, from)
-        // delete the '/'
-        core.view.dispatch(tr)
-      }
-    }
-  })
-
   return new Plugin({
+    key: pluginKey,
     props: {
       handleDOMEvents: {
         keydown(view, event) {
           // leave arrow up/down/enter to view layer
-          if (
+          const isActionKey =
             event.key === 'ArrowUp' ||
             event.key === 'ArrowDown' ||
             event.key === 'Enter'
-          ) {
+          if (isActionKey && isFastPathTriggered) {
             core.emit('fastpathActionKey', { event })
           }
           return false // means didn't handle by this plugin
@@ -39,29 +30,36 @@ export const activateInputFastPath = (core: EditorCore) => {
           const { state } = view
           const { selection } = state
           const { empty } = selection
+
           const paragraphPredicate = (node: Node) =>
             node.type.name === PARAGRAPH_SCHEMA_NODE_NAME
-          const blockquotePredicate = (node: Node) =>
-            node.type.name === EXTENSION_NAMES.BLOCK_QUOTE
+          const listItemPredicate = (node: Node) =>
+            node.type.name === EXTENSION_NAMES.LIST_ITEM
           const parentParagraph = findParentNode(paragraphPredicate)(selection)
-          if (empty && parentParagraph?.node.textContent === '') {
-            const paragraphDOM = findParentDomRef(
-              paragraphPredicate,
-              view.domAtPos.bind(view)
-            )(selection)
-            const isInsideBlockquote =
-              !!findParentNode(blockquotePredicate)(selection)
-            if (paragraphDOM instanceof HTMLElement) {
-              const { left, top } = paragraphDOM.getBoundingClientRect()
-              core.emit('activateInputFastPath', {
-                left,
-                top,
-                options: {
-                  blockQuoteAvailable: !isInsideBlockquote,
-                },
-              })
-              isFastPathTriggered = true
-            }
+          const parentListItem = findParentNode(listItemPredicate)(selection)
+          if (!empty || parentParagraph?.node.textContent !== '') {
+            return
+          }
+          let isNeedAppend = false
+          if (parentListItem) {
+            // if the parent is list item, we can't toggle any node type directly,
+            // we can just append a new line of that expected type
+            isNeedAppend = true
+          }
+          const paragraphDOM = findParentDomRef(
+            paragraphPredicate,
+            view.domAtPos.bind(view)
+          )(selection)
+          if (paragraphDOM instanceof HTMLElement) {
+            const { left, top } = paragraphDOM.getBoundingClientRect()
+            core.emit('activateInputFastPath', {
+              left,
+              top,
+              params: {
+                isNeedAppend,
+              },
+            })
+            isFastPathTriggered = true
           }
         }
         // other keys input
@@ -69,6 +67,7 @@ export const activateInputFastPath = (core: EditorCore) => {
           core.emit('deactivateInputFastPath', { isContentChanged: false })
           isFastPathTriggered = false
         }
+        return false
       },
     },
   })

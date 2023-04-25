@@ -12,10 +12,10 @@ interface EditorStoreState {
   menuAvailableState: {
     hyperlink: boolean
   }
-  prevLinkAttrs: HyperlinkAttrs | null
+  prevLinkAttrs: HyperlinkAttrs | undefined
   linkEditURL: string
   linkEditText: string
-  floatMenuByAction: EditorFloatMenuAction | null
+  floatMenuByAction: EditorFloatMenuAction | undefined
   floatTargetNodeLeft: number
   floatTargetNodeRight: number
   floatTargetNodeTop: number
@@ -25,7 +25,12 @@ interface EditorStoreState {
   isShowLinkEdit: boolean
   isShowFontFancyPicker: boolean
   isDropToAppend: boolean
-  draggingOverElement: HTMLElement | null
+  draggingOverElement: HTMLElement | undefined
+  fastpathParams:
+    | {
+        isNeedAppend?: boolean
+      }
+    | undefined
 }
 
 const createInitEditorStoreState = (): EditorStoreState => {
@@ -40,10 +45,10 @@ const createInitEditorStoreState = (): EditorStoreState => {
     menuAvailableState: {
       hyperlink: false,
     },
-    prevLinkAttrs: null,
+    prevLinkAttrs: undefined,
     linkEditURL: '',
     linkEditText: '',
-    floatMenuByAction: null,
+    floatMenuByAction: undefined,
     floatTargetNodeLeft: Number.NaN,
     floatTargetNodeRight: Number.NaN,
     floatTargetNodeTop: Number.NaN,
@@ -53,7 +58,8 @@ const createInitEditorStoreState = (): EditorStoreState => {
     isShowLinkEdit: false,
     isShowFontFancyPicker: false,
     isDropToAppend: false,
-    draggingOverElement: null,
+    draggingOverElement: undefined,
+    fastpathParams: undefined,
   }
 }
 
@@ -64,6 +70,9 @@ export const useEditorStore = defineStore('editor', {
   getters: {
     popoverTop: (state) => {
       return state.floatTargetNodeTop + 30
+    },
+    isFastpathAppend: (state) => {
+      return state.fastpathParams?.isNeedAppend ?? false
     },
   },
   actions: {
@@ -101,7 +110,7 @@ export const useEditorStore = defineStore('editor', {
     setShowLinkEdit(value: boolean) {
       this.isShowLinkEdit = value
       if (!value) {
-        this.prevLinkAttrs = null
+        this.prevLinkAttrs = undefined
       }
       return this
     },
@@ -117,7 +126,7 @@ export const useEditorStore = defineStore('editor', {
       return this
     },
     resetFloatMenuPos() {
-      this.floatMenuByAction = null
+      this.floatMenuByAction = undefined
       this.floatTargetNodeLeft = Number.NaN
       this.floatTargetNodeTop = Number.NaN
       return this
@@ -127,12 +136,16 @@ export const useEditorStore = defineStore('editor', {
       this.linkEditText = ''
       return this
     },
-    setDraggingOverElement(el: HTMLElement | null) {
+    setDraggingOverElement(el: HTMLElement | undefined) {
       this.draggingOverElement = el
       return this
     },
     setDropToAppend(value: boolean) {
       this.isDropToAppend = value
+      return this
+    },
+    setFastpathParams(params: EditorStoreState['fastpathParams']) {
+      this.fastpathParams = params
       return this
     },
   },

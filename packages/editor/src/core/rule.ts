@@ -127,10 +127,6 @@ function runInputRule(config: {
   rules.forEach((rule) => {
     if (matched) return
 
-    if (rule.onlyMatchNewInput) {
-      console.log('rule.onlyMatchNewInput', text)
-    }
-
     const match = rule.onlyMatchNewInput
       ? inputRuleRegExpMatcherHandler(text, rule.find)
       : inputRuleRegExpMatcherHandler(textBefore, rule.find)
@@ -203,7 +199,6 @@ export function inputRules(props: {
     },
     props: {
       handleTextInput(_, from, to, text) {
-        console.log(`handleTextInput: from=${from}, to=${to}, text=${text}`)
         return runInputRule({
           core,
           from,

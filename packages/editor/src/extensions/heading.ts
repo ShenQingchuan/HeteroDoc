@@ -11,9 +11,14 @@ import {
   getTextBlockAttrsFromElement,
   stylesOfTextBlock,
 } from '../utils/textBlockSchema'
-import { blockIdDataAttrAtDOM,  createBlockMetaAttr } from '../utils/blockSchema'
+import { blockIdDataAttrAtDOM, createBlockMetaAttr } from '../utils/blockSchema'
 import type { PatternRule } from '../core/rule'
-import type { AddNodesSchema, Command, IEditorExtension } from '../types'
+import type {
+  AddNodesSchema,
+  Command,
+  IEditorExtension,
+  NoArgsCommand,
+} from '../types'
 import type { EditorCore } from '../core'
 
 const headingInputRuleRegExp = /^(#{1,5})\s/
@@ -25,11 +30,13 @@ export interface HeadingSetterAttrs {
 interface HeadingCommandsDefs {
   setHeading: Command<HeadingSetterAttrs>
   toggleHeading: Command<HeadingSetterAttrs>
+  updateAnchorId: NoArgsCommand
 }
 declare module '@hetero/editor' {
   interface Commands {
     setHeading: HeadingCommandsDefs['setHeading']
     toggleHeading: HeadingCommandsDefs['toggleHeading']
+    updateAnchorId: HeadingCommandsDefs['updateAnchorId']
   }
 }
 
@@ -46,7 +53,7 @@ export class HeadingExtension implements IEditorExtension {
         [EXTENSION_NAMES.HEADING]: {
           attrs: extendsTextBlockAttrs({
             level: { default: 1 },
-            anchorId: {},
+            anchorId: { default: '' },
           }),
           content: 'inline*',
           group: 'block ',
@@ -89,7 +96,7 @@ export class HeadingExtension implements IEditorExtension {
         return {
           level: match[1]!.length,
           anchorId: getRandomHeadingID(),
-          ... createBlockMetaAttr(),
+          ...createBlockMetaAttr(),
         }
       }),
     ]
@@ -105,7 +112,7 @@ export class HeadingExtension implements IEditorExtension {
             attrs: {
               level,
               anchorId: getRandomHeadingID(),
-              ... createBlockMetaAttr(),
+              ...createBlockMetaAttr(),
             },
           })
         },
@@ -123,7 +130,17 @@ export class HeadingExtension implements IEditorExtension {
             attrs: {
               level,
               anchorId: getRandomHeadingID(),
-              ... createBlockMetaAttr(),
+              ...createBlockMetaAttr(),
+            },
+          })
+        },
+      updateAnchorId:
+        () =>
+        ({ commands }) => {
+          return commands.updateAttributes({
+            typeOrName: this.name,
+            attrs: {
+              anchorId: getRandomHeadingID(),
             },
           })
         },

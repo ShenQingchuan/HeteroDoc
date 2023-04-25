@@ -8,8 +8,6 @@ const { t } = useI18n()
 const { activeOption, onFastpathActionKey, onFastpathTrigger } =
   useFastpathHandler()
 
-const isBlockQuoteAvailable = ref(true)
-
 const onClickOutside = () => {
   if (editorStore.isShowInputFastpath) {
     editorStore.setShowInputFastpath(false)
@@ -20,13 +18,13 @@ const getActiveClassByOption = (option: string) => {
 }
 
 editorEventBus.on('editorMounted', ({ core }) => {
-  core.on('activateInputFastPath', ({ left, top, options }) => {
+  core.on('activateInputFastPath', ({ left, top, params }) => {
     editorStore.setFloatMenuPosition(
       { left, top },
       EditorFloatMenuAction.ByInputFastpath
     )
     editorStore.setShowInputFastpath(true)
-    isBlockQuoteAvailable.value = options.blockQuoteAvailable
+    editorStore.setFastpathParams(params)
   })
   core.on('deactivateInputFastPath', () => {
     editorStore.setShowInputFastpath(false)
@@ -101,11 +99,10 @@ watch(
             }}</span>
           </div>
           <div
-            v-if="isBlockQuoteAvailable"
-            class="hetero-editor__input-fastpath-option quote"
-            :class="`${getActiveClassByOption('quote')}`"
+            class="hetero-editor__input-fastpath-option blockquote"
+            :class="`${getActiveClassByOption('blockquote')}`"
             editor-input-fastpath-option
-            @click="onFastpathTrigger({ option: 'quote' })"
+            @click="onFastpathTrigger({ option: 'blockquote' })"
           >
             <i
               class="label-icon"
@@ -119,9 +116,9 @@ watch(
           </div>
           <div
             class="hetero-editor__input-fastpath-option codeBlock"
-            :class="`${getActiveClassByOption('codeblock')}`"
+            :class="`${getActiveClassByOption('codeBlock')}`"
             editor-input-fastpath-option
-            @click="onFastpathTrigger({ option: 'codeblock' })"
+            @click="onFastpathTrigger({ option: 'codeBlock' })"
           >
             <i
               class="label-icon"
@@ -134,10 +131,10 @@ watch(
             }}</span>
           </div>
           <div
-            class="hetero-editor__input-fastpath-option horizontal"
-            :class="`${getActiveClassByOption('horizontal')}`"
+            class="hetero-editor__input-fastpath-option horizontalLine"
+            :class="`${getActiveClassByOption('horizontalLine')}`"
             editor-input-fastpath-option
-            @click="onFastpathTrigger({ option: 'horizontal' })"
+            @click="onFastpathTrigger({ option: 'horizontalLine' })"
           >
             <i
               class="label-icon"

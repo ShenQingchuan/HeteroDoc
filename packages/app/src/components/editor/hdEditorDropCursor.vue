@@ -29,7 +29,7 @@ editorEventBus.on('editorMounted', ({ core }) => {
 })
 editorEventBus.on('dropEnd', () => {
   isShowDropCursor.value = false
-  editorStore.setDraggingOverElement(null)
+  editorStore.setDraggingOverElement(undefined)
 })
 </script>
 

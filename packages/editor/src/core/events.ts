@@ -1,5 +1,5 @@
 import type { EditorState, Transaction } from 'prosemirror-state'
-import type { InputFastpathOptions } from '../types'
+import type { InputFastpathParams as InputFastpathParams } from '../types'
 
 export interface EditorCoreEvent {
   rendered: { timeCost: number }
@@ -10,9 +10,12 @@ export interface EditorCoreEvent {
   activateInputFastPath: {
     left: number
     top: number
-    options: InputFastpathOptions
+    params: InputFastpathParams
   }
-  deactivateInputFastPath: { isContentChanged: boolean }
+  deactivateInputFastPath: {
+    isContentChanged: boolean
+    params?: InputFastpathParams
+  }
   activateSideBtns: {
     left: number
     width: number

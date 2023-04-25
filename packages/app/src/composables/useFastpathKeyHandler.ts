@@ -1,12 +1,14 @@
+import type { CommandProps } from '@hetero/editor'
+
 const FastpathKeyOptions = [
   'h1',
   'h2',
   'h3',
   'h4',
   'h5',
-  'quote',
-  'codeblock',
-  'horizontal',
+  'blockquote',
+  'codeBlock',
+  'horizontalLine',
   'bulletList',
   'orderedList',
 ] as const
@@ -24,40 +26,90 @@ export function useFastpathHandler() {
     (...args: Parameters<typeof runActions>) => {
       runActions(...args)
       editorStore.setShowInputFastpath(false)
-      editorCore?.value.view.focus()
       editorCore?.value.emit('deactivateInputFastPath', {
         isContentChanged: true,
+        params: editorStore.fastpathParams,
       })
     }
-  const onClickHeadingFastpath = runInputFastPath((level: number) => {
-    editorCore?.value.commands.toggleHeading({ level })
+
+  const deleteSlash = () =>
+    editorCore?.value.commands.command({
+      fn: ({ dispatch, tr }: CommandProps) => {
+        const { from, empty } = tr.selection
+        if (dispatch && empty) {
+          tr.delete(from - 1, from)
+        }
+        return true
+      },
+    })
+  const getFastpathCommandChain = () => {
+    // delete the '/' first
+    deleteSlash()
+    return editorCore?.value.cmdManager.chain
+  }
+
+  const handleHeadingFastpath = runInputFastPath((level: number) => {
+    const cmdChain = getFastpathCommandChain()
+    if (editorStore.isFastpathAppend) {
+      cmdChain
+        ?.appendBlockNode({ nameOrType: 'heading' })
+        .updateAnchorId()
+        .run()
+      return
+    }
+    cmdChain?.toggleHeading({ level }).run()
   })
-  const onClickQuoteFastpath = runInputFastPath(() => {
-    editorCore?.value.commands.setBlockquote()
+  const handleQuoteFastpath = runInputFastPath(() => {
+    const cmdChain = getFastpathCommandChain()
+    if (editorStore.isFastpathAppend) {
+      cmdChain?.appendBlockNode({ nameOrType: 'blockquote' }).run()
+      return
+    }
+    cmdChain?.setBlockquote().run()
   })
-  const onClickCodeblockFastpath = runInputFastPath(() => {
-    editorCore?.value.commands.setCodeblock({ params: 'plaintext' })
+  const handleCodeblockFastpath = runInputFastPath(() => {
+    const cmdChain = getFastpathCommandChain()
+    if (editorStore.isFastpathAppend) {
+      cmdChain?.appendBlockNode({ nameOrType: 'codeBlock' }).run()
+      return
+    }
+    cmdChain?.setCodeblock({ params: 'plaintext' }).run()
   })
-  const onClickHorizontalFastpath = runInputFastPath(() => {
-    editorCore?.value.commands.setHorizontal()
+  const handleHorizontalFastpath = runInputFastPath(() => {
+    const cmdChain = getFastpathCommandChain()
+    if (editorStore.isFastpathAppend) {
+      cmdChain?.appendBlockNode({ nameOrType: 'horizontalLine' }).run()
+      return
+    }
+    cmdChain?.setHorizontal().run()
   })
-  const onClickBulletListFastpath = runInputFastPath(() => {
-    editorCore?.value.commands.toggleBulletList()
+  const handleBulletListFastpath = runInputFastPath(() => {
+    const cmdChain = getFastpathCommandChain()
+    if (editorStore.isFastpathAppend) {
+      cmdChain?.appendBlockNode({ nameOrType: 'bulletList' }).run()
+      return
+    }
+    cmdChain?.toggleBulletList().run()
   })
-  const onClickOrderedListFastpath = runInputFastPath(() => {
-    editorCore?.value.commands.toggleOrderedList()
+  const handleOrderedListFastpath = runInputFastPath(() => {
+    const cmdChain = getFastpathCommandChain()
+    if (editorStore.isFastpathAppend) {
+      cmdChain?.appendBlockNode({ nameOrType: 'orderedList' }).run()
+      return
+    }
+    cmdChain?.toggleOrderedList().run()
   })
 
   const fastPathHandlerMap = {
     ...Array.from({ length: 5 }, (_, i) => i + 1).reduce((acc, level) => {
-      acc[`h${level}`] = () => onClickHeadingFastpath(level)
+      acc[`h${level}`] = () => handleHeadingFastpath(level)
       return acc
     }, {} as Record<string, (...args: any) => void>),
-    quote: onClickQuoteFastpath,
-    codeblock: onClickCodeblockFastpath,
-    horizontal: onClickHorizontalFastpath,
-    bulletList: onClickBulletListFastpath,
-    orderedList: onClickOrderedListFastpath,
+    blockquote: handleQuoteFastpath,
+    codeBlock: handleCodeblockFastpath,
+    horizontalLine: handleHorizontalFastpath,
+    bulletList: handleBulletListFastpath,
+    orderedList: handleOrderedListFastpath,
   } as FastPathKeyMap
 
   const onFastpathTrigger = (clickParams?: { option: FastpathKey }) => {

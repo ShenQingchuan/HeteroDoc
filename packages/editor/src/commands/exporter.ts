@@ -26,13 +26,21 @@ import { setMark } from './markOps/setMark'
 import { unsetMark } from './markOps/unsetMark'
 import { resetAttributes } from './fundamentals/resetAttributes'
 import { updateAttributes } from './fundamentals/updateAttributes'
-import { insertAfter, insertBefore } from './fundamentals/insertBeforeOrAfter'
+import {
+  insertLineAfter,
+  insertLineBefore,
+} from './fundamentals/insertBeforeOrAfter'
 import { supportRemoveFirstLine } from './fundamentals/supportRemoveFirstLine'
 import { toggleList } from './fundamentals/toggleList'
 import { liftListItem } from './fundamentals/liftListItem'
 import { wrapInList } from './fundamentals/wrapInList'
 import { sinkListItem } from './fundamentals/sinkListItem'
 import { splitListItem } from './fundamentals/splitListItem'
+import { appendBlockNode } from './fundamentals/appendBlockNode'
+
+export * from './markOps/toggleMark'
+export * from './markOps/setMark'
+export * from './markOps/unsetMark'
 
 export * from './fundamentals/focus'
 export * from './fundamentals/scrollIntoView'
@@ -46,13 +54,11 @@ export * from './fundamentals/selectAll'
 export * from './fundamentals/setNode'
 export * from './fundamentals/toggleNode'
 export * from './fundamentals/adaptProseMirrorCmds'
-export * from './markOps/toggleMark'
-export * from './markOps/setMark'
-export * from './markOps/unsetMark'
 export * from './fundamentals/resetAttributes'
 export * from './fundamentals/updateAttributes'
 export * from './fundamentals/insertBeforeOrAfter'
 export * from './fundamentals/supportRemoveFirstLine'
+export * from './fundamentals/appendBlockNode'
 
 export const builtinsCommands = {
   focus,
@@ -78,15 +84,15 @@ export const builtinsCommands = {
   toggleNode,
   updateAttributes,
   resetAttributes,
-  insertBefore,
-  insertAfter,
+  insertLineBefore,
+  insertLineAfter,
   supportRemoveFirstLine,
   toggleList,
   liftListItem,
   wrapInList,
   sinkListItem,
   splitListItem,
-
+  appendBlockNode,
   toggleMark,
   setMark,
   unsetMark,

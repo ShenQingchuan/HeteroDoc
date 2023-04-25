@@ -155,8 +155,8 @@ export interface MarkRange {
 
 export type FocusPosition = 'start' | 'end' | 'all' | number | boolean | null
 
-export interface InputFastpathOptions {
-  blockQuoteAvailable: boolean
+export interface InputFastpathParams {
+  isNeedAppend?: boolean
 }
 
 export interface FontFancyAttrs {
