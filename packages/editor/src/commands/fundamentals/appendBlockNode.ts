@@ -69,8 +69,6 @@ export const appendBlockNode: Commands['appendBlockNode'] =
         appendingNodeContent
       )
       tr.insert(appendPos, appendingNode)
-      // Set the cursor to the new block node.
-      setTextSelection(appendPos + 1)(tr)
     }
 
     return true

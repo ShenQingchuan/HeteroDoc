@@ -14,7 +14,6 @@ export const activateInputFastPath = (core: EditorCore) => {
     props: {
       handleDOMEvents: {
         keydown(view, event) {
-          // leave arrow up/down/enter to view layer
           const isActionKey =
             event.key === 'ArrowUp' ||
             event.key === 'ArrowDown' ||
@@ -22,7 +21,7 @@ export const activateInputFastPath = (core: EditorCore) => {
           if (isActionKey && isFastPathTriggered) {
             core.emit('fastpathActionKey', { event })
           }
-          return false // means didn't handle by this plugin
+          return false // means didn't terminate by this plugin
         },
       },
       handleKeyDown(view, event) {

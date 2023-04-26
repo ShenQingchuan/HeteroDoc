@@ -3,7 +3,7 @@ import { textblockTypeInputRule } from '../core/rule'
 import { ExtensionType } from '../types'
 import {
   blockIdDataAttrAtDOM,
-   createBlockMetaAttr,
+  createBlockMetaAttr,
   extendsBlockAttrs,
   getBlockAttrsFromElement,
 } from '../utils/blockSchema'
@@ -71,7 +71,7 @@ export class BlockquoteExtension implements IEditorExtension {
     const nodeType = this.core.schema.nodes[EXTENSION_NAMES.BLOCK_QUOTE]!
     return [
       textblockTypeInputRule(blockquoteInputRuleRegExp, nodeType, {
-        ... createBlockMetaAttr(),
+        ...createBlockMetaAttr(),
       }),
     ]
   }
@@ -81,7 +81,7 @@ export class BlockquoteExtension implements IEditorExtension {
       setBlockquote:
         () =>
         ({ commands }) => {
-          return commands.wrapIn({ typeOrName: this.name })
+          return commands.setNode({ typeOrName: this.name })
         },
     }
   }

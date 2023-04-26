@@ -19,12 +19,13 @@ const getActiveClassByOption = (option: string) => {
 
 editorEventBus.on('editorMounted', ({ core }) => {
   core.on('activateInputFastPath', ({ left, top, params }) => {
-    editorStore.setFloatMenuPosition(
-      { left, top },
-      EditorFloatMenuAction.ByInputFastpath
-    )
-    editorStore.setShowInputFastpath(true)
-    editorStore.setFastpathParams(params)
+    editorStore
+      .setFloatMenuPosition(
+        { left, top },
+        EditorFloatMenuAction.ByInputFastpath
+      )
+      .setShowInputFastpath(true)
+      .setFastpathParams(params)
   })
   core.on('deactivateInputFastPath', () => {
     editorStore.setShowInputFastpath(false)
