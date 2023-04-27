@@ -39,7 +39,6 @@ export enum EXTENSION_NAMES {
   BLOCK_QUOTE = 'blockquote',
   CODE_BLOCK = 'codeBlock',
   FONT_FANCY = 'fontFancy',
-  CUSTOM_EMOJI = 'customEmoji',
   HEADING = 'heading',
   HYPERLINK = 'hyperlink',
   TEXT_ALIGN = 'textAlign',

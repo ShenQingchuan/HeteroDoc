@@ -111,11 +111,10 @@ function runInputRule(config: {
 
   if (view.composing) return false
 
+  // disable pattern rule inside codeBlock and inline-code mark
   const $from = view.state.doc.resolve(from)
   if (
-    // check for code node
     $from.parent.type.spec.code ||
-    // check for code mark
     !!($from.nodeBefore || $from.nodeAfter)?.marks.find(
       (mark) => mark.type.spec.code
     )
@@ -127,9 +126,7 @@ function runInputRule(config: {
   rules.forEach((rule) => {
     if (matched) return
 
-    const match = rule.onlyMatchNewInput
-      ? inputRuleRegExpMatcherHandler(text, rule.find)
-      : inputRuleRegExpMatcherHandler(textBefore, rule.find)
+    const match = inputRuleRegExpMatcherHandler(textBefore, rule.find)
     if (!match) return
 
     const tr = view.state.tr
