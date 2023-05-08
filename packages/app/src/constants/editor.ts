@@ -71,4 +71,8 @@ export const supportCodeBlockLangsName = [
   'vim',
   'WASM',
   'yaml',
+
+  // otonielemanuel add
+  'php',
+  'perl',
 ]

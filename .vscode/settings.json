@@ -3,7 +3,7 @@
   "i18n-ally.enabledFrameworks": ["vue"],
   "volar.autoCompleteRefs": true,
   "unocss.root": "packages/app",
-  "files.autoSave": "off",
+  "files.autoSave": "afterDelay",
   "i18n-ally.keystyle": "nested",
   "typescript.tsdk": "node_modules/typescript/lib",
   "vue3snippets.enable-compile-vue-file-on-did-save-code": false
