@@ -7,7 +7,6 @@ import type { EditorCore } from '@hetero/editor'
 const props = defineProps<{ mockData?: any }>()
 const { t, locale } = useI18n()
 const envStore = useEnvStore()
-const themeModeText = useThemeModeText()
 const editorRef = ref<HTMLElement>()
 const editorCore = shallowRef<EditorCore>()
 
@@ -51,9 +50,8 @@ onMounted(() => {
       flex-col
       items-center
       justify-center
-      w100vw
       min-h-100vh
-      p-y-10
+      p-y-7
     >
       <div
         class="page-misc__editor-test__settings"
@@ -64,7 +62,6 @@ onMounted(() => {
         <n-button text mr4 @click="envStore.toggleDark()">
           <div v-if="envStore.isDark" i-carbon-light text-6 mr2 font-light />
           <div v-else i-carbon-moon text-6 mr2 font-light />
-          <span>{{ themeModeText }}</span>
         </n-button>
         <n-button text mr4 @click="switchLocale">
           <template #icon>
@@ -72,7 +69,7 @@ onMounted(() => {
               <div i-carbon:language />
             </n-icon>
           </template>
-          <span>{{ t('locale.name') }}</span>
+          <h4>{{ t('locale.name') }}</h4>
         </n-button>
         <a
           color-inherit
@@ -87,7 +84,7 @@ onMounted(() => {
                 <div i-carbon:logo-github />
               </n-icon>
             </template>
-            <span>{{ t('playground.navigate-github-link') }}</span>
+            <h4>source code</h4>
           </n-button>
         </a>
       </div>
